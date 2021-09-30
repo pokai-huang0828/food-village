@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage.navigation.Screen
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -42,7 +43,7 @@ fun MainScreen(navController: NavController) {
                     image = painterResource(id = R.drawable.rice_snacks),
                     header = "Rice Snacks",
                     navController = navController,
-                    itemDescription = "Our Rice Crisps come in a dilicious variety of flavours to satisfy your snack cravings any \ntime of day."
+                    itemDescription = "Our Rice Crisps come in a delicious variety of flavours to satisfy your snack cravings any \ntime of day."
                 )
                 Spacer(modifier = Modifier.heightIn(20.dp))
                 FoodItem(
@@ -58,7 +59,7 @@ fun MainScreen(navController: NavController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("welcome_screen")
+                    navController.navigate(Screen.WelcomeScreen.route)
                 },
                 backgroundColor = Color.Gray,
                 contentColor = Color.White
@@ -185,7 +186,7 @@ fun FoodItem(
                 contentScale = ContentScale.Crop
             )
             TextButton(
-                onClick = { navController.navigate("welcome_screen") },
+                onClick = { navController.navigate(Screen.WelcomeScreen.route) },
                 modifier = ReadMoreModifier()
             ) {
             }

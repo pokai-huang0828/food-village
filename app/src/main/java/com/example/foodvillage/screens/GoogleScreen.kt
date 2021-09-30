@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage.navigation.Screen
 
 @Composable
 fun GoogleScreen(navController: NavController) {
@@ -59,7 +60,7 @@ fun GoogleScreen(navController: NavController) {
                                 .clip(RoundedCornerShape(30.dp))
                         )
                         TextButton(
-                            onClick = { navController.navigate("main_screen") },
+                            onClick = { navController.navigate(Screen.MainScreen.route) },
                             modifier = Modifier
                                 .size(width = 350.dp, height = 415.dp)
                                 .padding(top = 20.dp)

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage.navigation.Screen
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
@@ -53,7 +54,7 @@ fun WelcomeScreen(navController: NavController) {
                 ) {
                     Box {
                         Button(
-                            onClick = { navController.navigate("google_screen") },
+                            onClick = { navController.navigate(Screen.GoogleScreen.route) },
                             contentPadding = PaddingValues(15.dp),
                             border = BorderStroke(3.dp, Color.Gray),
                             colors = ButtonDefaults.textButtonColors(
