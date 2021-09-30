@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "google_screen") {
+    NavHost(navController = navController, startDestination = "welcome_screen") {
         composable(route = "main_screen") {
             MainScreen(navController = navController)
         }
