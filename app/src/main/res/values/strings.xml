@@ -3,4 +3,6 @@
     <string name="main_screen">MainScreen</string>
     <string name="welcome_screen">WelcomeScreen</string>
     <string name="google_screen">GoogleScreen</string>
+    <string name="sign_in_screen">SignInScreen</string>
+    <string name="sign_up_screen">SignUpScreen</string>
 </resources>

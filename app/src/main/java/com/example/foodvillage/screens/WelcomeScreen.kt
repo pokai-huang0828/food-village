@@ -77,7 +77,7 @@ fun WelcomeScreen(navController: NavController) {
                             contentDescription = "Google logo",
                             modifier = Modifier
                                 .size(width = 45.dp, height = 45.dp)
-                                .padding(top = 15.dp,start = 10.dp)
+                                .padding(top = 15.dp, start = 10.dp)
                         )
                     }
                 }

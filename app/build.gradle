@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -67,6 +68,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     // Feature module Support
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.3.5")
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:2.3.5")
     // Jetpack Compose Integration

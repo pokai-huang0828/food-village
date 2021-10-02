@@ -1,16 +1,14 @@
 package com.example.foodvillage
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +25,7 @@ import androidx.navigation.NavController
 import com.example.foodvillage.navigation.Screen
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController, signOut: () -> Unit) {
     Scaffold(
         content = {
             Column(
@@ -36,7 +34,7 @@ fun MainScreen(navController: NavController) {
                     .padding(10.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                TopBar()
+                TopBar(signOut = signOut)
                 SearchRow()
                 Spacer(modifier = Modifier.heightIn(20.dp))
                 FoodItem(
@@ -77,6 +75,7 @@ fun MainScreen(navController: NavController) {
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
+    signOut: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -94,17 +93,17 @@ fun TopBar(
             horizontalArrangement = Arrangement.End,
         ) {
             Icon(
-                imageVector = Icons.Filled.Message,
-                contentDescription = "Messages",
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "Account",
                 tint = Color.DarkGray,
                 modifier = Modifier.size(47.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Icon(
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "Account",
+                imageVector = Icons.Filled.Logout,
+                contentDescription = "Messages",
                 tint = Color.DarkGray,
-                modifier = Modifier.size(47.dp)
+                modifier = Modifier.size(47.dp).clickable { signOut() }
             )
         }
     }
