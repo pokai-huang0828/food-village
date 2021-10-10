@@ -1,4 +1,4 @@
-package com.example.foodvillage
+package com.example.foodvillage2205.util
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

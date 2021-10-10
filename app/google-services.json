@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "234130611855",
-    "project_id": "foodvillage-b7ee6",
-    "storage_bucket": "foodvillage-b7ee6.appspot.com"
+    "project_number": "313422313828",
+    "project_id": "foodvillage2205",
+    "storage_bucket": "foodvillage2205.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:234130611855:android:ef37668d752275f4ce5afa",
+        "mobilesdk_app_id": "1:313422313828:android:2ca8d97cc86b9e46c1e271",
         "android_client_info": {
-          "package_name": "com.example.foodvillage"
+          "package_name": "com.example.foodvillage2205"
         }
       },
       "oauth_client": [
         {
-          "client_id": "234130611855-k9u0hmrkgr0qfjmca8j49burkettpob8.apps.googleusercontent.com",
+          "client_id": "313422313828-e8e4k5jj3mttd1vpbeouck2e6gt9k6r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodvillage2205",
+            "certificate_hash": "6d7664ea6e499593907d8cfcb35f7e99fdabff8a"
+          }
+        },
+        {
+          "client_id": "313422313828-gt6pvu7ofboted1kfkjn0evakp92ca6g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC66ntoHCtlmFKwODeyYM8z5TdBMYQyq0E"
+          "current_key": "AIzaSyCI0pgnA5GJN56zqcu7JZlZ23A3kD4zW5g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "234130611855-k9u0hmrkgr0qfjmca8j49burkettpob8.apps.googleusercontent.com",
+              "client_id": "313422313828-gt6pvu7ofboted1kfkjn0evakp92ca6g.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

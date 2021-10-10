@@ -1,4 +1,4 @@
-package com.example.foodvillage
+package com.example.foodvillage2205
 
 import org.junit.Test
 

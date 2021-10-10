@@ -1,4 +1,4 @@
-package com.example.foodvillage
+package com.example.foodvillage2205.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,7 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.foodvillage.navigation.Screen
+import com.example.foodvillage2205.R
+import com.example.foodvillage2205.view.navigation.Route
+import com.example.foodvillage2205.util.ReadMoreModifier
 
 @Composable
 fun MainScreen(navController: NavController, signOut: () -> Unit) {
@@ -57,7 +59,7 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.WelcomeScreen.route)
+                    navController.navigate(Route.TestScreen.route)
                 },
                 backgroundColor = Color.Gray,
                 contentColor = Color.White
@@ -185,7 +187,7 @@ fun FoodItem(
                 contentScale = ContentScale.Crop
             )
             TextButton(
-                onClick = { navController.navigate(Screen.WelcomeScreen.route) },
+                onClick = { navController.navigate(Route.TestScreen.route) },
                 modifier = ReadMoreModifier()
             ) {
             }

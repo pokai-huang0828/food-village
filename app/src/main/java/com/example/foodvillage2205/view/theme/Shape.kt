@@ -1,4 +1,4 @@
-package com.example.foodvillage.ui.theme
+package com.example.foodvillage2205.view.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
