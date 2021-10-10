@@ -59,7 +59,7 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Route.TestScreen.route)
+
                 },
                 backgroundColor = Color.Gray,
                 contentColor = Color.White
@@ -187,7 +187,7 @@ fun FoodItem(
                 contentScale = ContentScale.Crop
             )
             TextButton(
-                onClick = { navController.navigate(Route.TestScreen.route) },
+                onClick = {  },
                 modifier = ReadMoreModifier()
             ) {
             }
