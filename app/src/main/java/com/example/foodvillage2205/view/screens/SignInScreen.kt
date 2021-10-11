@@ -28,8 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 @Composable
 fun SignInScreen(
     navController: NavController,
-    signIn: () -> Unit,
-    signInPass: (email: String, password: String) -> Unit,
+    signInWithEmailAndPassword: (email: String, password: String) -> Unit,
+    signInWithGoogle: () -> Unit,
     ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -57,7 +57,7 @@ fun SignInScreen(
         )
 
         Button(
-            onClick = { signInPass(email, password) },
+            onClick = { signInWithEmailAndPassword(email, password) },
             colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
             modifier = Modifier.padding(ButtonPadding_16dp)
         ) {
@@ -76,7 +76,7 @@ fun SignInScreen(
                 .padding(horizontal = 55.dp)
                 .padding(top=15.dp)
                 .height(50.dp),
-            onClick = {signIn() }
+            onClick = {signInWithGoogle() }
         ){
             Row(
                 modifier = Modifier.fillMaxWidth(),

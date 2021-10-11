@@ -24,7 +24,7 @@ import com.example.foodvillage2205.view.theme.PrimaryColor
 @Composable
 fun SignUpScreen(
     navController: NavController,
-    signUpPass: (email: String, password: String) -> Unit
+    signUpWithEmailAndPassword: (email: String, password: String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -52,7 +52,7 @@ fun SignUpScreen(
         )
 
         Button(
-            onClick = { signUpPass(email, password) },
+            onClick = { signUpWithEmailAndPassword(email, password) },
             colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
             modifier = Modifier.padding(ButtonPadding_16dp)
         ) {

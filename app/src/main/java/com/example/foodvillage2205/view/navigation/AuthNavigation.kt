@@ -11,9 +11,9 @@ import com.example.foodvillage2205.view.screens.SignUpScreen
 @ExperimentalAnimationApi
 @Composable
 fun AuthNavigation(
-    signIn: () -> Unit,
-    signUpPass: (email: String, password: String) -> Unit,
-    signInPass: (email: String, password: String) -> Unit
+    signInWithGoogle: () -> Unit,
+    signUpWithEmailAndPassword: (email: String, password: String) -> Unit,
+    signInWithEmailAndPassword: (email: String, password: String) -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -22,10 +22,17 @@ fun AuthNavigation(
         startDestination = Route.SignInScreen.route
     ) {
         composable(route = Route.SignInScreen.route) {
-            SignInScreen(navController = navController, signIn = signIn, signInPass = signInPass,)
+            SignInScreen(
+                navController = navController,
+                signInWithGoogle = signInWithGoogle,
+                signInWithEmailAndPassword = signInWithEmailAndPassword,
+            )
         }
         composable(route = Route.SignUpScreen.route) {
-            SignUpScreen(navController = navController, signUpPass = signUpPass)
+            SignUpScreen(
+                navController = navController,
+                signUpWithEmailAndPassword = signUpWithEmailAndPassword
+            )
         }
     }
 }
