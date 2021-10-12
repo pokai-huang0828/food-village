@@ -1,5 +1,7 @@
 package com.example.foodvillage2205.view.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,21 +11,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
-import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
-import com.example.foodvillage2205.view.theme.PrimaryColor
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.foodvillage2205.view.theme.*
 
 @Composable
 fun SignInScreen(
@@ -34,13 +36,15 @@ fun SignInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    LogoTextBox()
+
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text("SIGN IN", style = MaterialTheme.typography.h2)
-
+        Spacer(modifier = Modifier.padding(top = 125.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -74,7 +78,7 @@ fun SignInScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 55.dp)
-                .padding(top=15.dp)
+                .padding(top = 15.dp)
                 .height(50.dp),
             onClick = {signInWithGoogle() }
         ){
@@ -104,4 +108,47 @@ fun SignInScreen(
     }
 }
 
+
+@Composable
+fun LogoTextBox() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .height(270.dp)
+            .fillMaxWidth()
+            .background(SecondaryColor),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.food_village_logo_1),
+            contentDescription = "logo",
+            modifier = Modifier
+                .size(180.dp),
+        )
+        Image(
+            painter = painterResource(id = R.drawable.logo_text),
+            contentDescription = "logoText",
+            modifier = Modifier
+                .size(250.dp),
+        )
+//        val RobotoSlab = FontFamily(
+//            Font(R.font.robotoslab_semibold),
+//        )
+//
+//        Text(
+//            text = "Food Village",
+//            color = Color.White,
+//            fontSize = 35.sp,
+//            fontFamily = RobotoSlab,
+//            textAlign = TextAlign.Center,
+//        )
+//        Text(
+//            text = "Donate & Wasteless",
+//            color = Color.White,
+//            fontSize = 20.sp,
+//            fontFamily = RobotoSlab,
+//            textAlign = TextAlign.Center,
+//        )
+    }
+}
 
