@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
@@ -22,25 +23,32 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.repositories.PostsRepository
-import com.example.foodvillage2205.model.responses.OnError
-import com.example.foodvillage2205.model.responses.OnSuccess
+import com.example.foodvillage2205.model.entities.User
+import com.example.foodvillage2205.model.repositories.PostRepository
+import com.example.foodvillage2205.model.repositories.UserRepository
+import com.example.foodvillage2205.model.responses.PostsResponseError
+import com.example.foodvillage2205.model.responses.PostsResponseSuccess
 import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
+import com.example.foodvillage2205.viewmodels.UserViewModelFactory
+import com.example.foodvillage2205.viewmodels.UserViewModel
 import kotlinx.coroutines.flow.asStateFlow
 
 @ExperimentalAnimationApi
 @Composable
 fun TestScreen() {
+    val userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
+    userVM.getUserById(id="sM6tFMM1xEbxpfrlBlwh")
+
     PostList()
 }
 
 @ExperimentalAnimationApi
 @Composable
 fun PostList(
-    postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostsRepository()))
+    postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -53,11 +61,11 @@ fun PostList(
             postsViewModel.postsStateFlow.asStateFlow().collectAsState()
                 .value) {
 
-            is OnError -> {
+            is PostsResponseError -> {
                 Text(text = "Please try after sometime")
             }
 
-            is OnSuccess -> {
+            is PostsResponseSuccess -> {
                 val listOfPosts = postsListResponse.posts
 
                 listOfPosts?.let {
@@ -95,7 +103,7 @@ fun PostList(
 
 @Composable
 fun createPost(postsViewModel: PostsViewModel) {
-    var name by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
 
@@ -114,9 +122,9 @@ fun createPost(postsViewModel: PostsViewModel) {
         )
 
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") }
+            value = title,
+            onValueChange = { title = it },
+            label = { Text("Title") }
         )
         OutlinedTextField(
             value = description,
@@ -133,13 +141,13 @@ fun createPost(postsViewModel: PostsViewModel) {
             onClick = {
                 postsViewModel.createPost(
                     Post(
-                        name = name,
+                        title = title,
                         description = description,
-                        image = imageUrl
+                        imageUrl = imageUrl
                     )
                 )
 
-                name = ""
+                title = ""
                 description = ""
                 imageUrl = ""
             },
@@ -164,10 +172,10 @@ fun PostDetails(post: Post, postsViewModel: PostsViewModel) {
         showPostDescription = showPostDescription.not()
     }) {
         Row(modifier = Modifier.padding(12.dp)) {
-            post.image?.let {
+            post.imageUrl?.let {
                 Image(
                     painter = rememberImagePainter(
-                        data = post.image,
+                        data = post.imageUrl,
                     ),
                     contentDescription = "Post thumbnail",
                     contentScale = ContentScale.Fit,
@@ -183,7 +191,7 @@ fun PostDetails(post: Post, postsViewModel: PostsViewModel) {
                     )
                 )
                 Text(
-                    text = post.name, style = TextStyle(
+                    text = post.title, style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
