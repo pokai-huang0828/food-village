@@ -1,11 +1,9 @@
 package com.example.foodvillage2205.view.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -19,12 +17,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.util.ReadMoreModifier
+import com.example.foodvillage2205.view.theme.FourthColor
+import com.example.foodvillage2205.view.theme.PrimaryColor
+import com.example.foodvillage2205.view.theme.SecondaryColor
+import com.example.foodvillage2205.view.theme.ThirdColor
 
 @Composable
 fun MainScreen(navController: NavController, signOut: () -> Unit) {
@@ -33,11 +37,10 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 TopBar(signOut = signOut)
-                SearchRow()
+                SearchBar()
                 Spacer(modifier = Modifier.heightIn(20.dp))
                 FoodItem(
                     image = painterResource(id = R.drawable.rice_snacks),
@@ -61,13 +64,26 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
                 onClick = {
 
                 },
-                backgroundColor = Color.Gray,
-                contentColor = Color.White
+                backgroundColor = SecondaryColor,
+                contentColor = Color.White,
+                modifier = Modifier.size(79.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "FAB"
-                )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "FAB"
+                    )
+                    Text(
+                        text = "Donate",
+                        fontSize = 18.sp,
+                        fontFamily = RobotoSlab
+                    )
+                }
+
             }
         }
 
@@ -81,32 +97,72 @@ fun TopBar(
 ) {
     Row(
         modifier = Modifier
+            .background(SecondaryColor)
             .fillMaxWidth()
-            .padding(end = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .height(60.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "logo"
+            painter = painterResource(id = R.drawable.food_village_logo_1),
+            contentDescription = "logo",
+            alignment = Alignment.CenterStart,
+            modifier = Modifier
+                .size(79.dp)
+                .padding(2.dp)
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.logo_text),
+            contentDescription = "logo",
+            alignment = Alignment.Center,
+            modifier = Modifier
+                .size(190.dp)
+                .padding(2.dp)
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .background(SecondaryColor)
+                .height(60.dp)
+                .padding(2.dp),
             horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = "Account",
-                tint = Color.DarkGray,
+                tint = ThirdColor,
                 modifier = Modifier.size(47.dp)
             )
-            Spacer(modifier = Modifier.width(10.dp))
+
+            Spacer(modifier = modifier.padding(5.dp))
+            
             Icon(
                 imageVector = Icons.Filled.Logout,
                 contentDescription = "Messages",
-                tint = Color.DarkGray,
-                modifier = Modifier.size(47.dp).clickable { signOut() }
+                tint = ThirdColor,
+                modifier = Modifier
+                    .size(47.dp)
+                    .clickable { signOut() }
             )
+        }
+    }
+}
+
+@Composable
+fun SearchBar() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.White,
+        elevation = 5.dp,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(8.dp)
+        ) {
+
+
         }
     }
 }
