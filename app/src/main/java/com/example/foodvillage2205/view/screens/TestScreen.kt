@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.foodvillage2205.model.entities.Post
@@ -28,22 +29,63 @@ import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.PostsResponseError
 import com.example.foodvillage2205.model.responses.PostsResponseSuccess
+import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.model.responses.UsersResponseSuccess
 import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.example.foodvillage2205.viewmodels.UserViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @ExperimentalAnimationApi
 @Composable
-fun TestScreen() {
-    val userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
-    userVM.getUserById(id="sM6tFMM1xEbxpfrlBlwh")
+fun TestScreen(
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
+    postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
+) {
+    // Method 1
+    var name = produceState(initialValue = "") {
+        val resource = postVM.getPostById("D94uOoNScTPwF6oPlJV0")
 
-    PostList()
+        value = if (resource is Resource.Success<*>) {
+            (resource.data as Post).title
+        } else {
+            resource?.message.let {
+                resource.message as String
+            }
+        }
+    }
+
+    // Method 2
+//    var name by remember { mutableStateOf("") }
+//    val coroutineScope = rememberCoroutineScope()
+//    val getName: () -> Unit = {
+//        coroutineScope.launch(Dispatchers.IO) {
+//            postVM.getPostById("D94uOoNScTPwF6oPlJV0")?.title?.let {
+//                name = it
+//            }
+//        }
+//    }
+//    getName()
+
+//    if (name.isNotEmpty()) {
+    Text(
+        text = "Hello, ${name.value}!",
+        modifier = Modifier.padding(bottom = 8.dp),
+        style = MaterialTheme.typography.h5
+    )
+//    }
+
+//    PostList()
 }
+
 
 @ExperimentalAnimationApi
 @Composable
@@ -58,8 +100,7 @@ fun PostList(
         createPost(postsViewModel = postsViewModel)
 
         when (val postsListResponse =
-            postsViewModel.postsStateFlow.asStateFlow().collectAsState()
-                .value) {
+            postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
 
             is PostsResponseError -> {
                 Text(text = "Please try after sometime")

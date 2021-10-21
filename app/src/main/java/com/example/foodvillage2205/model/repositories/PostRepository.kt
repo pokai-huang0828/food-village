@@ -2,9 +2,10 @@ package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.responses.PostsResponseError
 import com.example.foodvillage2205.model.responses.PostsResponseSuccess
+import com.example.foodvillage2205.model.responses.Resource
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -39,26 +40,16 @@ class PostRepository {
         }
     }
 
-    suspend fun getPostById(id: String): Post? {
-        var result: Post? = null;
-
-        _collection
+    suspend fun getPostById(id: String): Resource<Any?> {
+        val response = _collection
             .document(id)
             .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+            .await()
 
-                    result = mapDataToPost(document)
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }.await()
+        if (response.exists())
+            return Resource.Success(response.toObject(Post::class.java))
 
-        return result;
+        return Resource.Error("Could not find the post with the given Id.")
     }
 
     fun createPost(post: Post) {

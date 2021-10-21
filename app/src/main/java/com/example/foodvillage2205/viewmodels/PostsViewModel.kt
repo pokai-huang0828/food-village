@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.PostsResponse
+import com.google.android.gms.common.api.Response
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class PostsViewModel(val postRepository: PostRepository) : ViewModel() {
+class PostsViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     val postsStateFlow = MutableStateFlow<PostsResponse?>(null)
 
@@ -22,17 +24,19 @@ class PostsViewModel(val postRepository: PostRepository) : ViewModel() {
         }
     }
 
-    fun getPosts() = postRepository.getPosts()
+    suspend fun getPostById(id: String) = postRepository.getPostById(id)
 
-    fun getPostById(id: String) = viewModelScope.launch {
-        postRepository.getPostById(id)
+    fun createPost(post: Post) = viewModelScope.launch {
+        postRepository.createPost(post)
     }
 
-    fun createPost(post: Post) = postRepository.createPost(post)
+    fun updatePost(post: Post) = viewModelScope.launch {
+        postRepository.updatePost(post)
+    }
 
-    fun updatePost(post: Post) = postRepository.updatePost(post)
-
-    fun deletePost(post: Post) = postRepository.deletePost(post)
+    fun deletePost(post: Post) = viewModelScope.launch {
+        postRepository.deletePost(post)
+    }
 
 }
 

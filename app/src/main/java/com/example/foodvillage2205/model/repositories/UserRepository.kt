@@ -1,7 +1,9 @@
 package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
+import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
+import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.model.responses.UsersResponseError
 import com.example.foodvillage2205.model.responses.UsersResponseSuccess
 import com.google.firebase.firestore.DocumentSnapshot
@@ -38,36 +40,27 @@ class UserRepository {
         }
     }
 
-    suspend fun getUserById(id: String): User? {
-        var result: User? = null;
-
-        _collection
+    suspend fun getUserById(id: String): Resource<Any?> {
+        val response = _collection
             .document(id)
             .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+            .await()
 
-                    result = mapDataToUser(document)
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }.await()
+        if (response.exists())
+            return Resource.Success(response.toObject(User::class.java))
 
-        return result
+        return Resource.Error("Could not find the user with the given Id.")
     }
 
-    fun createUser(user: User) : String? {
-        var userId : String? = null
 
-        _collection.add(mapUserToData(user))
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+    fun createUser(user: User): String? {
+        var userId: String? = null
 
-                userId = documentReference.id
+        _collection.document(user.id).set(mapUserToData(user))
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot written with ID: ${user.id}")
+
+                userId = user.id
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
@@ -83,8 +76,7 @@ class UserRepository {
     }
 
     fun deleteUser(user: User) {
-        _collection.document(user.id)
-            .delete()
+        _collection.document(user.id).delete()
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
     }
