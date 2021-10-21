@@ -8,3 +8,4 @@ val ThirdColor = Color(255, 204, 41)
 val FourthColor = Color(245, 134, 52)
 
 val White = Color(0xFFF7F7F7)
+val WhiteLight = Color(0xFFFFFFFF)

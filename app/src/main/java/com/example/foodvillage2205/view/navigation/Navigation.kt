@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.foodvillage2205.view.screens.MainScreen
+import com.example.foodvillage2205.view.screens.ProfileScreen
 import com.example.foodvillage2205.view.screens.SignUpScreen
 import com.example.foodvillage2205.view.screens.TestScreen
 
@@ -20,6 +21,10 @@ fun Navigation(signOut: () -> Unit) {
     ) {
         composable(route = Route.MainScreen.route) {
             MainScreen(navController = navController, signOut = signOut)
+        }
+
+        composable(route = Route.ProfileScreen.route) {
+            ProfileScreen(navController = navController)
         }
     }
 }

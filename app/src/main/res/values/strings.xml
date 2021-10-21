@@ -6,4 +6,13 @@
     <string name="sign_in_screen">SignInScreen</string>
     <string name="sign_up_screen">SignUpScreen</string>
     <string name="test_screen">SignUpScreen</string>
+    <string name="profile_screen">ProfileScreen</string>
+    <!--profile page-->
+    <string name="Profile_title">Profile</string>
+    <string name="Donator_name">Donator Name</string>
+    <string name="Email">Contact Email</string>
+    <string name="Phone">Contact Phone</string>
+    <string name="Password">Password</string>
+    <string name="Update">Update</string>
+    <string name="History">View Donate History</string>
 </resources>

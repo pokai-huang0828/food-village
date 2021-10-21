@@ -9,6 +9,7 @@ sealed class Route(val route: String, @StringRes val resourceID: Int) {
     object GoogleScreen : Route("googleScreen", R.string.google_screen)
     object MainScreen : Route("mainScreen", R.string.main_screen)
     object TestScreen : Route("testScreen", R.string.test_screen)
+    object ProfileScreen : Route("profileScreen", R.string.profile_screen)
 
     object SignInScreen : Route("signInScreen", R.string.sign_in_screen)
     object SignUpScreen : Route("signUpScreen", R.string.sign_up_screen)

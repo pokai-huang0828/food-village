@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.ThirdColor
@@ -33,7 +34,7 @@ import com.example.foodvillage2205.view.theme.ThirdColor
 @Composable
 fun MainScreen(navController: NavController, signOut: () -> Unit) {
     Scaffold(
-        topBar = { TopBar(signOut = signOut) },
+        topBar = { TopBar(navController, signOut = signOut) },
         content = {
             FoodList(navController)
         },
@@ -69,6 +70,7 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
 
 @Composable
 fun TopBar(
+    navController: NavController,
     modifier: Modifier = Modifier,
     signOut: () -> Unit
 ) {
@@ -113,7 +115,7 @@ fun TopBar(
                     tint = ThirdColor,
                     modifier = Modifier
                         .size(47.dp)
-                        .clickable {  }
+                        .clickable {navController.navigate(Route.ProfileScreen.route) }
                 )
 
                 Spacer(modifier = modifier.padding(5.dp))
