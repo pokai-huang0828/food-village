@@ -5,10 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.foodvillage2205.view.screens.MainScreen
-import com.example.foodvillage2205.view.screens.ProfileScreen
-import com.example.foodvillage2205.view.screens.SignUpScreen
-import com.example.foodvillage2205.view.screens.TestScreen
+import com.example.foodvillage2205.view.screens.*
 
 @ExperimentalAnimationApi
 @Composable
@@ -25,6 +22,10 @@ fun Navigation(signOut: () -> Unit) {
 
         composable(route = Route.ProfileScreen.route) {
             ProfileScreen(navController = navController)
+        }
+
+        composable(route = Route.DonateScreen.route) {
+            DonateScreen(navController = navController)
         }
     }
 }
