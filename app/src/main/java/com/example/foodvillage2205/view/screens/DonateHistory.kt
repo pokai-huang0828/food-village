@@ -46,33 +46,39 @@ fun DonateHistory(navController: NavController) {
 fun NavBar(
     navController: NavController,
     modifier: Modifier = Modifier) {
+    Column() {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
                 .height(60.dp)
                 .padding(vertical = 3.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {navController.navigate(Route.MainScreen.route)},
+            IconButton(
+                onClick = { navController.navigate(Route.MainScreen.route) },
                 modifier = Modifier
                     .size(80.dp)
-                    .align(Alignment.CenterVertically)) {
-                Image(painterResource(R.drawable.food_village_logo_1), "")
+                    .align(Alignment.CenterVertically)
+            ) {
+                Image(painterResource(R.drawable.food_village_logo_1), "logo")
             }
 
             Text(
-                text= "Donations",
+                text = "Donations",
                 color = White,
                 fontSize = 30.sp,
                 fontFamily = RobotoSlab,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
-            }
+
+            Spacer(modifier = Modifier.size(90.dp))
+        }
 
         SearchBox()
+    }
 }
 
 @Composable
@@ -139,6 +145,13 @@ fun ItemList(navController: NavController) {
             navController = navController,
             date = "Date: ",
             itemDate = "05-09-2021"
+        )
+        Item(
+            image = painterResource(id = R.drawable.donuts),
+            header = "Donuts",
+            navController = navController,
+            date = "Date: ",
+            itemDate = "25-08-2021"
         )
     }
 }
