@@ -17,11 +17,11 @@ fun Navigation(signOut: () -> Unit) {
         startDestination = Route.MainScreen.route
     ) {
         composable(route = Route.MainScreen.route) {
-            MainScreen(navController = navController, signOut = signOut)
+            MainScreen(navController = navController)
         }
 
         composable(route = Route.ProfileScreen.route) {
-            ProfileScreen(navController = navController)
+            ProfileScreen(navController = navController, signOut = signOut)
         }
 
         composable(route = Route.DonateScreen.route) {

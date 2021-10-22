@@ -2,6 +2,7 @@ package com.example.foodvillage2205.view.screens
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -27,14 +29,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
-import com.example.foodvillage2205.view.theme.PrimaryColor
-import com.example.foodvillage2205.view.theme.SecondaryColor
-import com.example.foodvillage2205.view.theme.ThirdColor
+import com.example.foodvillage2205.view.theme.*
 
 @Composable
-fun MainScreen(navController: NavController, signOut: () -> Unit) {
+fun MainScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController, signOut = signOut) },
+        topBar = { TopBar(navController) },
         content = {
             FoodList(navController)
         },
@@ -61,6 +61,7 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
                     Text(
                         text = "Donate",
                         fontSize = 18.sp,
+                        fontFamily = RobotoSlab,
                     )
                 }
             }
@@ -72,33 +73,26 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
 fun TopBar(
     navController: NavController,
     modifier: Modifier = Modifier,
-    signOut: () -> Unit
 ) {
     Column() {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
-                .height(60.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .height(60.dp)
+                .padding(vertical = 3.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.food_village_logo_1),
-                contentDescription = "logo",
-                alignment = Alignment.CenterStart,
+            Text(
+                text = "Food Village",
+                color = White,
+                fontFamily = RobotoSlab,
+                fontSize = 30.sp,
                 modifier = Modifier
-                    .size(80.dp)
-                    .padding(3.dp)
-            )
+                    .padding(5.dp)
+                    .padding(start = 5.dp)
 
-            Image(
-                painter = painterResource(id = R.drawable.logo_text),
-                contentDescription = "logo",
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .size(190.dp)
-                    .padding(2.dp)
             )
 
             Row(
@@ -109,25 +103,22 @@ fun TopBar(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Account",
-                    tint = ThirdColor,
+                IconButton(
+                    onClick = { navController.navigate(Route.ProfileScreen.route) },
                     modifier = Modifier
-                        .size(47.dp)
-                        .clickable {navController.navigate(Route.ProfileScreen.route) }
-                )
-
-                Spacer(modifier = modifier.padding(5.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Messages",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable { signOut() }
-                )
+                        .padding(5.dp)
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(PrimaryColor)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AccountCircle,
+                        contentDescription = "Account",
+                        tint = White,
+                        modifier = Modifier
+                            .size(30.dp)
+                    )
+                }
             }
         }
         SearchBar()
@@ -139,8 +130,9 @@ fun SearchBar() {
     var searchText by remember { mutableStateOf("") }
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
-        color = Color.White,
+            .fillMaxWidth()
+            ,
+        color = Gray,
     ) {
         Row(
             modifier = Modifier
@@ -182,7 +174,7 @@ fun SearchBar() {
 fun FoodList(navController: NavController) {
     Column(
         modifier = Modifier
-            .padding(10.dp)
+            .background(Gray)
             .verticalScroll(rememberScrollState())
     ) {
         FoodItem(
@@ -211,51 +203,59 @@ fun FoodItem(
     itemDescription: String,
     navController: NavController
 ) {
-    Column(
+    Card(
         modifier = Modifier
+            .height(200.dp)
             .fillMaxWidth()
             .padding(10.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Image(
-            painter = image,
-            contentDescription = header,
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(160.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-        Text(
-            text = "$header:",
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
-            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
-            color = PrimaryColor,
-        )
-        Text(
-            text = itemDescription,
-            fontWeight = FontWeight.Normal,
-            fontSize = 17.sp,
-        )
+        shape = Shapes.medium,
+        backgroundColor = White,
+        elevation = 2.dp,
 
-        Button(
-            onClick = { navController.navigate(Route.DetailScreen.route) },
-            colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
-            modifier = Modifier
-                .padding(top = 15.dp)
-                .width(120.dp)
-                .height(35.dp),
-        ) {
-            Text(
-                fontFamily = RobotoSlab,
-                color = Color.White,
-                text = "Read More",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W900,
+    ) {
+        Column() {
+            Image(
+                painter = image,
+                contentDescription = header,
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(50.dp)
+                    .clip(RoundedCornerShape(15.dp)),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
             )
+            Text(
+                text = "$header:",
+                fontWeight = FontWeight.Bold,
+                fontFamily = RobotoSlab,
+                fontSize = 22.sp,
+                modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+                color = PrimaryColor,
+
+            )
+            Text(
+                text = itemDescription,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+            )
+
+//        Button(
+//            onClick = { navController.navigate(Route.DetailScreen.route) },
+//            colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
+//            modifier = Modifier
+//                .padding(top = 15.dp)
+//                .width(120.dp)
+//                .height(25.dp),
+//        ) {
+//            Text(
+//                fontFamily = RobotoSlab,
+//                color = Color.White,
+//                text = "Read More",
+//                fontSize = 14.sp,
+//                fontWeight = FontWeight.W900,
+//            )
+//        }
         }
+
     }
 }
