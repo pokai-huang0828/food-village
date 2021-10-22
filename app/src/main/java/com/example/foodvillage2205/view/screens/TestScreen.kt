@@ -1,6 +1,5 @@
 package com.example.foodvillage2205.view.screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
@@ -20,29 +19,24 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
-import com.example.foodvillage2205.model.responses.PostsResponseError
-import com.example.foodvillage2205.model.responses.PostsResponseSuccess
 import com.example.foodvillage2205.model.responses.Resource
-import com.example.foodvillage2205.model.responses.UsersResponseSuccess
+import com.example.foodvillage2205.view.composables.CameraCapture
+import com.example.foodvillage2205.view.composables.CameraPreview
+import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.example.foodvillage2205.viewmodels.UserViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @ExperimentalAnimationApi
 @Composable
@@ -50,7 +44,7 @@ fun TestScreen(
     userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
     postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
 ) {
-    // Method 1
+    // getPostById Example
     var name = produceState(initialValue = "") {
         val resource = postVM.getPostById("D94uOoNScTPwF6oPlJV0")
 
@@ -63,27 +57,13 @@ fun TestScreen(
         }
     }
 
-    // Method 2
-//    var name by remember { mutableStateOf("") }
-//    val coroutineScope = rememberCoroutineScope()
-//    val getName: () -> Unit = {
-//        coroutineScope.launch(Dispatchers.IO) {
-//            postVM.getPostById("D94uOoNScTPwF6oPlJV0")?.title?.let {
-//                name = it
-//            }
-//        }
-//    }
-//    getName()
-
-//    if (name.isNotEmpty()) {
     Text(
         text = "Hello, ${name.value}!",
         modifier = Modifier.padding(bottom = 8.dp),
         style = MaterialTheme.typography.h5
     )
-//    }
 
-//    PostList()
+    PostList()
 }
 
 
@@ -99,15 +79,16 @@ fun PostList(
     ) {
         createPost(postsViewModel = postsViewModel)
 
+        // Example of get real time posts from firestore
         when (val postsListResponse =
             postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
 
-            is PostsResponseError -> {
+            is Resource.Error<*> -> {
                 Text(text = "Please try after sometime")
             }
 
-            is PostsResponseSuccess -> {
-                val listOfPosts = postsListResponse.posts
+            is Resource.Success<*> -> {
+                val listOfPosts = postsListResponse.data as List<Post>
 
                 listOfPosts?.let {
                     Column(

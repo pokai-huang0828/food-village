@@ -2,12 +2,10 @@ package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.responses.PostsResponseError
-import com.example.foodvillage2205.model.responses.PostsResponseSuccess
 import com.example.foodvillage2205.model.responses.Resource
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -17,7 +15,9 @@ class PostRepository {
     private val TAG = "Debug"
 
     fun getPosts() = callbackFlow {
-        val snapshotListener = _collection.addSnapshotListener { snapshot, error ->
+        val snapshotListener = _collection
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
             val response = if (error == null) {
                 val posts = mutableListOf<Post>()
 
@@ -26,10 +26,10 @@ class PostRepository {
                         mapDataToPost(it)
                     }
 
-                    PostsResponseSuccess(posts)
+                    Resource.Success(posts)
                 }
             } else {
-                PostsResponseError(error)
+                Resource.Error("Failed to load posts", error)
             }
 
             offer(response)

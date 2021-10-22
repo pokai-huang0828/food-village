@@ -106,13 +106,12 @@ class Auth(var context: Activity, default_web_client_id: String) {
             .addOnCompleteListener(context) { task ->
                 if (task.isSuccessful) {
                     val userRepo = UserRepository()
-
-                    // Sign in success, update UI
                     currentUser = _auth.currentUser
+
+                    // add new user to firestore
                     userRepo.createUser(User(email = email, id = _auth.currentUser?.uid!!))
 
-                    Log.d("user", currentUser.toString())
-
+                    // Sign in success, update UI
                     recreate(context)
                 } else {
                     // If sign in fails, display a message to the user.

@@ -1,11 +1,8 @@
 package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
-import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.responses.Resource
-import com.example.foodvillage2205.model.responses.UsersResponseError
-import com.example.foodvillage2205.model.responses.UsersResponseSuccess
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -26,10 +23,10 @@ class UserRepository {
                         mapDataToUser(it)
                     }
 
-                    UsersResponseSuccess(users)
+                    Resource.Success(users)
                 }
             } else {
-                UsersResponseError(error)
+                Resource.Error("Failed to load users", error)
             }
 
             offer(response)
@@ -51,7 +48,6 @@ class UserRepository {
 
         return Resource.Error("Could not find the user with the given Id.")
     }
-
 
     fun createUser(user: User): String? {
         var userId: String? = null

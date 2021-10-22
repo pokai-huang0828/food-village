@@ -5,16 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.PostRepository
-import com.example.foodvillage2205.model.responses.PostsResponse
-import com.google.android.gms.common.api.Response
-import kotlinx.coroutines.Dispatchers
+import com.example.foodvillage2205.model.responses.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PostsViewModel(private val postRepository: PostRepository) : ViewModel() {
 
-    val postsStateFlow = MutableStateFlow<PostsResponse?>(null)
+    val postsStateFlow = MutableStateFlow<Resource<*>?>(null)
 
     init {
         viewModelScope.launch {

@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.UserRepository
-import com.example.foodvillage2205.model.responses.UsersResponse
+import com.example.foodvillage2205.model.responses.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class UserViewModel(val userRepository: UserRepository) : ViewModel() {
-    val userStateFlow = MutableStateFlow<UsersResponse?>(null)
+    val userStateFlow = MutableStateFlow<Resource<*>?>(null)
 
     init {
         viewModelScope.launch {
