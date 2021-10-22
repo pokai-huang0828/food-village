@@ -7,7 +7,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -18,10 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,112 +31,58 @@ import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.ThirdColor
+import com.example.foodvillage2205.view.theme.White
+
 
 @Composable
-fun MainScreen(navController: NavController, signOut: () -> Unit) {
+fun DonateHistory(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController, signOut = signOut) },
-        content = {
-            FoodList(navController)
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Route.DonateScreen.route)
-                },
-                backgroundColor = SecondaryColor,
-                contentColor = Color.White,
-                modifier = Modifier.size(85.dp),
-
-                ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "FAB",
-                        modifier = Modifier.size(39.dp)
-                    )
-                    Text(
-                        text = "Donate",
-                        fontSize = 18.sp,
-                    )
-                }
-            }
-        }
+        topBar = { NavBar(navController) },
+        content = { ItemList(navController)}
     )
 }
 
 @Composable
-fun TopBar(
+fun NavBar(
     navController: NavController,
-    modifier: Modifier = Modifier,
-    signOut: () -> Unit
-) {
+    modifier: Modifier = Modifier) {
     Column() {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
-                .height(60.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .height(60.dp)
+                .padding(vertical = 3.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.food_village_logo_1),
-                contentDescription = "logo",
-                alignment = Alignment.CenterStart,
+            IconButton(
+                onClick = { navController.navigate(Route.MainScreen.route) },
                 modifier = Modifier
                     .size(80.dp)
-                    .padding(3.dp)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.logo_text),
-                contentDescription = "logo",
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .size(190.dp)
-                    .padding(2.dp)
-            )
-
-            Row(
-                modifier = Modifier
-                    .background(SecondaryColor)
-                    .height(60.dp)
-                    .padding(2.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
+                    .align(Alignment.CenterVertically)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Account",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable {navController.navigate(Route.ProfileScreen.route) }
-                )
-
-                Spacer(modifier = modifier.padding(5.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Messages",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable { signOut() }
-                )
+                Image(painterResource(R.drawable.food_village_logo_1), "logo")
             }
+
+            Text(
+                text = "Donations",
+                color = White,
+                fontSize = 30.sp,
+                fontFamily = RobotoSlab,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.size(90.dp))
         }
-        SearchBar()
+
+        SearchBox()
     }
 }
 
 @Composable
-fun SearchBar() {
+fun SearchBox() {
     var searchText by remember { mutableStateOf("") }
     Surface(
         modifier = Modifier
@@ -179,36 +126,43 @@ fun SearchBar() {
 }
 
 @Composable
-fun FoodList(navController: NavController) {
+fun ItemList(navController: NavController) {
     Column(
         modifier = Modifier
             .padding(10.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        FoodItem(
+        Item(
             image = painterResource(id = R.drawable.rice_snacks),
             header = "Rice Snacks",
             navController = navController,
-            itemDescription = "Our Rice Crisps come in a delicious variety of flavours to satisfy your snack cravings any \ntime of day."
+            date = "Date: ",
+            itemDate = "05-10-2021"
         )
-        FoodItem(
+        Item(
             image = painterResource(id = R.drawable.spaghetti),
             header = "Spaghetti",
             navController = navController,
-            itemDescription = "It is the quintessential Italian pasta. It is long \n- like a string " +
-                    "- round in cross-section and made from durum wheat semolina."
+            date = "Date: ",
+            itemDate = "05-09-2021"
         )
-
-        Spacer(modifier = Modifier.padding(bottom = 80.dp))
+        Item(
+            image = painterResource(id = R.drawable.donuts),
+            header = "Donuts",
+            navController = navController,
+            date = "Date: ",
+            itemDate = "25-08-2021"
+        )
     }
 }
 
 @Composable
-fun FoodItem(
+fun Item(
     modifier: Modifier = Modifier,
     image: Painter,
     header: String,
-    itemDescription: String,
+    date: String,
+    itemDate: String,
     navController: NavController
 ) {
     Column(
@@ -227,35 +181,48 @@ fun FoodItem(
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
         )
+
         Text(
-            text = "$header:",
+            text = "$header",
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
         )
-        Text(
-            text = itemDescription,
-            fontWeight = FontWeight.Normal,
-            fontSize = 17.sp,
-        )
 
-        Button(
-            onClick = {  },
-            colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
-            modifier = Modifier
-                .padding(top = 15.dp)
-                .width(120.dp)
-                .height(35.dp),
-        ) {
+        Row {
             Text(
-                fontFamily = RobotoSlab,
-                color = Color.White,
-                text = "Read More",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W900,
+                text = date,
+                fontWeight = FontWeight.Bold,
+                fontSize = 17.sp,
+                color = PrimaryColor,
             )
+            Text(
+                text = itemDate,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+            )
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
+                modifier = Modifier
+                    .fillMaxWidth(0.87f)
+                    .height(34.dp)
+                    .padding(start = 50.dp)
+
+            ) {
+                Text(
+                    fontFamily = RobotoSlab,
+                    color = Color.White,
+                    text = "Details",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W900,
+                )
+            }
         }
+
+
     }
 }
+
