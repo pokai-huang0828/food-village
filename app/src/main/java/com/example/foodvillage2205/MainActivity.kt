@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         auth = Auth(this, getString(R.string.default_web_client_id))
 
         setContent {
-/*            when (auth.currentUser) {
+            when (auth.currentUser) {
                 null -> AuthNavigation(
                     signInWithGoogle = { auth.signInWithGoogle(requestCode = GOOGLE_AUTH) },
                     signUpWithEmailAndPassword = { email, password ->
@@ -39,10 +39,7 @@ class MainActivity : ComponentActivity() {
                 )
                 else ->
                     Navigation(signOut = { auth.signOut(this) })
-            }*/
-
-            // For testing purpose
-            TestScreen()
+            }
         }
     }
 
