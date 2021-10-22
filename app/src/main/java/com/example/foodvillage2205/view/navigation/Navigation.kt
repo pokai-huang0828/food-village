@@ -24,6 +24,10 @@ fun Navigation(signOut: () -> Unit) {
             ProfileScreen(navController = navController)
         }
 
+        composable(route = Route.DonateScreen.route) {
+            DonateScreen(navController = navController)
+        }
+
         composable(route = Route.DonateHistory.route) {
             DonateHistory(navController = navController)
         }

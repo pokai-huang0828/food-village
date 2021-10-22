@@ -41,7 +41,7 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate(Route.DonateScreen.route)
                 },
                 backgroundColor = SecondaryColor,
                 contentColor = Color.White,

@@ -7,6 +7,7 @@
     <string name="sign_up_screen">SignUpScreen</string>
     <string name="test_screen">SignUpScreen</string>
     <string name="profile_screen">ProfileScreen</string>
+    <string name="donate_screen">DonateScreen</string>
     <string name="donate_history">DonateHistory</string>
     <!--profile page-->
     <string name="Profile_title">Profile</string>
@@ -16,4 +17,21 @@
     <string name="Password">Password</string>
     <string name="Update">Update</string>
     <string name="History">View Donate History</string>
+
+    <!--Donate page-->
+    <string name="D_title">Post New Donate</string>
+    <string name="postName">Post Name</string>
+    <string name="foodName">Food Name</string>
+    <string name="details">Details</string>
+    <string name="food_details">Food Details</string>
+    <string name="pickUp_Contact">Pick Up Contact</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="pickUp_Location">Pick Up Location</string>
+    <string name="Street">Street</string>
+    <string name="City">City</string>
+    <string name="Province">Province</string>
+    <string name="Postal">Postal Code</string>
+    <string name="Submit">Submit</string>
+    <string name="AddImage">Add Image</string>
 </resources>
