@@ -35,38 +35,32 @@ import com.example.foodvillage2205.view.theme.White
 
 
 @Composable
-fun DonateHistory(navController: NavController, signOut: () -> Unit) {
+fun DonateHistory(navController: NavController) {
     Scaffold(
-        topBar = { NavBar(navController, signOut = signOut) },
-        content = {
-            ItemList(navController)
-        }
+        topBar = { NavBar(navController) },
+        content = { ItemList(navController)}
     )
 }
 
 @Composable
 fun NavBar(
     navController: NavController,
-    modifier: Modifier = Modifier,
-    signOut: () -> Unit
-) {
-    Column() {
+    modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(60.dp)
+                .padding(vertical = 3.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.food_village_logo_1),
-                contentDescription = "logo",
-                alignment = Alignment.TopStart,
+            IconButton(onClick = {navController.navigate(Route.MainScreen.route)},
                 modifier = Modifier
                     .size(80.dp)
-                    .padding(3.dp)
-            )
+                    .align(Alignment.CenterVertically)) {
+                Image(painterResource(R.drawable.food_village_logo_1), "")
+            }
 
             Text(
                 text= "Donations",
@@ -76,50 +70,9 @@ fun NavBar(
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
-
-            /*
-            Image(
-                painter = painterResource(id = R.drawable.logo_text),
-                contentDescription = "logo",
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .size(190.dp)
-                    .padding(2.dp)
-            )
-            */
-            Row(
-                modifier = Modifier
-                    .background(SecondaryColor)
-                    .height(60.dp)
-                    .padding(2.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Account",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable {navController.navigate(Route.ProfileScreen.route)}
-                )
-
-                Spacer(modifier = modifier.padding(5.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Messages",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable { signOut() }
-                )
             }
 
-
-        }
         SearchBox()
-    }
 }
 
 @Composable
@@ -179,7 +132,6 @@ fun ItemList(navController: NavController) {
             navController = navController,
             date = "Date: ",
             itemDate = "05-10-2021"
-            //itemDescription = "Our Rice Crisps come in a delicious variety of flavours to satisfy your snack cravings any \ntime of day."
         )
         Item(
             image = painterResource(id = R.drawable.spaghetti),
@@ -187,11 +139,7 @@ fun ItemList(navController: NavController) {
             navController = navController,
             date = "Date: ",
             itemDate = "05-09-2021"
-            //itemDescription = "It is the quintessential Italian pasta. It is long \n- like a string " +
-                    //"- round in cross-section and made from durum wheat semolina."
         )
-
-        Spacer(modifier = Modifier.padding(bottom = 80.dp))
     }
 }
 

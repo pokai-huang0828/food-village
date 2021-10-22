@@ -25,7 +25,7 @@ fun Navigation(signOut: () -> Unit) {
         }
 
         composable(route = Route.DonateHistory.route) {
-            DonateHistory(navController = navController, signOut = signOut)
+            DonateHistory(navController = navController)
         }
     }
 }
