@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.example.foodvillage2205.view.navigation.AuthNavigation
 import com.example.foodvillage2205.view.navigation.Navigation
+import com.example.foodvillage2205.view.screens.DetailScreen
+import com.example.foodvillage2205.view.screens.MainScreen
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // For testing purpose
-//            TestScreen()
+//            MainScreen()
         }
     }
 
