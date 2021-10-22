@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.navigation.NavController
 import com.example.foodvillage2205.view.navigation.AuthNavigation
 import com.example.foodvillage2205.view.navigation.Navigation
+import com.example.foodvillage2205.view.screens.DonateHistory
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
@@ -18,6 +20,7 @@ class MainActivity : ComponentActivity() {
         auth = Auth(this, getString(R.string.default_web_client_id))
 
         setContent {
+
             when (auth.currentUser) {
                 null -> AuthNavigation(
                     signInWithGoogle = { auth.signInWithGoogle(requestCode = GOOGLE_AUTH) },
@@ -40,8 +43,10 @@ class MainActivity : ComponentActivity() {
                     Navigation(signOut = { auth.signOut(this) })
             }
 
+
+
             // For testing purpose
-//            TestScreen()
+           //TestScreen()
         }
     }
 

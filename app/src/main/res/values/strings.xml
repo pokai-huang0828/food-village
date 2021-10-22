@@ -7,6 +7,7 @@
     <string name="sign_up_screen">SignUpScreen</string>
     <string name="test_screen">SignUpScreen</string>
     <string name="profile_screen">ProfileScreen</string>
+    <string name="donate_history">DonateHistory</string>
     <!--profile page-->
     <string name="Profile_title">Profile</string>
     <string name="Donator_name">Donator Name</string>

@@ -38,7 +38,7 @@ import com.example.foodvillage2205.view.theme.*
 fun ProfileScreen(navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController)},
-        content = {Form()}
+        content = {Form(navController)}
     )
 }
 
@@ -75,7 +75,7 @@ fun TopBar(navController: NavController) {
 }
 
 @Composable
-fun Form() {
+fun Form(navController: NavController) {
     val name = remember{ mutableStateOf("")}
     val email = remember { mutableStateOf("")}
     val phone = remember{ mutableStateOf("")}
@@ -235,7 +235,7 @@ fun Form() {
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             //view history button
-            Button(onClick = {},
+            Button(onClick = {navController.navigate(Route.DonateHistory.route)},
                 modifier = Modifier
                     .padding(top = 15.dp)
                     .width(200.dp)
