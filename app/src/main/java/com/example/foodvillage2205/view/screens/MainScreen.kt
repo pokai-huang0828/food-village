@@ -242,7 +242,7 @@ fun FoodItem(
         )
 
         Button(
-            onClick = {  },
+            onClick = { navController.navigate(Route.DetailScreen.route) },
             colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
             modifier = Modifier
                 .padding(top = 15.dp)

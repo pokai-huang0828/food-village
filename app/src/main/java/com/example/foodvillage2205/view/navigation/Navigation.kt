@@ -31,5 +31,9 @@ fun Navigation(signOut: () -> Unit) {
         composable(route = Route.DonateHistory.route) {
             DonateHistory(navController = navController)
         }
+
+        composable(route = Route.DetailScreen.route) {
+            DetailScreen(navController = navController)
+        }
     }
 }

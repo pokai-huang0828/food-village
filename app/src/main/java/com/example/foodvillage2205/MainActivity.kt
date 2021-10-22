@@ -1,13 +1,12 @@
 package com.example.foodvillage2205
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import android.content.Intent
 import com.example.foodvillage2205.view.navigation.AuthNavigation
 import com.example.foodvillage2205.view.navigation.Navigation
-import com.example.foodvillage2205.view.screens.TestScreen
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
