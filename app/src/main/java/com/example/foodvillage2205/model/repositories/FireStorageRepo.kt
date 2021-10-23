@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
@@ -64,6 +65,10 @@ class FireStorageRepo() {
         }
 
         return result
+    }
+
+    fun getImage(filename: String) : Task<Uri> {
+        return imageRef.child("images/$filename").downloadUrl
     }
 
     fun deleteImage(context: Context, filename: String) = CoroutineScope(Dispatchers.IO).launch {
