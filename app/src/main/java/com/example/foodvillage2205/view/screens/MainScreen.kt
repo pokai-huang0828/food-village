@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -19,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -40,6 +42,7 @@ import com.example.foodvillage2205.view.theme.*
 @Composable
 fun MainScreen(navController: NavController) {
     Scaffold(
+        modifier = Modifier.background(Gray),
         topBar = { TopBar(navController) },
         content = {
                   FoodListContent(navController)
@@ -82,17 +85,17 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun TopBar(
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
-    Column() {
+fun TopBar(navController: NavController)
+{
+    var visible by remember { mutableStateOf(false) }
+    Column(Modifier.shadow(elevation = 5.dp)) {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
                 .height(60.dp)
-                .padding(vertical = 3.dp),
+                .padding(vertical = 3.dp)
+            ,
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -115,8 +118,9 @@ fun TopBar(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 IconButton(
-                    onClick = { navController.navigate(Route.ProfileScreen.route) },
+                    onClick = { visible = !visible },
                     modifier = Modifier
                         .padding(5.dp)
                         .size(45.dp)
@@ -150,7 +154,9 @@ fun TopBar(
                 }
             }
         }
-        SearchBar()
+        AnimatedVisibility (visible){
+            SearchBar()
+        }
     }
 }
 
@@ -162,6 +168,7 @@ fun SearchBar() {
             .fillMaxWidth()
             ,
         color = Gray,
+        elevation = 5.dp
     ) {
         Row(
             modifier = Modifier
@@ -206,7 +213,9 @@ fun FoodListContent(navController: NavController){
     val foodItems = remember { FakeFoodData.foodList }
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
-        modifier = Modifier.padding(bottom = 20.dp)
+        modifier = Modifier
+            .padding(bottom = 5.dp)
+            .background(Gray)
     ){
         items(
             items = foodItems,

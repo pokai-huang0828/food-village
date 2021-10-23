@@ -26,7 +26,7 @@ fun FoodListItem(listItem: Post, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(horizontal = 4.dp, vertical = 4.dp)
-            .height(200.dp)
+            .height(210.dp)
             .width(100.dp)
             .clickable { navController.navigate(Route.DetailScreen.route) }
         ,
@@ -40,17 +40,17 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 painter = painter,
                 contentDescription = null,
                 modifier = Modifier
-                    .height(130.dp)
+                    .height(125.dp)
                     .fillMaxWidth()
             )
             Text(
                 text = listItem.title,
                 fontWeight = FontWeight.Bold,
                 fontFamily = RobotoSlab,
-                fontSize = 22.sp,
-                modifier = Modifier.padding(top = 5.dp, start = 10.dp),
+                fontSize = 18.sp,
+                modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp),
                 color = PrimaryColor,
-
+                maxLines = 2,
                 )
             Text(
                 text = "VIEW DETAIL",
