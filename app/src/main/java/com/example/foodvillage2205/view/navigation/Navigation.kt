@@ -2,7 +2,7 @@ package com.example.foodvillage2205.view.navigation
 
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,10 +13,13 @@ import com.example.foodvillage2205.view.screens.*
 @Composable
 fun Navigation(auth: Auth) {
     val navController = rememberNavController()
-
-    var startDestination = when (auth.currentUser) {
-        null -> Route.SignInScreen.route
-        else -> Route.MainScreen.route
+    val startDestination by remember {
+        mutableStateOf(
+            when (auth.currentUser) {
+                null -> Route.SignInScreen.route
+                else -> Route.MainScreen.route
+            }
+        )
     }
 
     NavHost(

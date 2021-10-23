@@ -19,10 +19,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Navigation(auth)
-        }
 
         // Just for testing
 //            TestScreen()
+        }
+
     }
 
     @ExperimentalAnimationApi

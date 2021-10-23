@@ -97,7 +97,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
                         }
                     }
 
-                    // Restart the app with visible transition
+                    // Restart the app without transition
                     context.finish()
                     context.startActivity(context.intent)
                     context.overridePendingTransition(0, 0)
@@ -173,7 +173,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
 
     fun signOut(navController: NavController) {
         _auth.signOut()
-        currentUser = _auth.currentUser
+        currentUser = null
 
         navController.navigate(Route.SignInScreen.route)
     }
