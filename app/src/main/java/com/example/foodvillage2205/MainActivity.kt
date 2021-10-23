@@ -5,12 +5,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.foodvillage2205.view.navigation.Navigation
 import com.example.foodvillage2205.view.screens.TestScreen
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
 
+    @ExperimentalFoundationApi
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

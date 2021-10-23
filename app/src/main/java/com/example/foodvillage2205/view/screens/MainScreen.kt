@@ -1,43 +1,52 @@
 package com.example.foodvillage2205.view.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.view.composables.FakeFoodData
+import com.example.foodvillage2205.view.composables.FoodListItem
 import com.example.foodvillage2205.view.navigation.Route
-import com.example.foodvillage2205.view.theme.PrimaryColor
-import com.example.foodvillage2205.view.theme.SecondaryColor
-import com.example.foodvillage2205.view.theme.ThirdColor
+import com.example.foodvillage2205.view.theme.*
 
+@ExperimentalFoundationApi
 @Composable
-fun MainScreen(navController: NavController, auth: Auth) {
+fun MainScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController, auth) },
+        modifier = Modifier.background(Gray),
+        topBar = { TopBar(navController) },
         content = {
-            FoodList(navController)
+            FoodListContent(navController)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -46,22 +55,28 @@ fun MainScreen(navController: NavController, auth: Auth) {
                 },
                 backgroundColor = SecondaryColor,
                 contentColor = Color.White,
-                modifier = Modifier.size(85.dp),
-
-                ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .width(115.dp)
+                    .height(45.dp),
+                elevation = elevation(15.dp),
+                shape = Shapes.large
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(2.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "FAB",
-                        modifier = Modifier.size(39.dp)
+                        modifier = Modifier.size(30.dp)
                     )
                     Text(
                         text = "Donate",
                         fontSize = 18.sp,
+                        fontFamily = RobotoSlab,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 2.dp)
                     )
                 }
             }
@@ -70,36 +85,27 @@ fun MainScreen(navController: NavController, auth: Auth) {
 }
 
 @Composable
-fun TopBar(
-    navController: NavController,
-    auth: Auth,
-    modifier: Modifier = Modifier,
-) {
-    Column() {
+fun TopBar(navController: NavController) {
+    var visible by remember { mutableStateOf(false) }
+    Column(Modifier.shadow(elevation = 5.dp)) {
         Row(
             modifier = Modifier
                 .background(SecondaryColor)
                 .fillMaxWidth()
-                .height(60.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .height(60.dp)
+                .padding(vertical = 3.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.food_village_logo_1),
-                contentDescription = "logo",
-                alignment = Alignment.CenterStart,
+            Text(
+                text = "Food Village",
+                color = White,
+                fontFamily = RobotoSlab,
+                fontSize = 30.sp,
                 modifier = Modifier
-                    .size(80.dp)
-                    .padding(3.dp)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.logo_text),
-                contentDescription = "logo",
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .size(190.dp)
-                    .padding(2.dp)
+                    .padding(5.dp)
+                    .padding(start = 5.dp)
+                    .clickable { }
             )
 
             Row(
@@ -110,28 +116,45 @@ fun TopBar(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Account",
-                    tint = ThirdColor,
-                    modifier = Modifier
-                        .size(47.dp)
-                        .clickable { navController.navigate(Route.ProfileScreen.route) }
-                )
 
-                Spacer(modifier = modifier.padding(5.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Messages",
-                    tint = ThirdColor,
+                IconButton(
+                    onClick = { visible = !visible },
                     modifier = Modifier
-                        .size(47.dp)
-                        .clickable { auth.signOut(navController) }
-                )
+                        .padding(5.dp)
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(PrimaryColor)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search",
+                        tint = White,
+                        modifier = Modifier
+                            .size(30.dp)
+                    )
+                }
+
+                IconButton(
+                    onClick = { navController.navigate(Route.ProfileScreen.route) },
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(PrimaryColor)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.AccountCircle,
+                        contentDescription = "Account",
+                        tint = White,
+                        modifier = Modifier
+                            .size(30.dp)
+                    )
+                }
             }
         }
-        SearchBar()
+        AnimatedVisibility(visible) {
+            SearchBar()
+        }
     }
 }
 
@@ -141,7 +164,8 @@ fun SearchBar() {
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
-        color = Color.White,
+        color = Gray,
+        elevation = 5.dp
     ) {
         Row(
             modifier = Modifier
@@ -161,8 +185,9 @@ fun SearchBar() {
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "email",
+                        contentDescription = "Search",
                         tint = SecondaryColor,
+                        modifier = Modifier.size(30.dp)
                     )
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -179,84 +204,21 @@ fun SearchBar() {
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
-fun FoodList(navController: NavController) {
-    Column(
+fun FoodListContent(navController: NavController) {
+    val foodItems = remember { FakeFoodData.foodList }
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
         modifier = Modifier
-            .padding(10.dp)
-            .verticalScroll(rememberScrollState())
+            .padding(bottom = 5.dp)
+            .background(Gray)
     ) {
-        FoodItem(
-            image = painterResource(id = R.drawable.rice_snacks),
-            header = "Rice Snacks",
-            navController = navController,
-            itemDescription = "Our Rice Crisps come in a delicious variety of flavours to satisfy your snack cravings any \ntime of day."
+        items(
+            items = foodItems,
+            itemContent = {
+                FoodListItem(listItem = it, navController)
+            }
         )
-        FoodItem(
-            image = painterResource(id = R.drawable.spaghetti),
-            header = "Spaghetti",
-            navController = navController,
-            itemDescription = "It is the quintessential Italian pasta. It is long \n- like a string " +
-                    "- round in cross-section and made from durum wheat semolina."
-        )
-
-        Spacer(modifier = Modifier.padding(bottom = 80.dp))
-    }
-}
-
-@Composable
-fun FoodItem(
-    modifier: Modifier = Modifier,
-    image: Painter,
-    header: String,
-    itemDescription: String,
-    navController: NavController
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Image(
-            painter = image,
-            contentDescription = header,
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(160.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-        Text(
-            text = "$header:",
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
-            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
-            color = PrimaryColor,
-        )
-        Text(
-            text = itemDescription,
-            fontWeight = FontWeight.Normal,
-            fontSize = 17.sp,
-        )
-
-        Button(
-            onClick = { navController.navigate(Route.DetailScreen.route) },
-            colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
-            modifier = Modifier
-                .padding(top = 15.dp)
-                .width(120.dp)
-                .height(35.dp),
-        ) {
-            Text(
-                fontFamily = RobotoSlab,
-                color = Color.White,
-                text = "Read More",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W900,
-            )
-        }
     }
 }

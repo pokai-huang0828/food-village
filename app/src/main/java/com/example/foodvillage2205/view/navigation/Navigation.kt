@@ -2,6 +2,7 @@ package com.example.foodvillage2205.view.navigation
 
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.view.screens.*
 
+@ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
 fun Navigation(auth: Auth) {
@@ -24,10 +26,10 @@ fun Navigation(auth: Auth) {
 
     NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = startDestination
     ) {
         composable(route = Route.MainScreen.route) {
-            MainScreen(navController = navController, auth = auth)
+            MainScreen(navController = navController)
         }
 
         composable(route = Route.ProfileScreen.route) {

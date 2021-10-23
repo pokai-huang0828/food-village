@@ -12,24 +12,24 @@
     <string name="detail_screen">DetailScreen</string>
     <!--profile page-->
     <string name="Profile_title">Profile</string>
-    <string name="Donator_name">Donator Name</string>
-    <string name="Email">Contact Email</string>
-    <string name="Phone">Contact Phone</string>
+    <string name="Donator_name">Name</string>
+    <string name="Email">Email</string>
+    <string name="Phone">Phone</string>
     <string name="Password">Password</string>
     <string name="Update">Update</string>
-    <string name="History">View Donate History</string>
+    <string name="History">Donation History</string>
 
     <!--Donate page-->
-    <string name="D_title">Post New Donate</string>
-    <string name="postName">Post Name</string>
+    <string name="D_title">New Donation</string>
+    <string name="postName">Item Name</string>
     <string name="foodName">Food Name</string>
-    <string name="details">Details</string>
+    <string name="details">Item Details</string>
     <string name="food_details">Food Details</string>
     <string name="pickUp_Contact">Pick Up Contact</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="pickUp_Location">Pick Up Location</string>
-    <string name="Street">Street</string>
+    <string name="Street">Street Address</string>
     <string name="City">City</string>
     <string name="Province">Province</string>
     <string name="Postal">Postal Code</string>
