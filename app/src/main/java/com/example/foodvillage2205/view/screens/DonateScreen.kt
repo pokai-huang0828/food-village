@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,30 +29,28 @@ import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.foodvillage2205.model.entities.Post
+import com.example.foodvillage2205.model.repositories.FireStorageRepo
+import com.example.foodvillage2205.model.repositories.PostRepository
+import com.example.foodvillage2205.viewmodels.PostViewModelFactory
+import com.example.foodvillage2205.viewmodels.PostsViewModel
+import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.model.responses.Resource
+import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.launch
 
 @Composable
-fun DonateScreen(navController: NavController) {
+fun DonateScreen(navController: NavController, auth: Auth) {
     Scaffold(
-        topBar = { TopBarDonateScreen(navController)},
-        content = {FormDonateScreen()}
+        topBar = { TopBarDonateScreen(navController) },
+        content = { FormDonateScreen(navController = navController, auth = auth) }
     )
 }
 
@@ -66,18 +63,21 @@ fun TopBarDonateScreen(navController: NavController) {
             .height(60.dp)
             .padding(vertical = 3.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         //Icon button to go back to Main Page
-        IconButton(onClick = {navController.navigate(Route.MainScreen.route)},
+        IconButton(
+            onClick = { navController.navigate(Route.MainScreen.route) },
             modifier = Modifier
                 .size(80.dp)
-                .align(Alignment.CenterVertically)) {
+                .align(Alignment.CenterVertically)
+        ) {
             Image(painterResource(R.drawable.food_village_logo_1), "")
         }
 
         //title
         Text(
-            text= stringResource(R.string.D_title),
+            text = stringResource(R.string.D_title),
             color = White,
             fontSize = 30.sp,
             fontFamily = RobotoSlab,
@@ -90,7 +90,11 @@ fun TopBarDonateScreen(navController: NavController) {
 }
 
 @Composable
-fun FormDonateScreen() {
+fun FormDonateScreen(
+    navController: NavController,
+    auth: Auth,
+    postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
+) {
     val name = remember { mutableStateOf("") }
     val details = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
@@ -104,6 +108,10 @@ fun FormDonateScreen() {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    // Set up for firestorage upload
+    var coroutineScope = rememberCoroutineScope()
+    var fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -149,10 +157,10 @@ fun FormDonateScreen() {
                         )
                     }
                 }
-                )
+                        )
 
                 OutlinedButton(
-                    onClick = {launcher.launch("image/*")},
+                    onClick = { launcher.launch("image/*") },
                     modifier = Modifier
                         .size(20.dp)
                         .offset(y = (3).dp, x = 30.dp),
@@ -256,6 +264,7 @@ fun FormDonateScreen() {
                     unfocusedIndicatorColor = SecondaryColor
                 )
             )
+
             //Phone Number
             TextField(
                 value = phone.value,
@@ -367,7 +376,42 @@ fun FormDonateScreen() {
 
             //Submit Button
             Button(
-                onClick = {},
+                onClick = {
+                    // Check if imageUrl has been set
+                    if (imageUrl !== null) {
+                        val post = Post(
+                            title = name.value,
+                            description = details.value,
+                            email = email.value,
+                            phone = phone.value,
+                            street = street.value,
+                            city = city.value,
+                            province = province.value,
+                            postalCode = postalCode.value,
+                            userId = (auth.currentUser as FirebaseUser).uid,
+                            imageUrl = imageUrl?.lastPathSegment!!
+                        )
+
+                        // upload image to firestorage
+                        coroutineScope.launch {
+                            fireStorageRepo.uploadImageToStorage(
+                                context,
+                                imageUrl!!,
+                                imageUrl!!.lastPathSegment!!
+                            ).join()
+                        }.invokeOnCompletion { fireStorageException ->
+                            // upload post to firestore
+                            if (fireStorageException === null) {
+                                postVM.createPost(post) { resource ->
+                                    // if resource is success, return to Main Screen
+                                    if (resource is Resource.Success) {
+                                        navController.navigate(Route.MainScreen.route)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 modifier = Modifier
                     .padding(top = 15.dp)
                     .width(200.dp)
@@ -386,8 +430,5 @@ fun FormDonateScreen() {
             }
         }
     }
-
-
-
-
 }
+

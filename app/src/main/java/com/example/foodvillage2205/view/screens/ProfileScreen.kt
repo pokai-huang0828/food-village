@@ -1,17 +1,10 @@
 package com.example.foodvillage2205.view.screens
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -135,11 +128,11 @@ fun Form(
 
     // Set up for picking image from gallery
     val context = LocalContext.current
+    var scope = rememberCoroutineScope()
     var fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
     var imageChanged by remember { mutableStateOf(false) }
     var showGallery by remember { mutableStateOf(false) }
-    var scope = rememberCoroutineScope()
 
     // Get User Info from firebase
     produceState(initialValue = false) {
@@ -366,7 +359,7 @@ fun Form(
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                //update button:
+                // update button:
                 // upload image to firestorage if user has provided one
                 // then update user info to firestore
                 Button(
