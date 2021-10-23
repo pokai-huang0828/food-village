@@ -10,9 +10,11 @@ import android.util.Log
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.app.ActivityCompat.recreate
 import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.navigation.NavController
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.view.navigation.Route
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -89,11 +91,16 @@ class Auth(var context: Activity, default_web_client_id: String) {
                                     email = _auth.currentUser?.email!!,
                                     id = _auth.currentUser?.uid!!
                                 )
-                            )
+                            ) {
+                                // check response type here
+                            }
                         }
                     }
 
-                    recreate(context)
+                    // Restart the app with visible transition
+                    context.finish()
+                    context.startActivity(context.intent)
+                    context.overridePendingTransition(0, 0)
                 } else {
                     currentUser = null
                 }
@@ -101,54 +108,74 @@ class Auth(var context: Activity, default_web_client_id: String) {
     }
 
     @ExperimentalAnimationApi
-    fun signUpWithEmailAndPassword(context: Activity, email: String, password: String) {
-        _auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(context) { task ->
-                if (task.isSuccessful) {
-                    val userRepo = UserRepository()
-                    currentUser = _auth.currentUser
+    fun signUpWithEmailAndPassword(
+        navController: NavController,
+        email: String,
+        password: String
+    ) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            _auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(context) { task ->
+                    if (task.isSuccessful) {
+                        currentUser = _auth.currentUser
 
-                    // add new user to firestore
-                    userRepo.createUser(User(email = email, id = _auth.currentUser?.uid!!))
+                        // Save new user to firestore
+                        val userRepo = UserRepository()
+                        userRepo.createUser(
+                            User(
+                                email = _auth.currentUser?.email!!,
+                                id = _auth.currentUser?.uid!!
+                            )
+                        ) {
+                            if (it is Resource.Success) {
+                                // Sign up and Save user successfully, update UI
+                                navController.navigate(Route.MainScreen.route)
+                            }
+                        }
 
-                    // Sign in success, update UI
-                    recreate(context)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(
-                        context,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(
+                            context,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            }
+        }
     }
 
     @ExperimentalAnimationApi
-    fun signInWithEmailAndPassword(context: Activity, email: String, password: String) {
-        _auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(context) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI
-                    currentUser = _auth.currentUser
+    fun signInWithEmailAndPassword(
+        navController: NavController,
+        email: String,
+        password: String
+    ) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            _auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(context) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI
+                        currentUser = _auth.currentUser
 
-                    recreate(context)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(
-                        context,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        navController.navigate(Route.MainScreen.route)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(
+                            context,
+                            "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            }
+        }
     }
 
-    fun signOut(context: Activity) {
+    fun signOut(navController: NavController) {
         _auth.signOut()
         currentUser = _auth.currentUser
 
-        recreate(context)
+        navController.navigate(Route.SignInScreen.route)
     }
 }
 

@@ -18,22 +18,22 @@ class PostRepository {
         val snapshotListener = _collection
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
-            val response = if (error == null) {
-                val posts = mutableListOf<Post>()
+                val response = if (error == null) {
+                    val posts = mutableListOf<Post>()
 
-                snapshot?.let { snapshot ->
-                    snapshot.documents.mapTo(posts) {
-                        mapDataToPost(it)
+                    snapshot?.let { snapshot ->
+                        snapshot.documents.mapTo(posts) {
+                            mapDataToPost(it)
+                        }
+
+                        Resource.Success(posts)
                     }
-
-                    Resource.Success(posts)
+                } else {
+                    Resource.Error("Failed to load posts", error)
                 }
-            } else {
-                Resource.Error("Failed to load posts", error)
-            }
 
-            offer(response)
-        }
+                offer(response)
+            }
 
         awaitClose {
             snapshotListener.remove()
@@ -52,27 +52,47 @@ class PostRepository {
         return Resource.Error("Could not find the post with the given Id.")
     }
 
-    fun createPost(post: Post) {
+    fun createPost(post: Post, onResponse: (Resource<*>) -> Unit) {
         _collection.add(mapPostToData(post))
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+
+                onResponse(Resource.Success(documentReference.id))
             }
             .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
+                Log.w(TAG, "Error adding post", e)
+
+                onResponse(Resource.Error("Error adding post", e))
             }
     }
 
-    fun updatePost(post: Post) {
+    fun updatePost(post: Post, onResponse: (Resource<*>) -> Unit) {
         _collection.document(post.id).set(mapPostToData(post))
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully updated!")
+
+                onResponse(Resource.Success(post.id))
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error updating post", e)
+
+                onResponse(Resource.Error("Error updating post", e))
+            }
     }
 
-    fun deletePost(post: Post) {
+    fun deletePost(post: Post, onResponse: (Resource<*>) -> Unit) {
         _collection.document(post.id)
             .delete()
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+
+                onResponse(Resource.Success(post.id))
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error deleting document", e)
+
+                onResponse(Resource.Error("Error deleting post", e))
+            }
     }
 
     private fun mapPostToData(post: Post): HashMap<String, Any?> {

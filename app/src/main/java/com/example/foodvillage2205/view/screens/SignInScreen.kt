@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.MainActivity
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
@@ -35,18 +38,17 @@ import com.example.foodvillage2205.view.theme.ThirdColor
 
 val RobotoSlab = FontFamily(Font(R.font.robotoslab_semibold))
 
+@ExperimentalAnimationApi
 @Composable
 fun SignInScreen(
     navController: NavController,
-    signInWithEmailAndPassword: (email: String, password: String) -> Unit,
-    signInWithGoogle: () -> Unit,
-    ) {
+    auth: Auth
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
 
     LogoTextBox()
-
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -67,13 +69,14 @@ fun SignInScreen(
             value = email,
             onValueChange = { email = it },
             label = {
-                Text("Email address") },
+                Text("Email address")
+            },
             leadingIcon = {
-                          Icon(
-                              imageVector = Icons.Default.Email,
-                              contentDescription = "email",
-                              tint = SecondaryColor,
-                          )
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "email",
+                    tint = SecondaryColor,
+                )
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = ThirdColor,
@@ -89,7 +92,8 @@ fun SignInScreen(
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             label = {
-                Text("Password") },
+                Text("Password")
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
@@ -105,7 +109,7 @@ fun SignInScreen(
                 IconButton(onClick = {
                     passwordVisibility = !passwordVisibility
                 }) {
-                    Icon(imageVector  = image, "")
+                    Icon(imageVector = image, "")
                 }
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -116,7 +120,7 @@ fun SignInScreen(
         )
 
         Button(
-            onClick = { signInWithEmailAndPassword(email, password) },
+            onClick = { auth.signInWithEmailAndPassword(navController, email, password) },
             colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
             modifier = Modifier
                 .padding(ButtonPadding_16dp)
@@ -124,7 +128,7 @@ fun SignInScreen(
                 .width(285.dp)
                 .height(50.dp),
 
-        ) {
+            ) {
             Text(
                 fontFamily = RobotoSlab,
                 color = Color.White,
@@ -141,8 +145,8 @@ fun SignInScreen(
                 .padding(horizontal = 55.dp)
                 .padding(top = 10.dp)
                 .height(50.dp),
-            onClick = {signInWithGoogle() }
-        ){
+            onClick = { auth.signInWithGoogle(MainActivity.GOOGLE_AUTH) }
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -173,7 +177,7 @@ fun SignInScreen(
 
         Text(
             text =
-                buildAnnotatedString {
+            buildAnnotatedString {
                 append("Don't have an account? Sign up here!")
                 addStyle(
                     style = SpanStyle(
@@ -190,7 +194,6 @@ fun SignInScreen(
         )
     }
 }
-
 
 @Composable
 fun LogoTextBox() {

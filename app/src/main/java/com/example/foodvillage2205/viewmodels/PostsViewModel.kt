@@ -24,16 +24,16 @@ class PostsViewModel(private val postRepository: PostRepository) : ViewModel() {
 
     suspend fun getPostById(id: String) = postRepository.getPostById(id)
 
-    fun createPost(post: Post) = viewModelScope.launch {
-        postRepository.createPost(post)
+    fun createPost(post: Post, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        postRepository.createPost(post, onResponse)
     }
 
-    fun updatePost(post: Post) = viewModelScope.launch {
-        postRepository.updatePost(post)
+    fun updatePost(post: Post, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        postRepository.updatePost(post, onResponse)
     }
 
-    fun deletePost(post: Post) = viewModelScope.launch {
-        postRepository.deletePost(post)
+    fun deletePost(post: Post, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        postRepository.deletePost(post, onResponse)
     }
 
 }

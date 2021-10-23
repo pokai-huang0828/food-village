@@ -30,14 +30,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, auth: Auth) {
     Scaffold(
-        topBar = { TopBar(navController)},
+        topBar = { TopBar(navController, auth)},
         content = {Form(navController)}
     )
 }

@@ -26,11 +26,17 @@ class UserViewModel(val userRepository: UserRepository) : ViewModel() {
 
     suspend fun getUserById(id: String) = userRepository.getUserById(id)
 
-    fun createUser(user: User) = userRepository.createUser(user)
+    fun createUser(user: User, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        userRepository.createUser(user, onResponse)
+    }
 
-    fun updateUser(user: User) = userRepository.updateUser(user)
+    fun updateUser(user: User, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        userRepository.updateUser(user, onResponse)
+    }
 
-    fun deleteUser(user: User) = userRepository.deleteUser(user)
+    fun deleteUser(user: User, onResponse: (Resource<*>) -> Unit) = viewModelScope.launch {
+        userRepository.deleteUser(user, onResponse)
+    }
 
 }
 

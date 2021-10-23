@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
@@ -32,9 +33,9 @@ import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.ThirdColor
 
 @Composable
-fun MainScreen(navController: NavController, signOut: () -> Unit) {
+fun MainScreen(navController: NavController, auth: Auth) {
     Scaffold(
-        topBar = { TopBar(navController, signOut = signOut) },
+        topBar = { TopBar(navController, auth) },
         content = {
             FoodList(navController)
         },
@@ -71,8 +72,8 @@ fun MainScreen(navController: NavController, signOut: () -> Unit) {
 @Composable
 fun TopBar(
     navController: NavController,
+    auth: Auth,
     modifier: Modifier = Modifier,
-    signOut: () -> Unit
 ) {
     Column() {
         Row(
@@ -115,7 +116,7 @@ fun TopBar(
                     tint = ThirdColor,
                     modifier = Modifier
                         .size(47.dp)
-                        .clickable {navController.navigate(Route.ProfileScreen.route) }
+                        .clickable { navController.navigate(Route.ProfileScreen.route) }
                 )
 
                 Spacer(modifier = modifier.padding(5.dp))
@@ -126,7 +127,7 @@ fun TopBar(
                     tint = ThirdColor,
                     modifier = Modifier
                         .size(47.dp)
-                        .clickable { signOut() }
+                        .clickable { auth.signOut(navController) }
                 )
             }
         }

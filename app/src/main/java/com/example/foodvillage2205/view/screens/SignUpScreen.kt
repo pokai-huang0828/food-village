@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
 import com.example.foodvillage2205.view.theme.PrimaryColor
@@ -34,10 +36,11 @@ import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.ThirdColor
 
 
+@ExperimentalAnimationApi
 @Composable
 fun SignUpScreen(
     navController: NavController,
-    signUpWithEmailAndPassword: (email: String, password: String) -> Unit
+    auth: Auth
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -148,14 +151,13 @@ fun SignUpScreen(
         )
 
         Button(
-            onClick = { signUpWithEmailAndPassword(email, password) },
+            onClick = { auth.signUpWithEmailAndPassword(navController, email, password) },
             colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
             modifier = Modifier
                 .padding(ButtonPadding_16dp)
                 .padding(top = 15.dp)
                 .width(285.dp)
-                .height(50.dp),
-
+                .height(50.dp)
             ) {
             Text(
                 fontFamily = RobotoSlab,
