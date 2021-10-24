@@ -20,6 +20,7 @@
         android:theme="@style/Theme.FoodVillage">
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.FoodVillage.NoActionBar">
