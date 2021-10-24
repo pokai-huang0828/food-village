@@ -12,16 +12,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class FireStorageRepo() {
     private val imageRef = Firebase.storage.reference
     private val TAG = "Debug"
 
-    fun uploadImageToStorage(context: Context, curFile: Uri, filename: String) =
-        CoroutineScope(Dispatchers.IO).launch {
+    fun uploadImageToStorage(
+        context: Context,
+        curFile: Uri,
+        filename: String,
+        onImageUploaded: (Uri) -> Unit
+    ) = CoroutineScope(Dispatchers.IO).launch {
             try {
                 curFile?.let {
-                    imageRef.child("images/$filename").putFile(it).await()
+                    // Create a timestamp
+                    val s = SimpleDateFormat("ddMMyyyyhhmmss")
+                    val format: String = s.format(Date())
+
+                    // Upload the image
+                    imageRef.child("images/$filename-$format").putFile(it).await()
+
+                    // Retrieve the Download Url and return it with the onImageUploaded callback
+                    val imageUrl = imageRef.child("images/$filename-$format").downloadUrl.await()
+                    onImageUploaded(imageUrl)
+
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,

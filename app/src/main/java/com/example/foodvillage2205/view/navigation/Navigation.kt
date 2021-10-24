@@ -1,12 +1,13 @@
 package com.example.foodvillage2205.view.navigation
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.*
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.view.screens.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -46,8 +47,14 @@ fun Navigation(auth: Auth) {
             DonateHistory(navController = navController)
         }
 
-        composable(route = Route.DetailScreen.route) {
-            DetailScreen(navController = navController)
+        composable(
+            route = Route.DetailScreen.route + "/{${RouteArgs.postId}}",
+            arguments = listOf(navArgument(RouteArgs.postId) { type = NavType.StringType })
+        ) { backStackEntry ->
+            DetailScreen(
+                navController = navController,
+                postId = backStackEntry.arguments?.getString(RouteArgs.postId)
+            )
         }
 
         composable(route = Route.SignInScreen.route) {

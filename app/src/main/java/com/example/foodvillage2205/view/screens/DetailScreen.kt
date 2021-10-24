@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,7 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,23 +21,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.model.entities.Post
+import com.example.foodvillage2205.model.entities.User
+import com.example.foodvillage2205.model.repositories.PostRepository
+import com.example.foodvillage2205.model.repositories.UserRepository
+import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
+import com.example.foodvillage2205.viewmodels.PostViewModelFactory
+import com.example.foodvillage2205.viewmodels.PostsViewModel
+import com.example.foodvillage2205.viewmodels.UserViewModel
+import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 
 @Composable
-fun DetailScreen(navController: NavController) {
+fun DetailScreen(navController: NavController, postId: String?) {
     Scaffold(
-        topBar = { TopBarDetail(navController)},
-        content = {
-            FoodDetailList()
-        }
+        topBar = { TopBarDetail(navController) },
+        content = { FoodDetailList(postId) }
     )
 }
-
 
 @Composable
 fun TopBarDetail(navController: NavController) {
@@ -47,7 +56,8 @@ fun TopBarDetail(navController: NavController) {
             .height(60.dp)
             .padding(vertical = 3.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         //Icon button to go back to Main Page
         IconButton(
             onClick = { navController.navigate(Route.MainScreen.route) },
@@ -60,7 +70,7 @@ fun TopBarDetail(navController: NavController) {
 
         //title
         Text(
-            text= "Detail",
+            text = "Detail",
             color = White,
             fontSize = 30.sp,
             fontFamily = RobotoSlab,
@@ -73,23 +83,45 @@ fun TopBarDetail(navController: NavController) {
 }
 
 
-
 @Composable
-fun FoodDetailList() {
+fun FoodDetailList(
+    postId: String?,
+    postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
+) {
+    var user by remember { mutableStateOf(User()) }
+    val post = produceState(initialValue = Post()) {
+        postId?.let {
+            val resource = postVM.getPostById(postId)
+
+            resource?.let {
+                if (resource is Resource.Success) {
+                    value = resource.data as Post
+
+                    // Get Post owner info
+                    val resource = userVM.getUserById(value.userId)
+                    if (resource is Resource.Success) {
+                        user = resource.data as User
+                    }
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .padding(10.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        IconTest()
-        FoodDetail(        )
+        IconTest(user)
+        FoodDetail(post.value)
 
         Spacer(modifier = Modifier.padding(bottom = 80.dp))
     }
 }
 
 @Composable
-fun IconTest() {
+fun IconTest(user: User) {
     Row(
         modifier = Modifier
             .padding(horizontal = 85.dp)
@@ -97,7 +129,10 @@ fun IconTest() {
             .padding(10.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.profile_icon),
+            painter = if (user.thumbnailUrl.isNotEmpty())
+                rememberImagePainter(user.thumbnailUrl)
+            else
+                painterResource(R.drawable.default_image),
             contentDescription = "Some text",
             modifier = Modifier
                 .width(50.dp)
@@ -109,7 +144,7 @@ fun IconTest() {
         Spacer(modifier = Modifier.size(10.dp))
 
         Text(
-            text = "John Smith",
+            text = user.name,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             fontStyle = FontStyle.Italic,
@@ -120,16 +155,21 @@ fun IconTest() {
 }
 
 @Composable
-fun FoodDetail() {
+fun FoodDetail(
+    post: Post
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
         horizontalAlignment = Alignment.Start
     ) {
-
         Image(
-            painter = painterResource(id = R.drawable.spaghetti),
+            painter =
+            if (post.imageUrl.isNotEmpty())
+                rememberImagePainter(post.imageUrl)
+            else
+                painterResource(R.drawable.default_image),
             contentDescription = "header",
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -139,19 +179,19 @@ fun FoodDetail() {
             alignment = Alignment.Center
         )
 
+        // Post Title
         Text(
-            text = "Spaghetti",
+            text = post.title,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
         )
+
+        // Post Description
         Text(
-            text = "Individually sized portions:" +
-                    "\n- Spaghetti: Red Sauce with long thin noodles" +
-                    "\n- Pesto Linguine: Basil Sauce with thick long noodles" +
-                    "\n - Penne Alle Vodka: Red mild sauce with short noodles",
+            text = post.description,
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
         )
@@ -164,8 +204,10 @@ fun FoodDetail() {
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
         )
+
+        // Telephone
         Text(
-            text = "604-273-3434",
+            text = post.phone,
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
         )
@@ -178,13 +220,18 @@ fun FoodDetail() {
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
         )
+
+        // Address
         Text(
-            text = "Italian Kitchen\n" +
-                    "860 Burrard",
+            text = "${post.street}\n" +
+                    "${post.city} ${post.province}\n" +
+                    "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             modifier = Modifier.padding(bottom = 5.dp)
         )
+
+        // Map
         Image(
             painter = painterResource(id = R.drawable.map),
             contentDescription = "header",

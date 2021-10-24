@@ -1,6 +1,5 @@
 package com.example.foodvillage2205.view.screens
 
-
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
@@ -156,8 +155,7 @@ fun FormDonateScreen(
                             modifier = Modifier.size(150.dp)
                         )
                     }
-                }
-                        )
+                })
 
                 OutlinedButton(
                     onClick = { launcher.launch("image/*") },
@@ -379,27 +377,32 @@ fun FormDonateScreen(
                 onClick = {
                     // Check if imageUrl has been set
                     if (imageUrl !== null) {
-                        val post = Post(
-                            title = name.value,
-                            description = details.value,
-                            email = email.value,
-                            phone = phone.value,
-                            street = street.value,
-                            city = city.value,
-                            province = province.value,
-                            postalCode = postalCode.value,
-                            userId = (auth.currentUser as FirebaseUser).uid,
-                            imageUrl = imageUrl?.lastPathSegment!!
-                        )
-
                         // upload image to firestorage
+                        var imageDownloadUrl: String? = null
+
                         coroutineScope.launch {
                             fireStorageRepo.uploadImageToStorage(
                                 context,
                                 imageUrl!!,
                                 imageUrl!!.lastPathSegment!!
-                            ).join()
+                            ) {
+                                imageDownloadUrl = it.toString()
+                            }.join()
+
                         }.invokeOnCompletion { fireStorageException ->
+                            val post = Post(
+                                title = name.value,
+                                description = details.value,
+                                email = email.value,
+                                phone = phone.value,
+                                street = street.value,
+                                city = city.value,
+                                province = province.value,
+                                postalCode = postalCode.value,
+                                userId = (auth.currentUser as FirebaseUser).uid,
+                                imageUrl = imageDownloadUrl ?: ""
+                            )
+
                             // upload post to firestore
                             if (fireStorageException === null) {
                                 postVM.createPost(post) { resource ->
@@ -409,6 +412,7 @@ fun FormDonateScreen(
                                     }
                                 }
                             }
+
                         }
                     }
                 },

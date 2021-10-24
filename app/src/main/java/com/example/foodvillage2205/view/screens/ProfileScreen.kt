@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,8 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -128,7 +124,7 @@ fun Form(
 
     // Set up for picking image from gallery
     val context = LocalContext.current
-    var scope = rememberCoroutineScope()
+    var coroutineScope = rememberCoroutineScope()
     var fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
     var imageChanged by remember { mutableStateOf(false) }
@@ -148,8 +144,8 @@ fun Form(
             timestamp = user.timestamp!!
         }
 
-        if (thumbnailUrl.isNotEmpty()) {
-            imageUri = fireStorageRepo.getImage(thumbnailUrl).await()
+        if(thumbnailUrl.isNotEmpty()){
+            imageUri = Uri.parse(thumbnailUrl)
         }
     }
 
@@ -177,7 +173,8 @@ fun Form(
             ) {
                 Box(contentAlignment = Alignment.TopEnd) {
                     Image(//profile pic, show default image if user does not has one
-                        painter = if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI)
+                        painter =
+                        if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI)
                             painterResource(R.drawable.default_image)
                         else
                             rememberImagePainter(imageUri),
@@ -360,17 +357,22 @@ fun Form(
                 Spacer(modifier = Modifier.height(5.dp))
 
                 // update button:
-                // upload image to firestorage if user has provided one
-                // then update user info to firestore
                 Button(
                     onClick = {
+                        // upload image to firestorage if user has provided one
                         if (imageChanged) {
-                            scope.launch {
+
+                            var imageDownloadUrl: String? = null
+
+                            coroutineScope.launch {
                                 fireStorageRepo.uploadImageToStorage(
                                     context,
                                     imageUri,
                                     imageUri.lastPathSegment!!
-                                ).join()
+                                ) {
+                                    imageDownloadUrl = it.toString()
+                                }.join()
+
                             }.invokeOnCompletion {
                                 userVM.updateUser(
                                     User(
@@ -378,14 +380,16 @@ fun Form(
                                         name = name,
                                         email = email,
                                         phone = phone,
-                                        thumbnailUrl = imageUri.lastPathSegment!!,
+                                        thumbnailUrl = imageDownloadUrl ?: "",
                                         timestamp = timestamp
                                     )
                                 ) {
                                     // if resource is success
                                 }
                             }
+
                         } else {
+                            // if user did not change image
                             userVM.updateUser(
                                 User(
                                     id = id,
@@ -399,6 +403,7 @@ fun Form(
                                 // if resource is success
                             }
                         }
+
                     },
                     modifier = Modifier
                         .padding(top = 15.dp)

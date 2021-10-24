@@ -31,13 +31,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.model.entities.Post
+import com.example.foodvillage2205.model.repositories.PostRepository
+import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.FakeFoodData
 import com.example.foodvillage2205.view.composables.FoodListItem
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
+import com.example.foodvillage2205.viewmodels.PostViewModelFactory
+import com.example.foodvillage2205.viewmodels.PostsViewModel
+import kotlinx.coroutines.flow.asStateFlow
 
 @ExperimentalFoundationApi
 @Composable
@@ -206,19 +213,35 @@ fun SearchBar() {
 
 @ExperimentalFoundationApi
 @Composable
-fun FoodListContent(navController: NavController) {
-    val foodItems = remember { FakeFoodData.foodList }
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
-        modifier = Modifier
-            .padding(bottom = 5.dp)
-            .background(Gray)
-    ) {
-        items(
-            items = foodItems,
-            itemContent = {
-                FoodListItem(listItem = it, navController)
+fun FoodListContent(
+    navController: NavController,
+    postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
+) {
+    // Examet real time posts from firestore
+    when (val postsListResponse =
+        postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
+
+        is Resource.Success<*> -> {
+            val foodItems = postsListResponse.data as List<Post>
+
+            LazyVerticalGrid(
+                cells = GridCells.Fixed(2),
+                modifier = Modifier
+                    .padding(bottom = 5.dp)
+                    .background(Gray)
+            ) {
+                items(
+                    items = foodItems,
+                    itemContent = {
+                        FoodListItem(listItem = it, navController)
+                    }
+                )
             }
-        )
+        }
+
+        else -> {
+            Text("Loading posts...")
+        }
     }
+
 }

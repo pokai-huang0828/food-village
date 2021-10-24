@@ -22,20 +22,21 @@ import com.example.foodvillage2205.view.theme.White
 
 @Composable
 fun FoodListItem(listItem: Post, navController: NavController) {
-
     Card(
         modifier = Modifier
             .padding(horizontal = 4.dp, vertical = 4.dp)
             .height(210.dp)
             .width(100.dp)
-            .clickable { navController.navigate(Route.DetailScreen.route) }
-        ,
+            .clickable {
+                navController.navigate(Route.DetailScreen.route + "/${listItem.id}")
+            },
         elevation = 9.dp,
         backgroundColor = White,
         shape = RoundedCornerShape(corner = CornerSize(15.dp))
     ) {
         val painter = rememberImagePainter(listItem.imageUrl)
-        Column{
+
+        Column {
             Image(
                 painter = painter,
                 contentDescription = null,
@@ -51,7 +52,7 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp),
                 color = PrimaryColor,
                 maxLines = 2,
-                )
+            )
             Text(
                 text = "VIEW DETAIL",
                 fontWeight = FontWeight.Normal,
