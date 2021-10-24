@@ -1,12 +1,9 @@
 package com.example.foodvillage2205.view.screens
 
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -14,6 +11,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -126,7 +125,9 @@ fun IconTest(user: User) {
         modifier = Modifier
             .padding(horizontal = 85.dp)
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = if (user.thumbnailUrl.isNotEmpty())
@@ -137,7 +138,10 @@ fun IconTest(user: User) {
             modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)
-                .clip(RoundedCornerShape(15.dp)),
+                .shadow(elevation = 12.dp, shape = RoundedCornerShape(25.dp), true)
+                .clip(RoundedCornerShape(25.dp))
+
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
         )
@@ -148,8 +152,9 @@ fun IconTest(user: User) {
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             fontStyle = FontStyle.Italic,
-            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
             color = PrimaryColor,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -162,7 +167,8 @@ fun FoodDetail(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
-        horizontalAlignment = Alignment.Start
+
+
     ) {
         Image(
             painter =
@@ -172,8 +178,8 @@ fun FoodDetail(
                 painterResource(R.drawable.default_image),
             contentDescription = "header",
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .height(160.dp)
+                .fillMaxWidth()
+                .height(220.dp)
                 .clip(RoundedCornerShape(15.dp)),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
@@ -187,11 +193,12 @@ fun FoodDetail(
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
+            textAlign = TextAlign.Start
         )
 
         // Post Description
         Text(
-            text = post.description,
+            text = if (post.description.isEmpty()) "No Description" else post.description,
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
         )
@@ -207,7 +214,12 @@ fun FoodDetail(
 
         // Telephone
         Text(
-            text = post.phone,
+            text = if (post.phone.isEmpty()) "No Phone" else post.phone,
+            fontWeight = FontWeight.Normal,
+            fontSize = 17.sp,
+        )
+        Text(
+            text = if (post.email.isEmpty()) "No Email" else post.email,
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
         )
@@ -223,7 +235,7 @@ fun FoodDetail(
 
         // Address
         Text(
-            text = "${post.street}\n" +
+            text = if (post.street.isEmpty())"No Location" else "${post.street}\n" +
                     "${post.city} ${post.province}\n" +
                     "${post.postalCode}",
             fontWeight = FontWeight.Normal,
@@ -236,7 +248,7 @@ fun FoodDetail(
             painter = painterResource(id = R.drawable.map),
             contentDescription = "header",
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
                 .height(160.dp)
                 .clip(RoundedCornerShape(15.dp)),
             contentScale = ContentScale.Crop,

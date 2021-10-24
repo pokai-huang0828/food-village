@@ -18,7 +18,7 @@
     <string name="Phone">Phone</string>
     <string name="Password">Password</string>
     <string name="Update">Update</string>
-    <string name="History">Donation History</string>
+    <string name="History">Archive</string>
 
     <!--Donate page-->
     <string name="D_title">New Donation</string>

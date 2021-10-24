@@ -9,6 +9,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +41,7 @@ fun FoodListItem(listItem: Post, navController: NavController) {
             Image(
                 painter = painter,
                 contentDescription = null,
+                contentScale = ContentScale.FillWidth,// Fit width
                 modifier = Modifier
                     .height(125.dp)
                     .fillMaxWidth()
@@ -53,6 +55,8 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 color = PrimaryColor,
                 maxLines = 2,
             )
+
+            // {Todo: Time Stamp in each post}
             Text(
                 text = "VIEW DETAIL",
                 fontWeight = FontWeight.Normal,

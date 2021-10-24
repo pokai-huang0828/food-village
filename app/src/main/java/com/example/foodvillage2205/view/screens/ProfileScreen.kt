@@ -9,8 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,7 +83,7 @@ fun TopBar(
             fontSize = 30.sp,
             fontFamily = RobotoSlab,
             fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         IconButton(
@@ -123,9 +122,6 @@ fun Form(
     var city by remember { mutableStateOf("") }
     var thumbnailUrl by remember { mutableStateOf("") }
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
-
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
 
     // Set up for picking image from gallery
     val context = LocalContext.current
@@ -173,12 +169,18 @@ fun Form(
             modifier = Modifier
                 .height(700.dp)
                 .verticalScroll(rememberScrollState())
-                .padding(30.dp)
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             //Avatar
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp)
+                    .padding(bottom = 20.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(contentAlignment = Alignment.TopEnd) {
                     Image(//profile pic, show default image if user does not has one
@@ -201,7 +203,7 @@ fun Form(
                         },
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(y = (-6).dp, x = 6.dp),
+                            .offset(y = (117).dp, x = (-5).dp),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(SecondaryColor),
                         contentPadding = PaddingValues(0.dp)
@@ -210,16 +212,46 @@ fun Form(
                             imageVector = Icons.Filled.Edit,
                             contentDescription = "Edit avatar",
                             tint = White,
-                            modifier = Modifier.size(25.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
+                Button(
+                    onClick = { navController.navigate(Route.DonateHistory.route) },
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .width(160.dp)
+                        .height(50.dp),
+                    shape = Shapes.medium,
+                    colors = ButtonDefaults.buttonColors(SecondaryColor),
+                    contentPadding = PaddingValues(5.dp)
+                ) {
+                    Row() {
+                        Icon(
+                            imageVector = Icons.Filled.History,
+                            contentDescription = "",
+                            tint = White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.padding(2.dp))
+                        Text(
+                            text = stringResource(R.string.History),
+                            fontFamily = RobotoSlab,
+                            color = White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W900,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
+                }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
-
             //Inputs
-            Column(modifier = Modifier.fillMaxWidth())
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
             {
                 // Name
                 Text(
@@ -227,14 +259,17 @@ fun Form(
                     fontSize = 20.sp,
                     fontFamily = RobotoSlab,
                     color = SecondaryColor,
-                    fontWeight = FontWeight.W900
+                    fontWeight = FontWeight.W900,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
                 )
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(//Name
+                //Name
+                TextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     maxLines = 1,
                     label = {
                     },
@@ -246,23 +281,23 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
 
                 // Email
-                Text(
-                    text = stringResource(R.string.Email),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
-                Spacer(modifier = Modifier.height(5.dp))
+
                 TextField(//Email
                     value = email,
                     onValueChange = { email = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f)
+                        .padding(vertical = 10.dp),
                     label = {
+                        Text(
+                            text = stringResource(R.string.Email),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900,
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -272,7 +307,7 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+
 
                 // Phone
                 Text(
@@ -282,8 +317,9 @@ fun Form(
                     color = SecondaryColor,
                     fontWeight = FontWeight.W900
                 )
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(//Phone Number
+
+                //Phone Number
+                TextField(
                     value = phone,
                     onValueChange = { phone = it },
                     modifier = Modifier
@@ -298,7 +334,6 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
 
                 // Street
                 Text(
@@ -324,7 +359,6 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
 
                 // City
                 Text(
@@ -350,7 +384,6 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
 
                 // Province
                 Text(
@@ -360,7 +393,6 @@ fun Form(
                     color = SecondaryColor,
                     fontWeight = FontWeight.W900
                 )
-                Spacer(modifier = Modifier.height(5.dp))
                 TextField(
                     value = province,
                     onValueChange = { province = it },
@@ -376,7 +408,6 @@ fun Form(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                Spacer(modifier = Modifier.height(10.dp))
 
                 // Postal Code
                 Text(
@@ -386,7 +417,6 @@ fun Form(
                     color = SecondaryColor,
                     fontWeight = FontWeight.W900
                 )
-                Spacer(modifier = Modifier.height(5.dp))
                 TextField(
                     value = postalCode,
                     onValueChange = { postalCode = it },
@@ -449,26 +479,6 @@ fun Form(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                //view history button
-                Button(
-                    onClick = { navController.navigate(Route.DonateHistory.route) },
-                    modifier = Modifier
-                        .padding(top = 15.dp)
-                        .width(200.dp)
-                        .height(50.dp),
-                    shape = Shapes.medium,
-                    colors = ButtonDefaults.buttonColors(SecondaryColor),
-                    contentPadding = PaddingValues(5.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.History),
-                        fontFamily = RobotoSlab,
-                        color = White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W900
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -540,7 +550,7 @@ fun Form(
 
                     },
                     modifier = Modifier
-                        .padding(top = 15.dp)
+                        .padding(top = 1.dp)
                         .width(200.dp)
                         .height(50.dp),
                     shape = Shapes.medium,
