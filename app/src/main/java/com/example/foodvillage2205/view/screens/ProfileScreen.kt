@@ -117,10 +117,15 @@ fun Form(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    var postalCode by remember { mutableStateOf("") }
+    var province by remember { mutableStateOf("") }
+    var street by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
     var thumbnailUrl by remember { mutableStateOf("") }
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
+
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     // Set up for picking image from gallery
     val context = LocalContext.current
@@ -140,11 +145,15 @@ fun Form(
             name = user.name
             email = user.email
             phone = user.phone
+            postalCode = user.postalCode
+            province = user.province
+            street = user.street
+            city = user.city
             thumbnailUrl = user.thumbnailUrl
             timestamp = user.timestamp!!
         }
 
-        if(thumbnailUrl.isNotEmpty()){
+        if (thumbnailUrl.isNotEmpty()) {
             imageUri = Uri.parse(thumbnailUrl)
         }
     }
@@ -212,6 +221,7 @@ fun Form(
             //Inputs
             Column(modifier = Modifier.fillMaxWidth())
             {
+                // Name
                 Text(
                     text = stringResource(R.string.Donator_name),
                     fontSize = 20.sp,
@@ -238,6 +248,7 @@ fun Form(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
+                // Email
                 Text(
                     text = stringResource(R.string.Email),
                     fontSize = 20.sp,
@@ -263,6 +274,7 @@ fun Form(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
+                // Phone
                 Text(
                     text = stringResource(R.string.Phone),
                     fontSize = 20.sp,
@@ -274,6 +286,110 @@ fun Form(
                 TextField(//Phone Number
                     value = phone,
                     onValueChange = { phone = it },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = {
+                    },
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = WhiteLight,
+                        focusedIndicatorColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor,
+                        unfocusedIndicatorColor = SecondaryColor
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Street
+                Text(
+                    text = stringResource(R.string.Street),
+                    fontSize = 20.sp,
+                    fontFamily = RobotoSlab,
+                    color = SecondaryColor,
+                    fontWeight = FontWeight.W900
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = street,
+                    onValueChange = { street = it },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = {
+                    },
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = WhiteLight,
+                        focusedIndicatorColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor,
+                        unfocusedIndicatorColor = SecondaryColor
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // City
+                Text(
+                    text = stringResource(R.string.City),
+                    fontSize = 20.sp,
+                    fontFamily = RobotoSlab,
+                    color = SecondaryColor,
+                    fontWeight = FontWeight.W900
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = {
+                    },
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = WhiteLight,
+                        focusedIndicatorColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor,
+                        unfocusedIndicatorColor = SecondaryColor
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Province
+                Text(
+                    text = stringResource(R.string.Province),
+                    fontSize = 20.sp,
+                    fontFamily = RobotoSlab,
+                    color = SecondaryColor,
+                    fontWeight = FontWeight.W900
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = province,
+                    onValueChange = { province = it },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = {
+                    },
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = WhiteLight,
+                        focusedIndicatorColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor,
+                        unfocusedIndicatorColor = SecondaryColor
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Postal Code
+                Text(
+                    text = stringResource(R.string.Postal),
+                    fontSize = 20.sp,
+                    fontFamily = RobotoSlab,
+                    color = SecondaryColor,
+                    fontWeight = FontWeight.W900
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = postalCode,
+                    onValueChange = { postalCode = it },
                     modifier = Modifier
                         .fillMaxWidth(),
                     label = {
@@ -380,11 +496,20 @@ fun Form(
                                         name = name,
                                         email = email,
                                         phone = phone,
+                                        postalCode = postalCode,
+                                        province = province,
+                                        street = street,
+                                        city = city,
                                         thumbnailUrl = imageDownloadUrl ?: "",
                                         timestamp = timestamp
                                     )
                                 ) {
                                     // if resource is success
+                                    if(it is Resource.Success){
+                                        navController.navigate(Route.MainScreen.route){
+                                            popUpTo(Route.MainScreen.route)
+                                        }
+                                    }
                                 }
                             }
 
@@ -396,11 +521,20 @@ fun Form(
                                     name = name,
                                     email = email,
                                     phone = phone,
+                                    postalCode = postalCode,
+                                    province = province,
+                                    street = street,
+                                    city = city,
                                     thumbnailUrl = thumbnailUrl,
                                     timestamp = timestamp
                                 )
                             ) {
                                 // if resource is success
+                                if(it is Resource.Success){
+                                    navController.navigate(Route.MainScreen.route){
+                                        popUpTo(Route.MainScreen.route)
+                                    }
+                                }
                             }
                         }
 

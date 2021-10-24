@@ -10,6 +10,7 @@
     <string name="donate_screen">DonateScreen</string>
     <string name="donate_history">DonateHistory</string>
     <string name="detail_screen">DetailScreen</string>
+
     <!--profile page-->
     <string name="Profile_title">Profile</string>
     <string name="Donator_name">Name</string>

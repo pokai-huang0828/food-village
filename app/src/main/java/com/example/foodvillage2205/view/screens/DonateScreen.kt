@@ -41,7 +41,11 @@ import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.model.entities.User
+import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.viewmodels.UserViewModel
+import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 
@@ -92,16 +96,17 @@ fun TopBarDonateScreen(navController: NavController) {
 fun FormDonateScreen(
     navController: NavController,
     auth: Auth,
-    postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
+    postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
 ) {
-    val name = remember { mutableStateOf("") }
-    val details = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val phone = remember { mutableStateOf("") }
-    val street = remember { mutableStateOf("") }
-    val city = remember { mutableStateOf("") }
-    val province = remember { mutableStateOf("") }
-    val postalCode = remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var details by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var street by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var province by remember { mutableStateOf("") }
+    var postalCode by remember { mutableStateOf("") }
 
     // Add Image from google drive
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
@@ -109,13 +114,28 @@ fun FormDonateScreen(
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
 
     // Set up for firestorage upload
-    var coroutineScope = rememberCoroutineScope()
-    var fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
+    val coroutineScope = rememberCoroutineScope()
+    val fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUrl = uri
+    }
+
+    // Get User Info from firebase to populate input fields
+    produceState(initialValue = false) {
+        val resource = userVM.getUserById((auth.currentUser as FirebaseUser).uid)
+
+        if (resource is Resource.Success<*>) {
+            val user = resource.data as User
+            email = user.email
+            phone = user.phone
+            postalCode = user.postalCode
+            province = user.province
+            street = user.street
+            city = user.city
+        }
     }
 
     Column(
@@ -192,8 +212,8 @@ fun FormDonateScreen(
             )
             Spacer(modifier = Modifier.height(5.dp))
             TextField(
-                value = name.value,
-                onValueChange = { name.value = it },
+                value = name,
+                onValueChange = { name = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -219,8 +239,8 @@ fun FormDonateScreen(
             )
             Spacer(modifier = Modifier.height(5.dp))
             TextField(
-                value = details.value,
-                onValueChange = { details.value = it },
+                value = details,
+                onValueChange = { details = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -247,8 +267,8 @@ fun FormDonateScreen(
             Spacer(modifier = Modifier.height(5.dp))
             //Email
             TextField(
-                value = email.value,
-                onValueChange = { email.value = it },
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -265,8 +285,8 @@ fun FormDonateScreen(
 
             //Phone Number
             TextField(
-                value = phone.value,
-                onValueChange = { phone.value = it },
+                value = phone,
+                onValueChange = { phone = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -294,8 +314,8 @@ fun FormDonateScreen(
 
             //Street
             TextField(
-                value = street.value,
-                onValueChange = { street.value = it },
+                value = street,
+                onValueChange = { street = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -312,8 +332,8 @@ fun FormDonateScreen(
 
             //City
             TextField(
-                value = city.value,
-                onValueChange = { city.value = it },
+                value = city,
+                onValueChange = { city = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -330,8 +350,8 @@ fun FormDonateScreen(
 
             //Province
             TextField(
-                value = province.value,
-                onValueChange = { province.value = it },
+                value = province,
+                onValueChange = { province = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -348,8 +368,8 @@ fun FormDonateScreen(
 
             //Postal Code
             TextField(
-                value = postalCode.value,
-                onValueChange = { postalCode.value = it },
+                value = postalCode,
+                onValueChange = { postalCode = it },
                 modifier = Modifier
                     .fillMaxWidth(),
                 label = {
@@ -391,14 +411,14 @@ fun FormDonateScreen(
 
                         }.invokeOnCompletion { fireStorageException ->
                             val post = Post(
-                                title = name.value,
-                                description = details.value,
-                                email = email.value,
-                                phone = phone.value,
-                                street = street.value,
-                                city = city.value,
-                                province = province.value,
-                                postalCode = postalCode.value,
+                                title = name,
+                                description = details,
+                                email = email,
+                                phone = phone,
+                                street = street,
+                                city = city,
+                                province = province,
+                                postalCode = postalCode,
                                 userId = (auth.currentUser as FirebaseUser).uid,
                                 imageUrl = imageDownloadUrl ?: ""
                             )
