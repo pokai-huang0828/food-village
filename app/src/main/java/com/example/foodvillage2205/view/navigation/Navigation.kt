@@ -21,8 +21,8 @@ fun Navigation(auth: Auth) {
     val startDestination by remember {
         mutableStateOf(
             when (auth.currentUser) {
-                null -> Route.SignInScreen.route
-                else -> Route.MainScreen.route
+                null -> Route.SplashScreen.route
+                else -> Route.SplashScreen.route
             }
         )
     }
@@ -31,6 +31,11 @@ fun Navigation(auth: Auth) {
         navController = navController,
         startDestination = startDestination
     ) {
+
+        composable(route = Route.SplashScreen.route) {
+            SplashScreen(navController = navController, auth = auth)
+        }
+
         composable(route = Route.MainScreen.route) {
             MainScreen(navController = navController)
         }

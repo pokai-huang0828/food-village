@@ -68,6 +68,11 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta03'
 
+    //Compose Runtime for animation from: https://developer.android.com/jetpack/androidx/releases/compose-runtime
+    implementation("androidx.compose.runtime:runtime:1.1.0-alpha06")
+    implementation("androidx.compose.runtime:runtime-livedata:1.1.0-alpha06")
+    implementation("androidx.compose.runtime:runtime-rxjava2:1.1.0-alpha06")
+
     // Java language implementation
     implementation("androidx.navigation:navigation-fragment:2.3.5")
     implementation("androidx.navigation:navigation-ui:2.3.5")
