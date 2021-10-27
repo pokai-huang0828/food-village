@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import android.annotation.SuppressLint
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
@@ -96,6 +97,7 @@ fun TopBarDonateScreen(navController: NavController) {
     }
 }
 
+@SuppressLint("ProduceStateDoesNotAssignValue")
 @ExperimentalPermissionsApi
 @Composable
 fun FormDonateScreen(

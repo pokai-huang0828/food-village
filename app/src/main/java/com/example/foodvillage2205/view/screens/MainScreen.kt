@@ -63,7 +63,7 @@ fun MainScreen(navController: NavController) {
                 backgroundColor = SecondaryColor,
                 contentColor = Color.White,
                 modifier = Modifier
-                    .width(115.dp)
+                    .width(100.dp)
                     .height(45.dp),
                 elevation = elevation(15.dp),
                 shape = Shapes.large
@@ -79,7 +79,7 @@ fun MainScreen(navController: NavController) {
                         modifier = Modifier.size(30.dp)
                     )
                     Text(
-                        text = "Donate",
+                        text = "New",
                         fontSize = 18.sp,
                         fontFamily = RobotoSlab,
                         textAlign = TextAlign.Center,

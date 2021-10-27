@@ -25,9 +25,9 @@
     <!--Donate page-->
     <string name="D_title">New Donation</string>
     <string name="postName">Item Name</string>
-    <string name="foodName">Food Name</string>
+    <string name="foodName">Name</string>
     <string name="details">Item Details</string>
-    <string name="food_details">Food Details</string>
+    <string name="food_details">Details</string>
     <string name="pickUp_Contact">Pick Up Contact</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>

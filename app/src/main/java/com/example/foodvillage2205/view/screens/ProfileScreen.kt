@@ -1,5 +1,6 @@
 package com.example.foodvillage2205.view.screens
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -105,6 +106,7 @@ fun TopBar(
     }
 }
 
+@SuppressLint("ProduceStateDoesNotAssignValue")
 @ExperimentalPermissionsApi
 @Composable
 fun Form(
@@ -183,7 +185,8 @@ fun Form(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(contentAlignment = Alignment.TopEnd) {
-                    Image(//profile pic, show default image if user does not has one
+                    //profile pic, show default image if user does not has one
+                    Image(
                         painter =
                         if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI)
                             painterResource(R.drawable.default_image)
@@ -226,7 +229,7 @@ fun Form(
                     colors = ButtonDefaults.buttonColors(SecondaryColor),
                     contentPadding = PaddingValues(5.dp)
                 ) {
-                    Row() {
+                    Row {
                         Icon(
                             imageVector = Icons.Filled.History,
                             contentDescription = "",
@@ -253,17 +256,7 @@ fun Form(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                // Name
-                Text(
-                    text = stringResource(R.string.Donator_name),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                )
+
                 //Name
                 TextField(
                     value = name,
@@ -272,6 +265,13 @@ fun Form(
                         .fillMaxWidth(0.9f),
                     maxLines = 1,
                     label = {
+                        Text(
+                            text = stringResource(R.string.Donator_name),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900,
+                        )
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
@@ -310,21 +310,22 @@ fun Form(
 
 
                 // Phone
-                Text(
-                    text = stringResource(R.string.Phone),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
+
 
                 //Phone Number
                 TextField(
                     value = phone,
                     onValueChange = { phone = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     label = {
+                        Text(
+                            text = stringResource(R.string.Phone),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -336,20 +337,21 @@ fun Form(
                 )
 
                 // Street
-                Text(
-                    text = stringResource(R.string.Street),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
+
                 Spacer(modifier = Modifier.height(5.dp))
                 TextField(
                     value = street,
                     onValueChange = { street = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     label = {
+                        Text(
+                            text = stringResource(R.string.Street),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -361,20 +363,21 @@ fun Form(
                 )
 
                 // City
-                Text(
-                    text = stringResource(R.string.City),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
+
                 Spacer(modifier = Modifier.height(5.dp))
                 TextField(
                     value = city,
                     onValueChange = { city = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     label = {
+                        Text(
+                            text = stringResource(R.string.City),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -386,19 +389,20 @@ fun Form(
                 )
 
                 // Province
-                Text(
-                    text = stringResource(R.string.Province),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
+
                 TextField(
                     value = province,
                     onValueChange = { province = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     label = {
+                        Text(
+                            text = stringResource(R.string.Province),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -410,19 +414,20 @@ fun Form(
                 )
 
                 // Postal Code
-                Text(
-                    text = stringResource(R.string.Postal),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
+
                 TextField(
                     value = postalCode,
                     onValueChange = { postalCode = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth(0.9f),
                     label = {
+                        Text(
+                            text = stringResource(R.string.Postal),
+                            fontSize = 20.sp,
+                            fontFamily = RobotoSlab,
+                            color = SecondaryColor,
+                            fontWeight = FontWeight.W900
+                        )
                     },
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -485,7 +490,7 @@ fun Form(
                 // update button:
                 Button(
                     onClick = {
-                        // upload image to firestorage if user has provided one
+                        // upload image to fire storage if user has provided one
                         if (imageChanged) {
 
                             var imageDownloadUrl: String? = null
