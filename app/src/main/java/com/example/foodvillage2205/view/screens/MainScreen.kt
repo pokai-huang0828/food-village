@@ -217,7 +217,7 @@ fun FoodListContent(
     navController: NavController,
     postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
 ) {
-    // Examet real time posts from firestore
+    // Exact real time posts from firestore
     when (val postsListResponse =
         postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
 

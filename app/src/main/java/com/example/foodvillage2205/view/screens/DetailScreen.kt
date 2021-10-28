@@ -1,12 +1,15 @@
 package com.example.foodvillage2205.view.screens
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +58,8 @@ fun TopBarDetail(navController: NavController) {
             .height(60.dp)
             .padding(vertical = 3.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+
     ) {
         //Icon button to go back to Main Page
         IconButton(
@@ -93,7 +97,7 @@ fun FoodDetailList(
         postId?.let {
             val resource = postVM.getPostById(postId)
 
-            resource?.let {
+            resource.let {
                 if (resource is Resource.Success) {
                     value = resource.data as Post
 
@@ -150,8 +154,9 @@ fun IconTest(user: User) {
         Text(
             text = user.name,
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
+            fontSize = 29.sp,
             fontStyle = FontStyle.Italic,
+            fontFamily = RobotoSlab,
             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
             color = PrimaryColor,
             textAlign = TextAlign.Center
@@ -166,7 +171,7 @@ fun FoodDetail(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            ,
 
 
     ) {
@@ -180,9 +185,11 @@ fun FoodDetail(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
+                .shadow(elevation = 20.dp, clip = true, shape = RoundedCornerShape(15.dp))
+                .clip(RoundedCornerShape(15.dp))
+                ,
+            contentScale = ContentScale.FillWidth,
+            alignment = Alignment.Center,
         )
 
         // Post Title
@@ -190,16 +197,17 @@ fun FoodDetail(
             text = post.title,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            fontFamily = RobotoSlab,
         )
 
         // Post Description
         Text(
             text = if (post.description.isEmpty()) "No Description" else post.description,
             fontWeight = FontWeight.Normal,
+            fontFamily = RobotoSlab,
             fontSize = 17.sp,
         )
 
@@ -207,30 +215,68 @@ fun FoodDetail(
             text = "Contact",
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
+            fontFamily = RobotoSlab,
         )
 
         // Telephone
+        Row(horizontalArrangement = Arrangement.Center) {
+            Icon(
+                imageVector = Icons.Filled.PhoneAndroid,
+                contentDescription = "",
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+            Text(
+                text = if (post.phone.isEmpty()) "No Phone" else post.phone,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+                fontFamily = RobotoSlab,
+            )
+
+        }
+
+        Row(horizontalArrangement = Arrangement.Center) {
+            Icon(
+                imageVector = Icons.Filled.Email,
+                contentDescription = "",
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+            Text(
+                text = if (post.email.isEmpty()) "No Email" else post.email,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+                fontFamily = RobotoSlab,
+            )
+
+        }
+
         Text(
-            text = if (post.phone.isEmpty()) "No Phone" else post.phone,
+            text = "Post Time",
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
+            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+            color = PrimaryColor,
+            fontFamily = RobotoSlab,
+        )
+
+        Text(
+            text = post.timestamp?.toDate().toString(),
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
+            fontFamily = RobotoSlab,
         )
-        Text(
-            text = if (post.email.isEmpty()) "No Email" else post.email,
-            fontWeight = FontWeight.Normal,
-            fontSize = 17.sp,
-        )
+
 
         Text(
             text = "Location",
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
             color = PrimaryColor,
+            fontFamily = RobotoSlab,
         )
 
         // Address
@@ -240,7 +286,8 @@ fun FoodDetail(
                     "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
-            modifier = Modifier.padding(bottom = 5.dp)
+            modifier = Modifier.padding(bottom = 5.dp),
+            fontFamily = RobotoSlab,
         )
 
         // Map

@@ -1,6 +1,7 @@
 package com.example.foodvillage2205.view.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,10 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.view.navigation.Route
-import com.example.foodvillage2205.view.theme.ButtonPadding_16dp
-import com.example.foodvillage2205.view.theme.PrimaryColor
-import com.example.foodvillage2205.view.theme.SecondaryColor
-import com.example.foodvillage2205.view.theme.ThirdColor
+import com.example.foodvillage2205.view.theme.*
 
 
 @ExperimentalAnimationApi
@@ -44,149 +42,160 @@ fun SignUpScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("")}
+    var confirmPassword by remember { mutableStateOf("") }
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var confirmPasswordVisibility by remember { mutableStateOf(false) }
 
-    LogoTextBox()
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(SecondaryColor)
     ) {
-        Spacer(modifier = Modifier.padding(top = 215.dp))
-        Text(
-            text = "SIGN UP",
-            color = PrimaryColor,
-            fontSize = 35.sp,
-            fontFamily = RobotoSlab,
-            textAlign = TextAlign.Center,
-        )
-
-        //Email input field
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = {
-                Text("Email address") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = "email",
-                    tint = SecondaryColor,
-                )
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = ThirdColor,
-                focusedLabelColor = SecondaryColor,
-                unfocusedBorderColor = SecondaryColor
-            )
-        )
-
-        //Password input field
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            label = {
-                Text("Password") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Password",
-                    tint = SecondaryColor,
-                )
-            },
-            trailingIcon = {
-                val image = if (passwordVisibility)
-                    Icons.Filled.Visibility
-                else Icons.Filled.VisibilityOff
-
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility
-                }) {
-                    Icon(imageVector  = image, "")
-                }
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = ThirdColor,
-                focusedLabelColor = SecondaryColor,
-                unfocusedBorderColor = SecondaryColor
-            )
-        )
-
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            visualTransformation = if (confirmPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            label = {
-                Text("Confirm Password") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Confirm Password",
-                    tint = SecondaryColor,
-                )
-            },
-            trailingIcon = {
-                val image = if (confirmPasswordVisibility)
-                    Icons.Filled.Visibility
-                else Icons.Filled.VisibilityOff
-
-                IconButton(onClick = {
-                    confirmPasswordVisibility = !confirmPasswordVisibility
-                }) {
-                    Icon(imageVector  = image, "")
-                }
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = ThirdColor,
-                focusedLabelColor = SecondaryColor,
-                unfocusedBorderColor = SecondaryColor
-            ),
-        )
-
-        Button(
-            onClick = { auth.signUpWithEmailAndPassword(navController, email, password) },
-            colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(ButtonPadding_16dp)
-                .padding(top = 15.dp)
-                .width(285.dp)
-                .height(50.dp)
-            ) {
+                .fillMaxSize()
+                .background(White)
+        ) {
+            LogoTextBox()
             Text(
+                text = "SIGN UP",
+                color = PrimaryColor,
+                fontSize = 35.sp,
                 fontFamily = RobotoSlab,
-                color = Color.White,
-                text = "Sign Up",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W900,
+                textAlign = TextAlign.Center,
+            )
+
+            //Email input field
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = {
+                    Text("Email address")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = "email",
+                        tint = SecondaryColor,
+                    )
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = ThirdColor,
+                    focusedLabelColor = SecondaryColor,
+                    unfocusedBorderColor = SecondaryColor
+                )
+            )
+
+            //Password input field
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                label = {
+                    Text("Password")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Password",
+                        tint = SecondaryColor,
+                    )
+                },
+                trailingIcon = {
+                    val image = if (passwordVisibility)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = {
+                        passwordVisibility = !passwordVisibility
+                    }) {
+                        Icon(imageVector = image, "")
+                    }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = ThirdColor,
+                    focusedLabelColor = SecondaryColor,
+                    unfocusedBorderColor = SecondaryColor
+                )
+            )
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                visualTransformation = if (confirmPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                label = {
+                    Text("Confirm Password")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Confirm Password",
+                        tint = SecondaryColor,
+                    )
+                },
+                trailingIcon = {
+                    val image = if (confirmPasswordVisibility)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = {
+                        confirmPasswordVisibility = !confirmPasswordVisibility
+                    }) {
+                        Icon(imageVector = image, "")
+                    }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = ThirdColor,
+                    focusedLabelColor = SecondaryColor,
+                    unfocusedBorderColor = SecondaryColor
+                ),
+            )
+
+            Button(
+                onClick = { auth.signUpWithEmailAndPassword(navController, email, password) },
+                colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
+                modifier = Modifier
+                    .padding(ButtonPadding_16dp)
+                    .padding(top = 15.dp)
+                    .width(285.dp)
+                    .height(50.dp)
+            ) {
+                Text(
+                    fontFamily = RobotoSlab,
+                    color = Color.White,
+                    text = "Sign Up",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W900,
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(top = 25.dp))
+
+            Text(
+                text =
+                buildAnnotatedString {
+                    append("Have an account? Back to Login!")
+                    addStyle(
+                        style = SpanStyle(
+                            color = PrimaryColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        start = 17,
+                        end = 31
+                    )
+                },
+                modifier = Modifier.clickable { navController.navigate(Route.SignInScreen.route) }
             )
         }
-
-        Spacer(modifier = Modifier.padding(top = 25.dp))
-
-        Text(
-            text =
-            buildAnnotatedString {
-                append("Have an account? Back to Login!")
-                addStyle(
-                    style = SpanStyle(
-                        color = PrimaryColor,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline
-                    ),
-                    start = 17,
-                    end = 31
-                )
-            },
-            modifier = Modifier.clickable { navController.navigate(Route.SignInScreen.route) }
-        )
     }
 }
 
