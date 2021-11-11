@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         auth = Auth(this, getString(R.string.default_web_client_id))
 
         setContent {
-            Navigation(auth)
+//            Navigation(auth)
 
         // Just for testing
 //            TestScreen()
