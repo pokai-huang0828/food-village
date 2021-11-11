@@ -3,6 +3,7 @@ package com.example.foodvillage2205.view.navigation
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +13,7 @@ import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.view.screens.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
@@ -37,7 +39,7 @@ fun Navigation(auth: Auth) {
         }
 
         composable(route = Route.MainScreen.route) {
-            MainScreen(navController = navController)
+            MainScreen(navController = navController, auth = auth)
         }
 
         composable(route = Route.ProfileScreen.route) {

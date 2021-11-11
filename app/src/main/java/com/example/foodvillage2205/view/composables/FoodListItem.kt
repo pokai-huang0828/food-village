@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.foodvillage2205.model.entities.Post
+import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.PrimaryColor
@@ -41,7 +42,6 @@ fun FoodListItem(listItem: Post, navController: NavController) {
     ) {
         val painter = rememberImagePainter(listItem.imageUrl)
 
-
         Column {
             Image(
                 painter = painter,
@@ -51,6 +51,7 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                     .height(155.dp)
                     .fillMaxWidth()
             )
+
             Text(
                 text = listItem.title,
                 fontWeight = FontWeight.Bold,
@@ -61,9 +62,8 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 maxLines = 2,
             )
 
-            // {Todo: Time Stamp in each post}
             Text(
-                text = listItem.timestamp?.toDate().toString(),
+                text = TimestampToFormatedString(listItem.timestamp),
                 fontWeight = FontWeight.Normal,
                 fontFamily = RobotoSlab,
                 fontSize = 12.sp,

@@ -48,13 +48,16 @@ val RobotoSlab = FontFamily(Font(R.font.robotoslab_semibold))
 @Composable
 fun SignInScreen(
     navController: NavController,
-    auth: Auth
+    auth: Auth,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
+    var displayErroMsg by remember { mutableStateOf(false) }
+
     val (focusRequester) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -151,8 +154,20 @@ fun SignInScreen(
                 )
             )
 
+            if (displayErroMsg)
+                Text(
+                    "Login failed, please try again.",
+                    color = Danger,
+                )
+
             Button(
-                onClick = { auth.signInWithEmailAndPassword(navController, email, password) },
+                onClick = {
+                    auth.signInWithEmailAndPassword(navController, email, password) {
+                        // error msg
+                        displayErroMsg = true
+
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
                 modifier = Modifier
                     .padding(ButtonPadding_16dp)
@@ -160,7 +175,7 @@ fun SignInScreen(
                     .width(285.dp)
                     .height(50.dp)
                     .shadow(elevation = 5.dp),
-                ) {
+            ) {
                 Text(
                     fontFamily = RobotoSlab,
                     color = Color.White,

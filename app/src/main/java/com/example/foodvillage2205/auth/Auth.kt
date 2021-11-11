@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Response
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -29,7 +30,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
 
     private var googleSignInClient: GoogleSignInClient
     private var _auth: FirebaseAuth = Firebase.auth
-    var currentUser: Any? = null
+    var currentUser: FirebaseUser? = null
 
     init {
         // Initialize Firebase Auth
@@ -111,7 +112,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
     fun signUpWithEmailAndPassword(
         navController: NavController,
         email: String,
-        password: String
+        password: String,
     ) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             _auth.createUserWithEmailAndPassword(email, password)
@@ -149,7 +150,8 @@ class Auth(var context: Activity, default_web_client_id: String) {
     fun signInWithEmailAndPassword(
         navController: NavController,
         email: String,
-        password: String
+        password: String,
+        onError: () -> Unit,
     ) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             _auth.signInWithEmailAndPassword(email, password)
@@ -161,11 +163,13 @@ class Auth(var context: Activity, default_web_client_id: String) {
                         navController.navigate(Route.MainScreen.route)
                     } else {
                         // If sign in fails, display a message to the user.
-                        Toast.makeText(
-                            context,
-                            "Login failed, please check your information and try again.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        onError()
+
+//                        Toast.makeText(
+//                            context,
+//                            "Login failed, please check your information and try again.",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                 }
         }

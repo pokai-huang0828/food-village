@@ -8,6 +8,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.runtime.*
@@ -32,6 +33,7 @@ import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
@@ -78,10 +80,25 @@ fun TopBarDetail(navController: NavController) {
             fontSize = 30.sp,
             fontFamily = RobotoSlab,
             fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(end = 15.dp)
         )
 
-        Spacer(modifier = Modifier.size(80.dp))
+        // Back button
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .padding(5.dp)
+                .size(45.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBackIos,
+                contentDescription = "Back",
+                tint = White,
+                modifier = Modifier
+                    .size(30.dp)
+            )
+        }
     }
 }
 
@@ -127,9 +144,9 @@ fun FoodDetailList(
 fun IconTest(user: User) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 85.dp)
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(10.dp)
+            .padding(end = 15.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -138,13 +155,12 @@ fun IconTest(user: User) {
                 rememberImagePainter(user.thumbnailUrl)
             else
                 painterResource(R.drawable.default_image),
-            contentDescription = "Some text",
+            contentDescription = "Post Image",
             modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)
                 .shadow(elevation = 12.dp, shape = RoundedCornerShape(25.dp), true)
                 .clip(RoundedCornerShape(25.dp))
-
                 .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
@@ -157,7 +173,7 @@ fun IconTest(user: User) {
             fontSize = 29.sp,
             fontStyle = FontStyle.Italic,
             fontFamily = RobotoSlab,
-            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+            modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
             color = PrimaryColor,
             textAlign = TextAlign.Center
         )
@@ -166,14 +182,11 @@ fun IconTest(user: User) {
 
 @Composable
 fun FoodDetail(
-    post: Post
+    post: Post,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            ,
-
-
+            .fillMaxWidth(),
     ) {
         Image(
             painter =
@@ -186,8 +199,7 @@ fun FoodDetail(
                 .fillMaxWidth()
                 .height(220.dp)
                 .shadow(elevation = 20.dp, clip = true, shape = RoundedCornerShape(15.dp))
-                .clip(RoundedCornerShape(15.dp))
-                ,
+                .clip(RoundedCornerShape(15.dp)),
             contentScale = ContentScale.FillWidth,
             alignment = Alignment.Center,
         )
@@ -196,8 +208,8 @@ fun FoodDetail(
         Text(
             text = post.title,
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+            fontSize = 30.sp,
+            modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
             color = PrimaryColor,
             textAlign = TextAlign.Start,
             fontFamily = RobotoSlab,
@@ -209,6 +221,7 @@ fun FoodDetail(
             fontWeight = FontWeight.Normal,
             fontFamily = RobotoSlab,
             fontSize = 17.sp,
+            modifier = Modifier.padding(start = 15.dp)
         )
 
         Text(
@@ -221,7 +234,10 @@ fun FoodDetail(
         )
 
         // Telephone
-        Row(horizontalArrangement = Arrangement.Center) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(start = 15.dp)
+        ) {
             Icon(
                 imageVector = Icons.Filled.PhoneAndroid,
                 contentDescription = "",
@@ -237,7 +253,10 @@ fun FoodDetail(
 
         }
 
-        Row(horizontalArrangement = Arrangement.Center) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(start = 15.dp)
+        ) {
             Icon(
                 imageVector = Icons.Filled.Email,
                 contentDescription = "",
@@ -263,10 +282,11 @@ fun FoodDetail(
         )
 
         Text(
-            text = post.timestamp?.toDate().toString(),
+            text = TimestampToFormatedString(post.timestamp),
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             fontFamily = RobotoSlab,
+            modifier = Modifier.padding(start = 15.dp)
         )
 
 
@@ -286,7 +306,7 @@ fun FoodDetail(
                     "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
-            modifier = Modifier.padding(bottom = 5.dp),
+            modifier = Modifier.padding(bottom = 5.dp, start = 15.dp),
             fontFamily = RobotoSlab,
         )
 
@@ -304,3 +324,4 @@ fun FoodDetail(
 
     }
 }
+

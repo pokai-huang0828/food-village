@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +14,7 @@ import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,10 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -34,24 +30,40 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
-import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
-import com.example.foodvillage2205.view.composables.FakeFoodData
+import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.composables.FoodListItem
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController, auth: Auth) {
+
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+
     Scaffold(
         modifier = Modifier.background(Gray),
-        topBar = { TopBar(navController) },
+        topBar = {
+            TopBar(navController,
+                scope = scope,
+                scaffoldState = scaffoldState)
+                 },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer(navController = navController, auth = auth)
+        },
+
         content = {
             FoodListContent(navController)
         },
@@ -92,7 +104,7 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(navController: NavController, scope: CoroutineScope, scaffoldState: ScaffoldState) {
     var visible by remember { mutableStateOf(false) }
     Column(Modifier.shadow(elevation = 5.dp)) {
         Row(
@@ -104,6 +116,19 @@ fun TopBar(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                }) {
+                Icon(
+                    Icons.Filled.Menu,
+                    contentDescription = "",
+                    tint = Color.White
+                )
+            }
+
             Text(
                 text = "Food Village",
                 color = White,
@@ -141,22 +166,22 @@ fun TopBar(navController: NavController) {
                     )
                 }
 
-                IconButton(
-                    onClick = { navController.navigate(Route.ProfileScreen.route) },
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .size(45.dp)
-                        .clip(CircleShape)
-                        .background(PrimaryColor)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Account",
-                        tint = White,
-                        modifier = Modifier
-                            .size(30.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = { navController.navigate(Route.ProfileScreen.route) },
+//                    modifier = Modifier
+//                        .padding(5.dp)
+//                        .size(45.dp)
+//                        .clip(CircleShape)
+//                        .background(PrimaryColor)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Filled.AccountCircle,
+//                        contentDescription = "Account",
+//                        tint = White,
+//                        modifier = Modifier
+//                            .size(30.dp)
+//                    )
+//                }
             }
         }
         AnimatedVisibility(visible) {
