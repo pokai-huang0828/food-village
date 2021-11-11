@@ -238,35 +238,6 @@ fun Form(
                         )
                     }
                 }
-                Button(
-                    onClick = { navController.navigate(Route.DonateHistory.route) },
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .width(160.dp)
-                        .height(50.dp),
-                    shape = Shapes.medium,
-                    colors = ButtonDefaults.buttonColors(SecondaryColor),
-                    contentPadding = PaddingValues(5.dp)
-                ) {
-                    Row {
-                        Icon(
-                            imageVector = Icons.Filled.History,
-                            contentDescription = "",
-                            tint = White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(2.dp))
-                        Text(
-                            text = stringResource(R.string.History),
-                            fontFamily = RobotoSlab,
-                            color = White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.W900,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                }
             }
 
             //Inputs
