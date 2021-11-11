@@ -163,7 +163,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(
                             context,
-                            "Authentication failed.",
+                            "Login failed, please check your information and try again.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

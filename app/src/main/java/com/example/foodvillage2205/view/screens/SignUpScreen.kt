@@ -1,9 +1,13 @@
 package com.example.foodvillage2205.view.screens
 
+import android.app.Dialog
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,12 +19,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -34,6 +45,7 @@ import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 fun SignUpScreen(
@@ -46,6 +58,12 @@ fun SignUpScreen(
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var confirmPasswordVisibility by remember { mutableStateOf(false) }
+
+    val (focusRequester1, focusRequester2) = FocusRequester.createRefs()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val openDialog = remember { mutableStateOf(false) }
+    var visible by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -77,6 +95,15 @@ fun SignUpScreen(
                 label = {
                     Text("Email address")
                 },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusRequester1.requestFocus() }
+                ),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Email,
@@ -95,8 +122,16 @@ fun SignUpScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
+                singleLine = true,
+                modifier = Modifier.focusRequester(focusRequester1),
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusRequester2.requestFocus() }
+                ),
                 label = {
                     Text("Password")
                 },
@@ -128,8 +163,16 @@ fun SignUpScreen(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
+                singleLine = true,
+                modifier = Modifier.focusRequester(focusRequester2),
                 visualTransformation = if (confirmPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { keyboardController?.hide() }
+                ),
                 label = {
                     Text("Confirm Password")
                 },
@@ -159,13 +202,19 @@ fun SignUpScreen(
             )
 
             Button(
-                onClick = { auth.signUpWithEmailAndPassword(navController, email, password) },
+                onClick = {
+                    if( password != confirmPassword ) {
+                        openDialog.value = true
+                        visible = !visible
+                    } else
+                    auth.signUpWithEmailAndPassword(navController, email, password) },
                 colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
                 modifier = Modifier
                     .padding(ButtonPadding_16dp)
                     .padding(top = 15.dp)
                     .width(285.dp)
                     .height(50.dp)
+                    .shadow(elevation = 5.dp),
             ) {
                 Text(
                     fontFamily = RobotoSlab,
@@ -195,9 +244,60 @@ fun SignUpScreen(
                 },
                 modifier = Modifier.clickable { navController.navigate(Route.SignInScreen.route) }
             )
+
+            AnimatedVisibility(visible) {
+                Dialog()
+            }
         }
     }
 }
 
 
+@Composable
+fun Dialog() {
+    val openDialog = remember { mutableStateOf(true) }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                title = {
+                    Text(
+                        fontFamily = RobotoSlab,
+                        text = "Warning ⚠️",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp)
+                },
+                text = {
+                    Text("Your password are not match, please try again.",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.W500,
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .fillMaxWidth(0.3f)
+                            .background(White),
+                        onClick = {
+                            openDialog.value = false
+                        }) {
+                        Text("OK",
+                            fontSize = 18.sp,
+                            color = PrimaryColor,
+                        )
+                    }
+                },
+                backgroundColor = SecondaryColor,
+                contentColor = Color.White
+            )
+        }
+    }
+}
 

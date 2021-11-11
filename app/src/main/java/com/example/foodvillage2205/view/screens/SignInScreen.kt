@@ -5,20 +5,28 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -35,6 +43,7 @@ import com.example.foodvillage2205.view.theme.*
 
 val RobotoSlab = FontFamily(Font(R.font.robotoslab_semibold))
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 fun SignInScreen(
@@ -44,6 +53,8 @@ fun SignInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
+    val (focusRequester) = FocusRequester.createRefs()
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,7 +84,14 @@ fun SignInScreen(
                 value = email,
                 onValueChange = { email = it },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusRequester.requestFocus() }
+                ),
                 label = {
                     Text("Email address")
                 },
@@ -96,8 +114,15 @@ fun SignInScreen(
                 value = password,
                 onValueChange = { password = it },
                 singleLine = true,
+                modifier = Modifier.focusRequester(focusRequester),
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { keyboardController?.hide() }
+                ),
                 label = {
                     Text("Password")
                 },
@@ -133,8 +158,8 @@ fun SignInScreen(
                     .padding(ButtonPadding_16dp)
                     .padding(top = 15.dp)
                     .width(285.dp)
-                    .height(50.dp),
-
+                    .height(50.dp)
+                    .shadow(elevation = 5.dp),
                 ) {
                 Text(
                     fontFamily = RobotoSlab,
@@ -151,7 +176,8 @@ fun SignInScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 55.dp)
                     .padding(top = 10.dp)
-                    .height(50.dp),
+                    .height(50.dp)
+                    .shadow(elevation = 3.dp),
                 onClick = { auth.signInWithGoogle(MainActivity.GOOGLE_AUTH) }
             ) {
                 Row(
