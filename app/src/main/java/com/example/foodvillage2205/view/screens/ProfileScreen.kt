@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,7 @@ import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.FireStorageRepo
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.composables.gallery.GallerySelect
 import com.example.foodvillage2205.view.navigation.Route
@@ -41,22 +43,36 @@ import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 @ExperimentalPermissionsApi
 @Composable
 fun ProfileScreen(navController: NavController, auth: Auth) {
+
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+
     Scaffold(
-        topBar = { TopBar(navController, auth) },
+        topBar = { TopBarProfile(navController,
+            scope = scope,
+            scaffoldState = scaffoldState) },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer(navController = navController, auth = auth)
+        },
         content = { Form(navController, auth) }
     )
 }
 
 @Composable
-fun TopBar(
+fun TopBarProfile(
     navController: NavController,
-    auth: Auth
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
 ) {
     Row(
         modifier = Modifier
@@ -67,14 +83,17 @@ fun TopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        //Icon button to go back to Main Page
         IconButton(
-            onClick = { navController.navigate(Route.MainScreen.route) },
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.CenterVertically)
-        ) {
-            Image(painterResource(R.drawable.food_village_logo_1), "")
+            onClick = {
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            }) {
+            Icon(
+                Icons.Filled.Menu,
+                contentDescription = "",
+                tint = Color.White
+            )
         }
 
         //title
@@ -85,22 +104,22 @@ fun TopBar(
             fontFamily = RobotoSlab,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
+            modifier = Modifier.padding(end = 10.dp)
         )
 
+        // Back button
         IconButton(
-            onClick = { auth.signOut(navController) },
+            onClick = { navController.popBackStack() },
             modifier = Modifier
-                .padding(5.dp)
+                .padding(2.dp)
                 .size(45.dp)
-                .clip(CircleShape)
-                .background(PrimaryColor)
         ) {
             Icon(
-                imageVector = Icons.Filled.Logout,
-                contentDescription = "Logout",
+                imageVector = Icons.Filled.ArrowBackIos,
+                contentDescription = "Back",
                 tint = White,
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(30.dp)
             )
         }
     }

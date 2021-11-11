@@ -6,9 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,18 +24,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.ThirdColor
 import com.example.foodvillage2205.view.theme.White
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun DonateHistory(navController: NavController) {
+fun DonateHistory(navController: NavController, auth: Auth) {
+
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+
     Scaffold(
-        topBar = { NavBar(navController) },
+        topBar = { NavBar(navController,
+            scope = scope,
+            scaffoldState = scaffoldState) },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer(navController = navController, auth = auth)
+        },
         content = { ItemList(navController)}
     )
 }
@@ -45,7 +59,9 @@ fun DonateHistory(navController: NavController) {
 @Composable
 fun NavBar(
     navController: NavController,
-    modifier: Modifier = Modifier) {
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
     Column() {
         Row(
             modifier = Modifier
@@ -57,24 +73,43 @@ fun NavBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { navController.navigate(Route.MainScreen.route) },
-                modifier = Modifier
-                    .size(80.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
-                Image(painterResource(R.drawable.food_village_logo_1), "logo")
+                onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                }) {
+                Icon(
+                    Icons.Filled.Menu,
+                    contentDescription = "",
+                    tint = Color.White
+                )
             }
 
             Text(
-                text = "Donations",
+                text = "Posts History",
                 color = White,
                 fontSize = 30.sp,
                 fontFamily = RobotoSlab,
                 fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(end = 10.dp)
             )
 
-            Spacer(modifier = Modifier.size(90.dp))
+            // Back button
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+                    .padding(2.dp)
+                    .size(45.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBackIos,
+                    contentDescription = "Back",
+                    tint = White,
+                    modifier = Modifier
+                        .size(30.dp)
+                )
+            }
         }
 
         SearchBox()

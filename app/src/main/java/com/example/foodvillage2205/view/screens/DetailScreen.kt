@@ -3,13 +3,11 @@ package com.example.foodvillage2205.view.screens
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
@@ -34,6 +33,7 @@ import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.TimestampToFormatedString
+import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
@@ -42,17 +42,35 @@ import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.example.foodvillage2205.viewmodels.UserViewModel
 import com.example.foodvillage2205.viewmodels.UserViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun DetailScreen(navController: NavController, postId: String?) {
+fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
+
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+
     Scaffold(
-        topBar = { TopBarDetail(navController) },
+        topBar = { TopBarDetail(navController,
+            scope = scope,
+            scaffoldState = scaffoldState) },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer(navController = navController, auth = auth)
+        },
         content = { FoodDetailList(postId) }
     )
 }
 
 @Composable
-fun TopBarDetail(navController: NavController) {
+fun TopBarDetail(
+    navController: NavController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
     Row(
         modifier = Modifier
             .background(SecondaryColor)
@@ -63,14 +81,17 @@ fun TopBarDetail(navController: NavController) {
         verticalAlignment = Alignment.CenterVertically,
 
     ) {
-        //Icon button to go back to Main Page
         IconButton(
-            onClick = { navController.navigate(Route.MainScreen.route) },
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.CenterVertically)
-        ) {
-            Image(painterResource(R.drawable.food_village_logo_1), "")
+            onClick = {
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            }) {
+            Icon(
+                Icons.Filled.Menu,
+                contentDescription = "",
+                tint = Color.White
+            )
         }
 
         //title
@@ -88,7 +109,7 @@ fun TopBarDetail(navController: NavController) {
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
-                .padding(5.dp)
+                .padding(2.dp)
                 .size(45.dp)
         ) {
             Icon(

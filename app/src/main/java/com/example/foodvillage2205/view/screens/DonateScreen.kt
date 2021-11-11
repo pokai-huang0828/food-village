@@ -4,12 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -31,8 +27,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
@@ -47,23 +47,41 @@ import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.CameraCapture
+import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.viewmodels.UserViewModel
 import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @ExperimentalPermissionsApi
 @Composable
 fun DonateScreen(navController: NavController, auth: Auth) {
+
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+
     Scaffold(
-        topBar = { TopBarDonateScreen(navController) },
+        topBar = { TopBarDonateScreen(navController,
+                scope = scope,
+                scaffoldState = scaffoldState) },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Drawer(navController = navController, auth = auth)
+        },
         content = { FormDonateScreen(navController = navController, auth = auth) }
     )
 }
 
 @Composable
-fun TopBarDonateScreen(navController: NavController) {
+fun TopBarDonateScreen(
+    navController: NavController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
     Row(
         modifier = Modifier
             .background(SecondaryColor)
@@ -73,27 +91,43 @@ fun TopBarDonateScreen(navController: NavController) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        //Icon button to go back to Main Page
         IconButton(
-            onClick = { navController.navigate(Route.MainScreen.route) },
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.CenterVertically)
-        ) {
-            Image(painterResource(R.drawable.food_village_logo_1), "")
+            onClick = {
+                scope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            }) {
+            Icon(
+                Icons.Filled.Menu,
+                contentDescription = "",
+                tint = Color.White
+            )
         }
 
-        //title
         Text(
-            text = stringResource(R.string.D_title),
+            text = "New Post",
             color = White,
-            fontSize = 30.sp,
             fontFamily = RobotoSlab,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
+            fontSize = 30.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(end = 10.dp)
         )
 
-        Spacer(modifier = Modifier.size(80.dp))
+        // Back button
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .padding(2.dp)
+                .size(45.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBackIos,
+                contentDescription = "Back",
+                tint = White,
+                modifier = Modifier
+                    .size(30.dp)
+            )
+        }
     }
 }
 

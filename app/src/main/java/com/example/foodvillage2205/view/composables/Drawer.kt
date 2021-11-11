@@ -10,10 +10,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +35,7 @@ import com.example.foodvillage2205.view.navigation.RouteArgs.Companion.postId
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
+import com.example.foodvillage2205.view.theme.Shapes
 import com.example.foodvillage2205.view.theme.White
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -53,12 +51,13 @@ fun Drawer(
         modifier = Modifier
             .background(White)
             .fillMaxSize()
-            ,
+            .shadow(elevation = 1.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(modifier = Modifier
             .background(SecondaryColor)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .shadow(elevation = 1.dp),
             contentAlignment = Alignment.Center
 
         ) {
@@ -82,6 +81,7 @@ fun Drawer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .padding(10.dp),
 
             ) {
@@ -98,15 +98,29 @@ fun Drawer(
                 Icon(
                     imageVector = Icons.Filled.Home,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = PrimaryColor
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "Home",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    fontFamily = RobotoSlab,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = "",
+                        tint = PrimaryColor
+                    )
+                }
             }
 
             Row(
@@ -121,17 +135,42 @@ fun Drawer(
                 Icon(
                     imageVector = Icons.Filled.AddCircleOutline,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = PrimaryColor
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "New Post",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    fontFamily = RobotoSlab,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = "",
+                        tint = PrimaryColor
+                    )
+                }
             }
 
+            Divider(color = Color.LightGray, thickness = 1.dp)
+            Spacer(modifier = Modifier.padding(5.dp))
+            Text(
+                text = "User",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = RobotoSlab,
+                color = Color.Gray,
+                modifier = Modifier.padding(bottom = 2.dp, start = 10.dp)
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -144,38 +183,101 @@ fun Drawer(
                 Icon(
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = PrimaryColor
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "Profile",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    fontFamily = RobotoSlab,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = "",
+                        tint = PrimaryColor
+                    )
+                }
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .clickable { auth.signOut(navController)},
+                    .clickable { navController.navigate(Route.DonateHistory.route) },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
                 Spacer(modifier = Modifier.padding(10.dp))
                 Icon(
-                    imageVector = Icons.Filled.ExitToApp,
+                    imageVector = Icons.Filled.History,
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = PrimaryColor
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Logout",
-                    fontSize = 18.sp,
+                    text = "Post History",
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    fontFamily = RobotoSlab,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = "",
+                        tint = PrimaryColor
+                    )
+                }
+            }
+
+            Column(
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                )
+            {
+                Divider(color = Color.LightGray, thickness = 1.dp)
+                Spacer(modifier = Modifier.padding(5.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .clickable { auth.signOut(navController) },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Icon(
+                        imageVector = Icons.Filled.ExitToApp,
+                        contentDescription = "",
+                        tint = PrimaryColor,
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Text(
+                        text = "Logout",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = RobotoSlab,
+                        color = PrimaryColor,
+                        modifier = Modifier.padding(bottom = 2.dp)
+                    )
+                }
             }
         }
     }
@@ -192,29 +294,43 @@ fun UserImage(auth: Auth) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = rememberImagePainter(auth.currentUser?.photoUrl),
-            contentDescription = "Post Image",
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .shadow(elevation = 12.dp, shape = RoundedCornerShape(25.dp), true)
-                .clip(RoundedCornerShape(25.dp))
-                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-        Spacer(modifier = Modifier.size(10.dp))
+        if (auth.currentUser?.displayName.isNullOrBlank()) {
+            Image(
+                painter = painterResource(id = R.drawable.food_village_logo_2),
+                contentDescription = "Post Image",
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp)
+                    .shadow(elevation = 12.dp),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            )
+        } else {
 
-        Text(
-            text = auth.currentUser?.displayName?:"",
-            fontWeight = FontWeight.Bold,
-            fontSize = 29.sp,
-            fontStyle = FontStyle.Italic,
-            fontFamily = RobotoSlab,
-            modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
-            color = White,
-            textAlign = TextAlign.Center
-        )
+            Image(
+                painter = rememberImagePainter(auth.currentUser?.photoUrl),
+                contentDescription = "Post Image",
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(50.dp)
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(25.dp), true)
+                    .clip(RoundedCornerShape(25.dp))
+                    .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Text(
+                text = auth.currentUser?.displayName ?: "",
+                fontWeight = FontWeight.Bold,
+                fontSize = 29.sp,
+                fontStyle = FontStyle.Italic,
+                fontFamily = RobotoSlab,
+                modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
+                color = White,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }

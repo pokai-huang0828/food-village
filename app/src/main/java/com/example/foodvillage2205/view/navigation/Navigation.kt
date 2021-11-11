@@ -51,7 +51,7 @@ fun Navigation(auth: Auth) {
         }
 
         composable(route = Route.DonateHistory.route) {
-            DonateHistory(navController = navController)
+            DonateHistory(navController = navController, auth = auth)
         }
 
         composable(
@@ -60,7 +60,8 @@ fun Navigation(auth: Auth) {
         ) { backStackEntry ->
             DetailScreen(
                 navController = navController,
-                postId = backStackEntry.arguments?.getString(RouteArgs.postId)
+                postId = backStackEntry.arguments?.getString(RouteArgs.postId),
+                auth = auth
             )
         }
 

@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.model.entities.Post
+import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
@@ -63,7 +64,6 @@ fun MainScreen(navController: NavController, auth: Auth) {
         drawerContent = {
             Drawer(navController = navController, auth = auth)
         },
-
         content = {
             FoodListContent(navController)
         },
