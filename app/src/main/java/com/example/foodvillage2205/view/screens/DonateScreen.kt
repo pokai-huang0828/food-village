@@ -28,13 +28,17 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodvillage2205.model.entities.Post
@@ -74,6 +78,76 @@ fun DonateScreen(navController: NavController, auth: Auth) {
         },
         content = { FormDonateScreen(navController = navController, auth = auth) }
     )
+}
+
+@Composable
+fun Item2(
+    modifier: Modifier = Modifier,
+    image: Painter,
+    header: String,
+    date: String,
+    itemDate: String,
+    navController: NavController
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Image(
+            painter = image,
+            contentDescription = header,
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .height(160.dp)
+                .clip(RoundedCornerShape(15.dp)),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
+
+        Text(
+            text = "$header",
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+            color = PrimaryColor,
+        )
+
+        Row {
+            Text(
+                text = date,
+                fontWeight = FontWeight.Bold,
+                fontSize = 17.sp,
+                color = PrimaryColor,
+            )
+            Text(
+                text = itemDate,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+            )
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
+                modifier = Modifier
+                    .fillMaxWidth(0.87f)
+                    .height(34.dp)
+                    .padding(start = 50.dp)
+
+            ) {
+                Text(
+                    fontFamily = RobotoSlab,
+                    color = Color.White,
+                    text = "Details",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W900,
+                )
+            }
+        }
+
+
+    }
 }
 
 @Composable
@@ -204,16 +278,19 @@ fun FormDonateScreen(
             //Avatar
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+//                horizontalArrangement = Arrangement.Center
             ) {
 
-                Box(contentAlignment = Alignment.TopEnd) {
-                    Text(
-                        text = stringResource(R.string.AddImage),
-                        fontSize = 20.sp,
-                        fontFamily = RobotoSlab,
-                        color = SecondaryColor,
-                        fontWeight = FontWeight.W900
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
+                    Item2(
+                        image = painterResource(id = R.drawable.defaultimagepreview),
+                        header = "",
+                        navController = navController,
+                        date = "",
+                        itemDate = ""
                     )
 
                     imageUrl?.let {
@@ -240,7 +317,7 @@ fun FormDonateScreen(
                         onClick = { launcher.launch("image/*") },
                         modifier = Modifier
                             .size(20.dp)
-                            .offset(y = (3).dp, x = 30.dp),
+                            .offset(y = (1).dp, x = 30.dp),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(SecondaryColor),
                         contentPadding = PaddingValues(0.dp)
@@ -258,7 +335,7 @@ fun FormDonateScreen(
                         onClick = { showCameraScreen = !showCameraScreen },
                         modifier = Modifier
                             .size(20.dp)
-                            .offset(y = (3).dp, x = 60.dp),
+                            .offset(y = (2).dp, x = 60.dp),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(SecondaryColor),
                         contentPadding = PaddingValues(0.dp)
