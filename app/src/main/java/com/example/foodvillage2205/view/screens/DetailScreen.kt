@@ -163,11 +163,17 @@ fun FoodDetailList(
     ) {
         IconTest(user)
         FoodDetail(post.value)
+        Spacer(modifier = Modifier.padding(bottom = 10.dp))
         DefaultBtn(
                 btnText = stringResource(R.string.Edit),
                 navController = navController,
         )
-
+        Spacer(modifier = Modifier.padding(bottom = 10.dp))
+        DefaultBtn(
+                postVM = postVM,
+                btnText = stringResource(R.string.Delete),
+                navController = navController,
+        )
         Spacer(modifier = Modifier.padding(bottom = 80.dp))
     }
 }

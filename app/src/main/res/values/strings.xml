@@ -38,6 +38,7 @@
     <string name="Province">Province</string>
     <string name="Postal">Postal Code</string>
     <string name="Submit">Submit</string>
+    <string name="Delete">Delete</string>
     <string name="Edit">Edit</string>
     <string name="AddImage">Add Image</string>
 </resources>

@@ -156,8 +156,15 @@ fun DefaultBtn(
                         }
                         "Edit" -> {
                             SessionPost.enabled = true
-//                        SessionPost.setSessionPost(postFromDetailPage!!)
                             navController?.navigate(Route.DonateScreen.route)
+                        }
+                        "Delete" -> {
+                            postVM?.deletePost(SessionPost.getSessionPost()) { resource ->
+                                // if resource is success, return to Main Screen
+                                if (resource is Resource.Success) {
+                                    navController?.navigate(Route.MainScreen.route)
+                                }
+                            }
                         }
                     }
                 },
