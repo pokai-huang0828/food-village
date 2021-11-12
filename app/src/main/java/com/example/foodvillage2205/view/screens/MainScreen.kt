@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -31,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
@@ -52,20 +50,25 @@ fun MainScreen(navController: NavController, auth: Auth) {
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
     )
+    var userRequest by remember { mutableStateOf("") }
 
     Scaffold(
         modifier = Modifier.background(Gray),
         topBar = {
-            TopBar(navController,
+            TopBar(
+                navController,
                 scope = scope,
-                scaffoldState = scaffoldState)
-                 },
+                scaffoldState = scaffoldState
+            ) { userSearch ->
+                userRequest = userSearch
+            }
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
         },
         content = {
-            FoodListContent(navController)
+            FoodListContent(navController, userRequest = userRequest)
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -104,7 +107,12 @@ fun MainScreen(navController: NavController, auth: Auth) {
 }
 
 @Composable
-fun TopBar(navController: NavController, scope: CoroutineScope, scaffoldState: ScaffoldState) {
+fun TopBar(
+    navController: NavController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState,
+    filterRequest: (String) -> Unit
+) {
     var visible by remember { mutableStateOf(false) }
     Column(Modifier.shadow(elevation = 5.dp)) {
         Row(
@@ -166,32 +174,20 @@ fun TopBar(navController: NavController, scope: CoroutineScope, scaffoldState: S
                     )
                 }
 
-//                IconButton(
-//                    onClick = { navController.navigate(Route.ProfileScreen.route) },
-//                    modifier = Modifier
-//                        .padding(5.dp)
-//                        .size(45.dp)
-//                        .clip(CircleShape)
-//                        .background(PrimaryColor)
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.AccountCircle,
-//                        contentDescription = "Account",
-//                        tint = White,
-//                        modifier = Modifier
-//                            .size(30.dp)
-//                    )
-//                }
             }
         }
         AnimatedVisibility(visible) {
-            SearchBar()
+            SearchBar() { userSearch ->
+                filterRequest(userSearch)
+            }
         }
     }
 }
 
 @Composable
-fun SearchBar() {
+fun SearchBar(
+    filterRequest: (String) -> Unit
+) {
     var searchText by remember { mutableStateOf("") }
     Surface(
         modifier = Modifier
@@ -206,7 +202,10 @@ fun SearchBar() {
         ) {
             TextField(
                 value = searchText,
-                onValueChange = { searchText = it },
+                onValueChange = {
+                    searchText = it
+                    filterRequest(searchText)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp)),
@@ -240,14 +239,15 @@ fun SearchBar() {
 @Composable
 fun FoodListContent(
     navController: NavController,
-    postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
+    postsViewModel: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
+    userRequest: String
 ) {
     // Exact real time posts from firestore
     when (val postsListResponse =
         postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
 
         is Resource.Success<*> -> {
-            val foodItems = postsListResponse.data as List<Post>
+            val foodItems = postsListResponse.data as List<*>
 
             LazyVerticalGrid(
                 cells = GridCells.Fixed(2),
@@ -255,18 +255,19 @@ fun FoodListContent(
                     .padding(bottom = 5.dp)
                     .background(Gray)
             ) {
-                items(
-                    items = foodItems,
-                    itemContent = {
-                        FoodListItem(listItem = it, navController)
+                items(items = foodItems) { post ->
+                    val listItem: Post = post as Post
+                    when (userRequest) {
+                        "" -> FoodListItem(listItem = listItem, navController)
+                        else -> {
+                            if (userRequest.lowercase() in listItem.title.lowercase()) {
+                                FoodListItem(listItem = listItem, navController)
+                            }
+                        }
                     }
-                )
+                }
             }
         }
-
-        else -> {
-            Text("Loading posts...")
-        }
+        else -> Text("Loading posts...")
     }
-
 }

@@ -3,7 +3,7 @@ package com.example.foodvillage2205.model.entities
 import com.google.firebase.Timestamp
 
 data class Post(
-    val id: String = "",
+    var id: String = "",
     val title: String = "",
     val imageUrl: String = "",
     val description: String = "",
