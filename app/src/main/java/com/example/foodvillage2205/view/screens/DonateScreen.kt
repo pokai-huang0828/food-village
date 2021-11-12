@@ -80,75 +80,7 @@ fun DonateScreen(navController: NavController, auth: Auth) {
     )
 }
 
-@Composable
-fun Item2(
-    modifier: Modifier = Modifier,
-    image: Painter,
-    header: String,
-    date: String,
-    itemDate: String,
-    navController: NavController
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Image(
-            painter = image,
-            contentDescription = header,
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .height(160.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
 
-        Text(
-            text = "$header",
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            fontStyle = FontStyle.Italic,
-            modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
-            color = PrimaryColor,
-        )
-
-        Row {
-            Text(
-                text = date,
-                fontWeight = FontWeight.Bold,
-                fontSize = 17.sp,
-                color = PrimaryColor,
-            )
-            Text(
-                text = itemDate,
-                fontWeight = FontWeight.Normal,
-                fontSize = 17.sp,
-            )
-            Button(
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(backgroundColor = SecondaryColor),
-                modifier = Modifier
-                    .fillMaxWidth(0.87f)
-                    .height(34.dp)
-                    .padding(start = 50.dp)
-
-            ) {
-                Text(
-                    fontFamily = RobotoSlab,
-                    color = Color.White,
-                    text = "Details",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.W900,
-                )
-            }
-        }
-
-
-    }
-}
 
 @Composable
 fun TopBarDonateScreen(
@@ -278,20 +210,15 @@ fun FormDonateScreen(
             //Avatar
             Row(
                 modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center
             ) {
 
-                Row(
+                Box(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    contentAlignment = Alignment.BottomEnd
                 ) {
-                    Item2(
-                        image = painterResource(id = R.drawable.defaultimagepreview),
-                        header = "",
-                        navController = navController,
-                        date = "",
-                        itemDate = ""
-                    )
+                    Image(painter = painterResource(id = R.drawable.defaultimagepreview), contentDescription = "", modifier = Modifier.size(100.dp))
 
                     imageUrl?.let {
                         if (Build.VERSION.SDK_INT < 28) {
