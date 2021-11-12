@@ -3,6 +3,7 @@ package com.example.foodvillage2205.model.repositories
 import android.util.Log
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.responses.Resource
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
@@ -59,7 +60,9 @@ class PostRepository {
     }
 
     fun updatePost(post: Post, onResponse: (Resource<*>) -> Unit) {
-        _collection.document(post.id).set(post)
+//        FirebaseFirestore.getInstance().collection("app").document("posts").collection(post.id).set(post)
+        _collection.document(post.id)
+            .set(post)
             .addOnSuccessListener {
                 Log.d(TAG, "DocumentSnapshot successfully updated!")
                 onResponse(Resource.Success(post.id))

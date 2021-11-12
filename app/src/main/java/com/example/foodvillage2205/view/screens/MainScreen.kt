@@ -32,6 +32,7 @@ import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
+import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.composables.FoodListItem
 import com.example.foodvillage2205.view.navigation.Route
@@ -73,6 +74,7 @@ fun MainScreen(navController: NavController, auth: Auth) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    SessionPost.enabled=false
                     navController.navigate(Route.DonateScreen.route)
                 },
                 backgroundColor = SecondaryColor,
