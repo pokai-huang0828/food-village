@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.FloatingActionButtonDefaults.elevation
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -31,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodvillage2205.Auth
 import com.example.foodvillage2205.model.entities.Post
-import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
@@ -56,10 +54,12 @@ fun MainScreen(navController: NavController, auth: Auth) {
     Scaffold(
         modifier = Modifier.background(Gray),
         topBar = {
-            TopBar(navController,
+            TopBar(
+                navController,
                 scope = scope,
-                scaffoldState = scaffoldState)
-                 },
+                scaffoldState = scaffoldState
+            )
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -166,22 +166,6 @@ fun TopBar(navController: NavController, scope: CoroutineScope, scaffoldState: S
                     )
                 }
 
-//                IconButton(
-//                    onClick = { navController.navigate(Route.ProfileScreen.route) },
-//                    modifier = Modifier
-//                        .padding(5.dp)
-//                        .size(45.dp)
-//                        .clip(CircleShape)
-//                        .background(PrimaryColor)
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.AccountCircle,
-//                        contentDescription = "Account",
-//                        tint = White,
-//                        modifier = Modifier
-//                            .size(30.dp)
-//                    )
-//                }
             }
         }
         AnimatedVisibility(visible) {
@@ -263,10 +247,6 @@ fun FoodListContent(
                 )
             }
         }
-
-        else -> {
-            Text("Loading posts...")
-        }
+        else -> Text("Loading posts...")
     }
-
 }

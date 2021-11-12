@@ -44,7 +44,6 @@ class PostViewModelFactory(private val postRepository: PostRepository) :
         if (modelClass.isAssignableFrom(PostsViewModel::class.java)) {
             return PostsViewModel(postRepository) as T
         }
-
         throw IllegalStateException()
     }
 }

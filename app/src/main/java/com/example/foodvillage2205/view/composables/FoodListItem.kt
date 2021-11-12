@@ -1,6 +1,5 @@
 package com.example.foodvillage2205.view.composables
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,9 +21,6 @@ import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.White
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun FoodListItem(listItem: Post, navController: NavController) {
@@ -69,7 +65,6 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 5.dp, start = 10.dp),
             )
-//            Log.d("test", listItem.timestamp?.toDate().toString())
         }
     }
 }

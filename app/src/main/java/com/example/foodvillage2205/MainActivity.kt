@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.foodvillage2205.view.navigation.Navigation
 import com.example.foodvillage2205.view.screens.TestScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -13,6 +14,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
 
+    @ExperimentalComposeUiApi
     @ExperimentalPermissionsApi
     @ExperimentalFoundationApi
     @ExperimentalAnimationApi

@@ -34,7 +34,6 @@ import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.Drawer
-import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
