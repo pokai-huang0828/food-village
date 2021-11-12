@@ -28,13 +28,21 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.foodvillage2205.model.entities.Post
@@ -55,6 +63,7 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
 @Composable
 fun DonateScreen(navController: NavController, auth: Auth) {
@@ -65,9 +74,11 @@ fun DonateScreen(navController: NavController, auth: Auth) {
     )
 
     Scaffold(
-        topBar = { TopBarDonateScreen(navController,
+        topBar = {
+            TopBarDonateScreen(navController,
                 scope = scope,
-                scaffoldState = scaffoldState) },
+                scaffoldState = scaffoldState)
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -80,7 +91,7 @@ fun DonateScreen(navController: NavController, auth: Auth) {
 fun TopBarDonateScreen(
     navController: NavController,
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
     Row(
         modifier = Modifier
@@ -131,6 +142,7 @@ fun TopBarDonateScreen(
     }
 }
 
+@ExperimentalComposeUiApi
 @SuppressLint("ProduceStateDoesNotAssignValue")
 @ExperimentalPermissionsApi
 @Composable
@@ -138,7 +150,7 @@ fun FormDonateScreen(
     navController: NavController,
     auth: Auth,
     postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
-    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
 ) {
     var name by remember { mutableStateOf("") }
     var details by remember { mutableStateOf("") }
@@ -157,6 +169,13 @@ fun FormDonateScreen(
     // Set up for firestorage upload
     val coroutineScope = rememberCoroutineScope()
     val fireStorageRepo by remember { mutableStateOf(FireStorageRepo()) }
+
+    // Keyboard done button
+    val (focusRequesterPhone,
+        focusRequesterCity,
+        focusRequesterProvince,
+        focusRequesterPostCode, ) = FocusRequester.createRefs()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -195,12 +214,12 @@ fun FormDonateScreen(
         }
     } else {
 
-    Column(
-        modifier = Modifier
-            .height(700.dp)
-            .verticalScroll(rememberScrollState())
-            .padding(30.dp)
-    ) {
+        Column(
+            modifier = Modifier
+                .height(700.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(30.dp)
+        ) {
             //Avatar
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -281,33 +300,6 @@ fun FormDonateScreen(
             {
                 //Post Name
                 Text(
-                    text = stringResource(R.string.postName),
-                    fontSize = 20.sp,
-                    fontFamily = RobotoSlab,
-                    color = SecondaryColor,
-                    fontWeight = FontWeight.W900
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.foodName))
-                    },
-                    maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
-                    )
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //Details
-                Text(
                     text = stringResource(R.string.details),
                     fontSize = 20.sp,
                     fontFamily = RobotoSlab,
@@ -315,13 +307,45 @@ fun FormDonateScreen(
                     fontWeight = FontWeight.W900
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                TextField(
-                    value = details,
-                    onValueChange = { details = it },
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxWidth(),
                     label = {
-                        Text(text = stringResource(R.string.food_details))
+                        Text(text = "Title")
+                    },
+                    singleLine = true,
+                    maxLines = 1,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = WhiteLight,
+                        focusedIndicatorColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor,
+                        unfocusedIndicatorColor = SecondaryColor
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
+                    ),
+                )
+                if (name.isEmpty()) {
+                    Text(
+                        "Title is required.",
+                        color = Danger,
+                    )
+                }else {}
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = details,
+                    onValueChange = { details = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    label = {
+                        Text(text = "Details")
                     },
                     maxLines = 5,
                     colors = TextFieldDefaults.textFieldColors(
@@ -331,6 +355,13 @@ fun FormDonateScreen(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
+                if (details.isEmpty()) {
+                Text(
+                    "Details are required.",
+                    color = Danger,
+                )}else {
+                }
+
                 Spacer(modifier = Modifier.height(10.dp))
 
                 //Contact
@@ -343,7 +374,7 @@ fun FormDonateScreen(
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 //Email
-                TextField(
+                OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
                     modifier = Modifier
@@ -351,32 +382,56 @@ fun FormDonateScreen(
                     label = {
                         Text(text = stringResource(R.string.email))
                     },
+                    singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
                         focusedLabelColor = SecondaryColor,
                         unfocusedIndicatorColor = SecondaryColor
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusRequesterPhone.requestFocus() }
+                    ),
                 )
 
                 //Phone Number
-                TextField(
+                OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .focusRequester(focusRequesterPhone),
                     label = {
                         Text(text = stringResource(R.string.phone))
                     },
+                    singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
                         focusedLabelColor = SecondaryColor,
                         unfocusedIndicatorColor = SecondaryColor
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
+                    ),
                 )
+                if (phone.isEmpty()) {
+                    Text(
+                        "Phone number is required.",
+                        color = Danger,
+                    )}else {
+                }
                 Spacer(modifier = Modifier.height(10.dp))
 
                 //Pick Up Location
@@ -390,7 +445,7 @@ fun FormDonateScreen(
                 Spacer(modifier = Modifier.height(5.dp))
 
                 //Street
-                TextField(
+                OutlinedTextField(
                     value = street,
                     onValueChange = { street = it },
                     modifier = Modifier
@@ -398,68 +453,118 @@ fun FormDonateScreen(
                     label = {
                         Text(text = stringResource(R.string.Street))
                     },
+                    singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
                         focusedLabelColor = SecondaryColor,
                         unfocusedIndicatorColor = SecondaryColor
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusRequesterCity.requestFocus() }
+                    ),
                 )
+                if (street.isEmpty()) {
+                    Text(
+                        "Address is required.",
+                        color = Danger,
+                    )}else {
+                }
 
-                //City
-                TextField(
-                    value = city,
-                    onValueChange = { city = it },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.City))
-                    },
-                    maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                Row() {
+                    //City
+                    OutlinedTextField(
+                        value = city,
+                        onValueChange = { city = it },
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .focusRequester(focusRequesterCity),
+                        label = {
+                            Text(text = stringResource(R.string.City))
+                        },
+                        singleLine = true,
+                        maxLines = 1,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = WhiteLight,
+                            focusedIndicatorColor = SecondaryColor,
+                            focusedLabelColor = SecondaryColor,
+                            unfocusedIndicatorColor = SecondaryColor
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequesterProvince.requestFocus() }
+                        ),
                     )
-                )
 
-                //Province
-                TextField(
-                    value = province,
-                    onValueChange = { province = it },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.Province))
-                    },
-                    maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    //Province
+                    OutlinedTextField(
+                        value = province,
+                        onValueChange = { province = it },
+                        modifier = Modifier
+                            .padding(start = 5.dp)
+                            .fillMaxWidth()
+                            .focusRequester(focusRequesterProvince),
+                        label = {
+                            Text(text = stringResource(R.string.Province))
+                        },
+                        singleLine = true,
+                        maxLines = 1,
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = WhiteLight,
+                            focusedIndicatorColor = SecondaryColor,
+                            focusedLabelColor = SecondaryColor,
+                            unfocusedIndicatorColor = SecondaryColor
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusRequesterPostCode.requestFocus() }
+                        ),
                     )
-                )
+                }
 
                 //Postal Code
-                TextField(
+                OutlinedTextField(
                     value = postalCode,
                     onValueChange = { postalCode = it },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .focusRequester(focusRequesterPostCode),
                     label = {
                         Text(text = stringResource(R.string.Postal))
                     },
+                    singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
                         focusedLabelColor = SecondaryColor,
                         unfocusedIndicatorColor = SecondaryColor
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
+                    ),
                 )
+                if (postalCode.isEmpty()) {
+                    Text(
+                        "PostalCode is required.",
+                        color = Danger,
+                    )}else {
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
             }
@@ -531,9 +636,7 @@ fun FormDonateScreen(
                 }
             }
         }
-        }
-
-
+    }
 }
 
 @ExperimentalPermissionsApi
@@ -543,7 +646,7 @@ fun CameraScreen(
     modifier: Modifier = Modifier,
     toggleCamera: () -> Unit,
     onPhotoTaken: (Uri) -> Unit,
-){
+) {
     if (showCamera) {
         Box(modifier = modifier) {
             CameraCapture(
