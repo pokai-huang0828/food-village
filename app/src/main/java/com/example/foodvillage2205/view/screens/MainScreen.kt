@@ -74,7 +74,7 @@ fun MainScreen(navController: NavController, auth: Auth) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    SessionPost.enabled=false
+                    SessionPost.enabled = false
                     navController.navigate(Route.DonateScreen.route)
                 },
                 backgroundColor = SecondaryColor,
@@ -250,26 +250,18 @@ fun FoodListContent(
 
         is Resource.Success<*> -> {
             val foodItems = postsListResponse.data as List<*>
-
+            val filtered = foodItems.filter { userRequest.lowercase() in (it as Post).title.lowercase() }
             LazyVerticalGrid(
                 cells = GridCells.Fixed(2),
                 modifier = Modifier
                     .padding(bottom = 5.dp)
                     .background(Gray)
             ) {
-                items(items = foodItems) { post ->
+                items(items = filtered) { post ->
                     val listItem: Post = post as Post
-                    when (userRequest) {
-                        "" -> FoodListItem(listItem = listItem, navController)
-                        else -> {
-                            if (userRequest.lowercase() in listItem.title.lowercase()) {
-                                FoodListItem(listItem = listItem, navController)
-                            }
-                        }
-                    }
+                    FoodListItem(listItem = listItem, navController)
                 }
             }
         }
-        else -> Text("Loading posts...")
     }
 }
