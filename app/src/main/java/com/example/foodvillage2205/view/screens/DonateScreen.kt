@@ -601,7 +601,6 @@ fun FormDonateScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
             }
-
             DefaultBtn(
                 imageUrl,
                 coroutineScope,
