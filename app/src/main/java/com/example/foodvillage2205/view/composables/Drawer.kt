@@ -67,11 +67,6 @@ fun Drawer(
                 modifier = Modifier
                     .padding(20.dp)
             ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.food_village_logo_2),
-//                    contentDescription = "",
-//                    modifier = Modifier.size(125.dp)
-//                )
                 UserImage(auth)
             }
         }
@@ -245,6 +240,43 @@ fun Drawer(
                 }
             }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .clickable { navController.navigate(Route.ApplyHistory.route) },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Spacer(modifier = Modifier.padding(10.dp))
+                Icon(
+                    imageVector = Icons.Filled.Fastfood,
+                    contentDescription = "",
+                    tint = PrimaryColor
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
+                Text(
+                    text = "Apply History",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = RobotoSlab,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 2.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.NavigateNext,
+                        contentDescription = "",
+                        tint = PrimaryColor
+                    )
+                }
+            }
+
             Column(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
@@ -288,9 +320,7 @@ fun UserImage(auth: Auth) {
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .padding(end = 15.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -307,30 +337,35 @@ fun UserImage(auth: Auth) {
             )
         } else {
 
-            Image(
-                painter = rememberImagePainter(auth.currentUser?.photoUrl),
-                contentDescription = "Post Image",
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
-                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(25.dp), true)
-                    .clip(RoundedCornerShape(25.dp))
-                    .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            )
-            Spacer(modifier = Modifier.size(10.dp))
+                    .fillMaxWidth()
+            ) {
+                Image(
+                    painter = rememberImagePainter(auth.currentUser?.photoUrl),
+                    contentDescription = "Post Image",
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                        .shadow(elevation = 12.dp, shape = RoundedCornerShape(50.dp), true)
+                        .clip(RoundedCornerShape(50.dp))
+                        .border(width = 2.dp, color = White, shape = RoundedCornerShape(50.dp)),
+                    contentScale = ContentScale.Crop,
+                )
+                Spacer(modifier = Modifier.size(5.dp))
 
-            Text(
-                text = auth.currentUser?.displayName ?: "",
-                fontWeight = FontWeight.Bold,
-                fontSize = 29.sp,
-                fontStyle = FontStyle.Italic,
-                fontFamily = RobotoSlab,
-                modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
-                color = White,
-                textAlign = TextAlign.Center
-            )
+                Text(
+                    text = "Welcome! \n"+ auth.currentUser?.displayName?: "",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    fontStyle = FontStyle.Italic,
+                    fontFamily = RobotoSlab,
+                    modifier = Modifier.padding(top = 1.dp),
+                    color = White,
+                )
+            }
         }
     }
 }

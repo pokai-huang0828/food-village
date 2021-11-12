@@ -12,4 +12,5 @@ sealed class Route(val route: String, @StringRes val resourceID: Int) {
     object SignInScreen : Route("signInScreen", R.string.sign_in_screen)
     object SignUpScreen : Route("signUpScreen", R.string.sign_up_screen)
     object DetailScreen : Route("detailScreen", R.string.detail_screen)
+    object ApplyHistory : Route("applyHistory", R.string.apply_history)
 }

@@ -72,5 +72,9 @@ fun Navigation(auth: Auth) {
         composable(route = Route.SignUpScreen.route) {
             SignUpScreen(navController = navController, auth = auth)
         }
+
+        composable(route = Route.ApplyHistory.route) {
+            ApplyHistory(navController = navController, auth = auth)
+        }
     }
 }
