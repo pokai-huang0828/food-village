@@ -227,30 +227,30 @@ fun FormDonateScreen(
             ) {
 
                 Box(contentAlignment = Alignment.TopEnd) {
-                    Text(
-                        text = stringResource(R.string.AddImage),
-                        fontSize = 20.sp,
-                        fontFamily = RobotoSlab,
-                        color = SecondaryColor,
-                        fontWeight = FontWeight.W900
-                    )
+                    Box(
+                            modifier = Modifier
+                                    .padding(10.dp),
+                            contentAlignment = Alignment.BottomEnd
+                    ) {
+                        Image(painter = painterResource(id = R.drawable.defaultimagepreview), contentDescription = "", modifier = Modifier.size(100.dp))
 
-                    imageUrl?.let {
-                        if (Build.VERSION.SDK_INT < 28) {
-                            bitmap.value =
-                                MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-                        } else {
-                            val source = ImageDecoder.createSource(context.contentResolver, it)
-                            bitmap.value = ImageDecoder.decodeBitmap(source)
-                        }
+                        imageUrl?.let {
+                            if (Build.VERSION.SDK_INT < 28) {
+                                bitmap.value =
+                                        MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                            } else {
+                                val source = ImageDecoder.createSource(context.contentResolver, it)
+                                bitmap.value = ImageDecoder.decodeBitmap(source)
+                            }
 
-                        bitmap.value?.let { bitmap ->
-                            Image(
-                                bitmap = bitmap.asImageBitmap(),
-                                stringResource(R.string.Profile_title),
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(150.dp)
-                            )
+                            bitmap.value?.let { bitmap ->
+                                Image(
+                                        bitmap = bitmap.asImageBitmap(),
+                                        stringResource(R.string.Profile_title),
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.size(150.dp)
+                                )
+                            }
                         }
                     }
 
@@ -336,7 +336,9 @@ fun FormDonateScreen(
                         "Title is required.",
                         color = Danger,
                     )
-                }else {}
+                }else {
+
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedTextField(
                     value = details,
