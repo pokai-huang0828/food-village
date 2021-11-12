@@ -186,7 +186,16 @@ fun Form(
     val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
     val inValidPhone = !phonePattern.matcher(phone).matches()
     val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
-    //
+
+    val inValid by derivedStateOf {
+        !inValidEmail &&
+        !inValidPhone &&
+        !inValidPostalCode &&
+        name.isNotBlank() &&
+        street.isNotBlank() &&
+        province.isNotBlank() &&
+        city.isNotBlank()
+    }
 
     // Show Gallery Screen or Profile Screen
     if (showGallery) {
@@ -559,10 +568,7 @@ fun Form(
                         .padding(top = 1.dp)
                         .width(200.dp)
                         .height(50.dp),
-                    enabled = !inValidEmail && !inValidPhone &&
-                              !inValidPostalCode && name.isNotBlank() &&
-                              street.isNotBlank() && province.isNotBlank() &&
-                              city.isNotBlank()
+                    enabled = inValid
                     ,
                     shape = Shapes.medium,
                     colors = ButtonDefaults.buttonColors(SecondaryColor),
