@@ -337,9 +337,9 @@ fun UserImage(auth: Auth) {
             )
         } else {
 
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center,
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -362,7 +362,7 @@ fun UserImage(auth: Auth) {
                     fontSize = 25.sp,
                     fontStyle = FontStyle.Italic,
                     fontFamily = RobotoSlab,
-                    modifier = Modifier.padding(top = 15.dp),
+                    modifier = Modifier.padding(top = 1.dp),
                     color = White,
                 )
             }
