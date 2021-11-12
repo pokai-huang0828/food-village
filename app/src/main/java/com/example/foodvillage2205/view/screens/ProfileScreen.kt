@@ -2,11 +2,13 @@ package com.example.foodvillage2205.view.screens
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -21,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +49,7 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.regex.Pattern
 
 @ExperimentalPermissionsApi
 @Composable
@@ -144,6 +148,8 @@ fun Form(
     var thumbnailUrl by remember { mutableStateOf("") }
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
 
+
+
     // Set up for picking image from gallery
     val context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
@@ -174,6 +180,13 @@ fun Form(
             imageUri = Uri.parse(thumbnailUrl)
         }
     }
+    //validate
+    val inValidEmail = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val postalCodePattern = Pattern.compile("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]\$")
+    val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
+    val inValidPhone = !phonePattern.matcher(phone).matches()
+    val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
+    //
 
     // Show Gallery Screen or Profile Screen
     if (showGallery) {
@@ -277,183 +290,152 @@ fun Form(
             {
 
                 //Name
-                TextField(
+                OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
+                    isError = name.isBlank(),
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     maxLines = 1,
                     label = {
                         Text(
                             text = stringResource(R.string.Donator_name),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
-                            fontWeight = FontWeight.W900,
+                            fontWeight = FontWeight.W900
                         )
                     },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
 
                 // Email
-
-                TextField(//Email
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .padding(vertical = 10.dp),
+                    isError = inValidEmail,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     label = {
                         Text(
                             text = stringResource(R.string.Email),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
-                            fontWeight = FontWeight.W900,
-                        )
-                    },
-                    maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
-                    )
-                )
-
-
-                // Phone
-
-
-                //Phone Number
-                TextField(
-                    value = phone,
-                    onValueChange = { phone = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
-                    label = {
-                        Text(
-                            text = stringResource(R.string.Phone),
-                            fontSize = 20.sp,
-                            fontFamily = RobotoSlab,
-                            color = SecondaryColor,
                             fontWeight = FontWeight.W900
                         )
                     },
                     maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
+                    )
+                )
+
+                //Phone Number
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    isError = inValidPhone,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    label = {
+                        Text(
+                            text = stringResource(R.string.Phone),
+                            fontFamily = RobotoSlab,
+                            fontWeight = FontWeight.W900
+                        )
+                    },
+                    maxLines = 1,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
 
                 // Street
-
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
                     value = street,
                     onValueChange = { street = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
+                    isError = street.isBlank(),
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     label = {
                         Text(
                             text = stringResource(R.string.Street),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
                             fontWeight = FontWeight.W900
                         )
                     },
                     maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
 
                 // City
-
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
                     value = city,
                     onValueChange = { city = it },
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
+                    isError= city.isBlank(),
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     label = {
                         Text(
                             text = stringResource(R.string.City),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
                             fontWeight = FontWeight.W900
                         )
                     },
                     maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
 
                 // Province
-
-                TextField(
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
                     value = province,
                     onValueChange = { province = it },
+                    isError = province.isBlank(),
                     modifier = Modifier
                         .fillMaxWidth(0.9f),
                     label = {
                         Text(
                             text = stringResource(R.string.Province),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
                             fontWeight = FontWeight.W900
                         )
                     },
                     maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
 
                 // Postal Code
-
-                TextField(
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
                     value = postalCode,
                     onValueChange = { postalCode = it },
+                    isError = inValidPostalCode,
                     modifier = Modifier
                         .fillMaxWidth(0.9f),
                     label = {
                         Text(
                             text = stringResource(R.string.Postal),
-                            fontSize = 20.sp,
                             fontFamily = RobotoSlab,
-                            color = SecondaryColor,
                             fontWeight = FontWeight.W900
                         )
                     },
                     maxLines = 1,
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = WhiteLight,
-                        focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = SecondaryColor,
+                        focusedLabelColor = SecondaryColor
                     )
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -577,9 +559,15 @@ fun Form(
                         .padding(top = 1.dp)
                         .width(200.dp)
                         .height(50.dp),
+                    enabled = !inValidEmail && !inValidPhone &&
+                              !inValidPostalCode && name.isNotBlank() &&
+                              street.isNotBlank() && province.isNotBlank() &&
+                              city.isNotBlank()
+                    ,
                     shape = Shapes.medium,
                     colors = ButtonDefaults.buttonColors(SecondaryColor),
-                    contentPadding = PaddingValues(5.dp)
+                    contentPadding = PaddingValues(5.dp),
+
                 ) {
                     Text(
                         text = stringResource(R.string.Update),
@@ -595,3 +583,4 @@ fun Form(
 
 
 }
+
