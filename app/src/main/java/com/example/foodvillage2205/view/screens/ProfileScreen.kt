@@ -445,6 +445,12 @@ fun Form(
                             onNext = { focusRequesterProvince.requestFocus() }
                         ),
                     )
+                    if (city.isEmpty()) {
+                        Text(
+                            "City is required.",
+                            color = Danger,
+                        )
+                    }else {}
 
                     //Province
                     OutlinedTextField(
@@ -473,6 +479,12 @@ fun Form(
                             onNext = { focusRequesterPostCode.requestFocus() }
                         ),
                     )
+                    if (province.isEmpty()) {
+                        Text(
+                            "Province is required.",
+                            color = Danger,
+                        )
+                    }else {}
                 }
 
                 //Postal Code
