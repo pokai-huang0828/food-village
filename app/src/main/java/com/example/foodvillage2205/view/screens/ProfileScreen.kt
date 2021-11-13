@@ -11,7 +11,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -42,6 +44,7 @@ import com.example.foodvillage2205.model.repositories.FireStorageRepo
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
+import com.example.foodvillage2205.view.composables.MapBox
 import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.composables.gallery.GallerySelect
 import com.example.foodvillage2205.view.navigation.Route
@@ -53,7 +56,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.util.regex.Pattern
 
 @ExperimentalComposeUiApi
@@ -514,6 +516,12 @@ fun Form(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
+            MapBox(
+                modifier = Modifier
+                    .height(300.dp)
+                    .width(300.dp)
+            )
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -608,6 +616,4 @@ fun Form(
             }
         }
     }
-
-
 }
