@@ -31,157 +31,160 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DefaultBtn(
-        imageUrl: Uri? = null,
-        coroutineScope: CoroutineScope? = null,
-        fireStorageRepo: FireStorageRepo? = null,
-        context: Context? = null,
-        auth: Auth? = null,
-        name: String = "",
-        details: String = "",
-        email: String = "",
-        phone: String = "",
-        street: String = "",
-        city: String = "",
-        province: String = "",
-        postalCode: String = "",
-        postVM: PostsViewModel? = null,
-        navController: NavController? = null,
-        btnText: String = "",
+    imageUrl: Uri? = null,
+    coroutineScope: CoroutineScope? = null,
+    fireStorageRepo: FireStorageRepo? = null,
+    context: Context? = null,
+    auth: Auth? = null,
+    name: String = "",
+    details: String = "",
+    email: String = "",
+    phone: String = "",
+    street: String = "",
+    city: String = "",
+    province: String = "",
+    postalCode: String = "",
+    postVM: PostsViewModel? = null,
+    navController: NavController? = null,
+    btnText: String = "",
 ) {
     Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         //Submit Button
         Button(
-                onClick = {
-                    // Check if imageUrl has been set
-                    when (btnText) {
-                        "Update" -> if (imageUrl !== null) {
-                            // upload image to firestorage
-                            var imageDownloadUrl: String? = null
+            onClick = {
+                // Check if imageUrl has been set
+                when (btnText) {
+                    "Update" -> if (imageUrl !== null) {
+                        // upload image to firestorage
+                        var imageDownloadUrl: String? = null
 
-                            coroutineScope?.launch {
-                                fireStorageRepo?.uploadImageToStorage(
-                                        context!!,
-                                        imageUrl,
-                                        imageUrl.lastPathSegment!!
-                                ) {
-                                    imageDownloadUrl = it.toString()
-                                }?.join()
+                        coroutineScope?.launch {
+                            fireStorageRepo?.uploadImageToStorage(
+                                context!!,
+                                imageUrl,
+                                imageUrl.lastPathSegment!!
+                            ) {
+                                imageDownloadUrl = it.toString()
+                            }?.join()
 
-                            }?.invokeOnCompletion { fireStorageException ->
-                                val post = Post(
-                                        id = SessionPost.getSessionPost().id,
-                                        title = name,
-                                        description = details,
-                                        email = email,
-                                        phone = phone,
-                                        street = street,
-                                        city = city,
-                                        province = province,
-                                        postalCode = postalCode,
-                                        userId = (auth?.currentUser as FirebaseUser).uid,
-                                        imageUrl = imageDownloadUrl ?: ""
-                                )
-                                // upload post to firestore
-                                if (fireStorageException === null) {
-                                    postVM?.updatePost(post) { resource ->
-                                        // if resource is success, return to Main Screen
-                                        if (resource is Resource.Success) {
-                                            navController?.navigate(Route.MainScreen.route)
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
+                        }?.invokeOnCompletion { fireStorageException ->
                             val post = Post(
-                                    id = SessionPost.getSessionPost().id,
-                                    title = name,
-                                    description = details,
-                                    email = email,
-                                    phone = phone,
-                                    street = street,
-                                    city = city,
-                                    province = province,
-                                    postalCode = postalCode,
-                                    userId = (auth?.currentUser as FirebaseUser).uid,
-                                    imageUrl = SessionPost.getSessionPost().imageUrl
+                                id = SessionPost.getSessionPost().id,
+                                title = name,
+                                description = details,
+                                email = email,
+                                phone = phone,
+                                street = street,
+                                city = city,
+                                province = province,
+                                postalCode = postalCode,
+                                userId = (auth?.currentUser as FirebaseUser).uid,
+                                imageUrl = imageDownloadUrl ?: ""
                             )
-                            postVM?.updatePost(post) { resource ->
-                                // if resource is success, return to Main Screen
-                                if (resource is Resource.Success) {
-                                    navController?.navigate(Route.MainScreen.route)
-                                }
-                            }
-                            SessionPost.enabled = false
-                        }
-                        "Submit" -> if (imageUrl !== null) {
-                            // upload image to firestorage
-                            var imageDownloadUrl: String? = null
-
-                            coroutineScope?.launch {
-                                fireStorageRepo?.uploadImageToStorage(
-                                        context!!,
-                                        imageUrl,
-                                        imageUrl.lastPathSegment!!
-                                ) {
-                                    imageDownloadUrl = it.toString()
-                                }?.join()
-
-                            }?.invokeOnCompletion { fireStorageException ->
-                                val post = Post(
-                                        title = name,
-                                        description = details,
-                                        email = email,
-                                        phone = phone,
-                                        street = street,
-                                        city = city,
-                                        province = province,
-                                        postalCode = postalCode,
-                                        userId = (auth?.currentUser as FirebaseUser).uid,
-                                        imageUrl = imageDownloadUrl ?: ""
-                                )
-                                // upload post to firestore
-                                if (fireStorageException === null) {
-                                    postVM?.createPost(post) { resource ->
-                                        // if resource is success, return to Main Screen
-                                        if (resource is Resource.Success) {
-                                            navController?.navigate(Route.MainScreen.route)
-                                        }
+                            // upload post to firestore
+                            if (fireStorageException === null) {
+                                postVM?.updatePost(post) { resource ->
+                                    // if resource is success, return to Main Screen
+                                    if (resource is Resource.Success) {
+                                        navController?.navigate(Route.MainScreen.route)
                                     }
                                 }
                             }
                         }
-                        "Edit" -> {
-                            SessionPost.enabled = true
-                            navController?.navigate(Route.DonateScreen.route)
+                    } else {
+                        val post = Post(
+                            id = SessionPost.getSessionPost().id,
+                            title = name,
+                            description = details,
+                            email = email,
+                            phone = phone,
+                            street = street,
+                            city = city,
+                            province = province,
+                            postalCode = postalCode,
+                            userId = (auth?.currentUser as FirebaseUser).uid,
+                            imageUrl = SessionPost.getSessionPost().imageUrl
+                        )
+                        postVM?.updatePost(post) { resource ->
+                            // if resource is success, return to Main Screen
+                            if (resource is Resource.Success) {
+                                navController?.navigate(Route.MainScreen.route)
+                            }
                         }
-                        "Delete" -> {
-                            postVM?.deletePost(SessionPost.getSessionPost()) { resource ->
-                                // if resource is success, return to Main Screen
-                                if (resource is Resource.Success) {
-                                    navController?.navigate(Route.MainScreen.route)
+                        SessionPost.enabled = false
+                    }
+                    "Submit" -> if (imageUrl !== null) {
+                        // upload image to firestorage
+                        var imageDownloadUrl: String? = null
+
+                        coroutineScope?.launch {
+                            fireStorageRepo?.uploadImageToStorage(
+                                context!!,
+                                imageUrl,
+                                imageUrl.lastPathSegment!!
+                            ) {
+                                imageDownloadUrl = it.toString()
+                            }?.join()
+
+                        }?.invokeOnCompletion { fireStorageException ->
+                            val post = Post(
+                                title = name,
+                                description = details,
+                                email = email,
+                                phone = phone,
+                                street = street,
+                                city = city,
+                                province = province,
+                                postalCode = postalCode,
+                                userId = (auth?.currentUser as FirebaseUser).uid,
+                                imageUrl = imageDownloadUrl ?: ""
+                            )
+                            // upload post to firestore
+                            if (fireStorageException === null) {
+                                postVM?.createPost(post) { resource ->
+                                    // if resource is success, return to Main Screen
+                                    if (resource is Resource.Success) {
+                                        navController?.navigate(Route.MainScreen.route)
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                modifier = Modifier
-                        .padding(top = 15.dp)
-                        .width(200.dp)
-                        .height(50.dp),
-                shape = Shapes.medium,
-                colors = ButtonDefaults.buttonColors(SecondaryColor),
-                contentPadding = PaddingValues(5.dp)
+                    "Edit" -> {
+                        SessionPost.enabled = true
+                        navController?.navigate(Route.DonateScreen.route)
+                    }
+                    "Delete" -> {
+                        postVM?.deletePost(SessionPost.getSessionPost()) { resource ->
+                            // if resource is success, return to Main Screen
+                            if (resource is Resource.Success) {
+                                navController?.navigate(Route.MainScreen.route)
+                            }
+                        }
+                    }
+                    "Apply" -> {
+                        navController?.navigate(Route.ApplyHistory.route)
+                    }
+                }
+            },
+            modifier = Modifier
+                .padding(top = 15.dp)
+                .width(200.dp)
+                .height(50.dp),
+            shape = Shapes.medium,
+            colors = ButtonDefaults.buttonColors(SecondaryColor),
+            contentPadding = PaddingValues(5.dp)
         ) {
             Text(
-                    text = btnText,
-                    fontFamily = RobotoSlab,
-                    color = White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W900
+                text = btnText,
+                fontFamily = RobotoSlab,
+                color = White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W900
             )
         }
     }
