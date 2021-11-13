@@ -14,5 +14,6 @@ data class Post(
     val street: String = "",
     val city: String = "",
     val province: String = "",
-    val postalCode: String = ""
+    val postalCode: String = "",
+    var appliedUserID: String = "",
 )

@@ -32,7 +32,6 @@ import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
-import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.DefaultBtn
@@ -47,8 +46,10 @@ import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @Composable
 fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
 
@@ -69,7 +70,9 @@ fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
         drawerContent = {
             Drawer(navController = navController, auth = auth)
         },
-        content = { FoodDetailList(postId = postId, navController = navController) }
+        content = {
+            FoodDetailList(postId = postId, navController = navController)
+        }
     )
 }
 
@@ -132,28 +135,22 @@ fun TopBarDetail(
 }
 
 
+@ExperimentalCoroutinesApi
 @Composable
 fun FoodDetailList(
-    postId: String?,
     postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
     userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
+    postId: String?,
     navController: NavController,
 ) {
     var user by remember { mutableStateOf(User()) }
     val post = produceState(initialValue = Post()) {
-        postId?.let {
-            val resource = postVM.getPostById(postId)
-
-            resource.let {
-                if (resource is Resource.Success) {
-                    value = resource.data as Post
-                    SessionPost.setSessionPost(value.apply { id = postId })
-
-                    // Get Post owner info
-                    val resource = userVM.getUserById(value.userId)
-                    if (resource is Resource.Success) {
-                        user = resource.data as User
-                    }
+        if (postId != null) {
+            postVM.getPostById(postId) { resPost ->
+                value = resPost.data as Post
+                SessionPost.setSessionPost(value.apply { id = postId })
+                userVM.getUserById(value.userId) { resUser ->
+                    user = resUser.data as User
                 }
             }
         }
@@ -167,21 +164,40 @@ fun FoodDetailList(
         FoodDetail(post.value)
         Spacer(modifier = Modifier.padding(bottom = 10.dp))
         if (post.value.userId == Firebase.auth.currentUser?.uid) {
-            DefaultBtn(
-                btnText = stringResource(R.string.Edit),
-                navController = navController,
-            )
-            Spacer(modifier = Modifier.padding(bottom = 10.dp))
-            DefaultBtn(
-                postVM = postVM,
-                btnText = stringResource(R.string.Delete),
-                navController = navController,
-            )
+            if (post.value.appliedUserID == "") {
+                DefaultBtn(
+                    btnText = stringResource(R.string.Edit),
+                    navController = navController,
+                )
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Delete),
+                    navController = navController,
+                )
+            } else {
+                var userById: User? = null
+                userVM.getUserById(id = Firebase.auth.currentUser!!.uid) { resPost ->
+                    userById = resPost.data as User
+                }
+                Text(text = "Applicant name = ${userById?.name}")
+                Text(text = "Applicant name = ${userById?.email}")
+                Text(text = "Applicant name = ${userById?.phone}")
+            }
         } else {
-            DefaultBtn(
-                btnText = stringResource(R.string.Apply),
-                navController = navController,
-            )
+            if (post.value.appliedUserID == "") {
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Apply),
+                    navController = navController,
+                )
+            } else {
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Undo),
+                    navController = navController,
+                )
+            }
         }
         Spacer(modifier = Modifier.padding(bottom = 80.dp))
     }

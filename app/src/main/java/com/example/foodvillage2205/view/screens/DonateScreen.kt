@@ -123,7 +123,7 @@ fun TopBarDonateScreen(
         }
 
         Text(
-            text = "New Post",
+            text = if (SessionPost.enabled) "Edit Mode" else "New Post",
             color = White,
             fontFamily = RobotoSlab,
             fontSize = 30.sp,
@@ -191,23 +191,20 @@ fun FormDonateScreen(
     ) { uri: Uri? ->
         imageUrl = uri
     }
-
     // Get User Info from firebase to populate input fields
     produceState(initialValue = false) {
-        val resource = userVM.getUserById((auth.currentUser as FirebaseUser).uid)
-
-        if (resource is Resource.Success<*>) {
-            val user = resource.data as User
-            email = user.email
-            phone = user.phone
-            postalCode = user.postalCode
-            province = user.province
-            street = user.street
-            city = user.city
+        userVM.getUserById((auth.currentUser as FirebaseUser).uid) { resource ->
+            if (resource is Resource.Success<*>) {
+                val user = resource.data as User
+                email = user.email
+                phone = user.phone
+                postalCode = user.postalCode
+                province = user.province
+                street = user.street
+                city = user.city
+            }
         }
     }
-
-
     var showCameraScreen by remember { mutableStateOf(false) }
 
     if (showCameraScreen) {
@@ -218,12 +215,10 @@ fun FormDonateScreen(
         ) {
             // call return the Uri of the photo taken
             imageUrl = it
-
             // close the camera screen
             showCameraScreen = !showCameraScreen
         }
     } else {
-
         Column(
             modifier = Modifier
                 .height(700.dp)
@@ -236,10 +231,7 @@ fun FormDonateScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Box(
-                    contentAlignment = Alignment.Center,
-                )
+                Box(contentAlignment = Alignment.Center)
                 {
                     Image(
                         painter = rememberImagePainter(data = if (SessionPost.enabled) SessionPost.getSessionPost().imageUrl else R.drawable.defaultimagepreview),
@@ -281,7 +273,6 @@ fun FormDonateScreen(
                         }
                     }
                 }
-
                 // Gallery Toggle
                 OutlinedButton(
                     onClick = { launcher.launch("image/*") },
@@ -299,7 +290,6 @@ fun FormDonateScreen(
                         modifier = Modifier.size(25.dp)
                     )
                 }
-
                 // Camara Toggle
                 OutlinedButton(
                     onClick = { showCameraScreen = !showCameraScreen },
@@ -318,9 +308,7 @@ fun FormDonateScreen(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(30.dp))
-
             //Inputs
             Column(modifier = Modifier.fillMaxWidth())
             {
@@ -336,11 +324,8 @@ fun FormDonateScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(text = "Title")
-                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Title") },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -358,12 +343,7 @@ fun FormDonateScreen(
                     ),
                 )
                 if (name.isEmpty()) {
-                    Text(
-                        "Title is required.",
-                        color = Danger,
-                    )
-                } else {
-
+                    Text("Title is required.", color = Danger)
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedTextField(
@@ -372,9 +352,7 @@ fun FormDonateScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(160.dp),
-                    label = {
-                        Text(text = "Details")
-                    },
+                    label = { Text(text = "Details") },
                     maxLines = 5,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
@@ -383,16 +361,9 @@ fun FormDonateScreen(
                         unfocusedIndicatorColor = SecondaryColor
                     )
                 )
-                if (details.isEmpty()) {
-                    Text(
-                        "Details are required.",
-                        color = Danger,
-                    )
-                } else {
-                }
+                if (details.isEmpty()) Text("Details are required.", color = Danger)
 
                 Spacer(modifier = Modifier.height(10.dp))
-
                 //Contact
                 Text(
                     text = stringResource(R.string.pickUp_Contact),
@@ -408,9 +379,7 @@ fun FormDonateScreen(
                     onValueChange = { email = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.email))
-                    },
+                    label = { Text(text = stringResource(R.string.email)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -428,7 +397,6 @@ fun FormDonateScreen(
                         onNext = { focusRequesterPhone.requestFocus() }
                     ),
                 )
-
                 //Phone Number
                 OutlinedTextField(
                     value = phone,
@@ -455,15 +423,8 @@ fun FormDonateScreen(
                         onDone = { keyboardController?.hide() }
                     ),
                 )
-                if (phone.isEmpty()) {
-                    Text(
-                        "Phone number is required.",
-                        color = Danger,
-                    )
-                } else {
-                }
+                if (phone.isEmpty()) Text("Phone number is required.", color = Danger)
                 Spacer(modifier = Modifier.height(10.dp))
-
                 //Pick Up Location
                 Text(
                     text = stringResource(R.string.pickUp_Location),
@@ -480,9 +441,7 @@ fun FormDonateScreen(
                     onValueChange = { street = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.Street))
-                    },
+                    label = { Text(text = stringResource(R.string.Street)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -499,14 +458,7 @@ fun FormDonateScreen(
                         onNext = { focusRequesterCity.requestFocus() }
                     ),
                 )
-                if (street.isEmpty()) {
-                    Text(
-                        "Address is required.",
-                        color = Danger,
-                    )
-                } else {
-                }
-
+                if (street.isEmpty()) Text("Address is required.", color = Danger)
                 Row {
                     //City
                     OutlinedTextField(
@@ -515,9 +467,7 @@ fun FormDonateScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .focusRequester(focusRequesterCity),
-                        label = {
-                            Text(text = stringResource(R.string.City))
-                        },
+                        label = { Text(text = stringResource(R.string.City)) },
                         singleLine = true,
                         maxLines = 1,
                         colors = TextFieldDefaults.textFieldColors(
@@ -543,9 +493,7 @@ fun FormDonateScreen(
                             .padding(start = 5.dp)
                             .fillMaxWidth()
                             .focusRequester(focusRequesterProvince),
-                        label = {
-                            Text(text = stringResource(R.string.Province))
-                        },
+                        label = { Text(text = stringResource(R.string.Province)) },
                         singleLine = true,
                         maxLines = 1,
                         colors = TextFieldDefaults.textFieldColors(
@@ -563,7 +511,6 @@ fun FormDonateScreen(
                         ),
                     )
                 }
-
                 //Postal Code
                 OutlinedTextField(
                     value = postalCode,
@@ -571,9 +518,7 @@ fun FormDonateScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPostCode),
-                    label = {
-                        Text(text = stringResource(R.string.Postal))
-                    },
+                    label = { Text(text = stringResource(R.string.Postal)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -591,14 +536,10 @@ fun FormDonateScreen(
                     ),
                 )
                 if (postalCode.isEmpty()) {
-                    Text(
-                        "PostalCode is required.",
-                        color = Danger,
-                    )
+                    Text("PostalCode is required.", color = Danger)
                 } else {
                     Text("")
                 }
-
                 Spacer(modifier = Modifier.height(10.dp))
             }
             DefaultBtn(
@@ -644,14 +585,9 @@ fun CameraScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    modifier = Modifier
-                        .padding(4.dp),
-                    onClick = {
-                        toggleCamera()
-                    }
-                ) {
-                    Text("Back")
-                }
+                    modifier = Modifier.padding(4.dp),
+                    onClick = { toggleCamera() }
+                ) { Text("Back") }
             }
         }
     }

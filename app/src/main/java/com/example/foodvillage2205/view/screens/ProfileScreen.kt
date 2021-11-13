@@ -65,9 +65,13 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
     )
 
     Scaffold(
-        topBar = { TopBarProfile(navController,
-            scope = scope,
-            scaffoldState = scaffoldState) },
+        topBar = {
+            TopBarProfile(
+                navController,
+                scope = scope,
+                scaffoldState = scaffoldState
+            )
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -154,10 +158,12 @@ fun Form(
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
 
     // Keyboard done button
-    val (focusRequesterPhone,
+    val (
+        focusRequesterPhone,
         focusRequesterCity,
         focusRequesterProvince,
-        focusRequesterPostCode, ) = FocusRequester.createRefs()
+        focusRequesterPostCode,
+    ) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Set up for picking image from gallery
@@ -170,22 +176,21 @@ fun Form(
 
     // Get User Info from firebase
     produceState(initialValue = false) {
-        val resource = userVM.getUserById((auth.currentUser as FirebaseUser).uid)
-
-        if (resource is Resource.Success<*>) {
-            val user = resource.data as User
-            id = user.id
-            name = user.name
-            email = user.email
-            phone = user.phone
-            postalCode = user.postalCode
-            province = user.province
-            street = user.street
-            city = user.city
-            thumbnailUrl = user.thumbnailUrl
-            timestamp = user.timestamp!!
+        userVM.getUserById((auth.currentUser as FirebaseUser).uid) { resource ->
+            if (resource is Resource.Success<*>) {
+                val user = resource.data as User
+                id = user.id
+                name = user.name
+                email = user.email
+                phone = user.phone
+                postalCode = user.postalCode
+                province = user.province
+                street = user.street
+                city = user.city
+                thumbnailUrl = user.thumbnailUrl
+                timestamp = user.timestamp!!
+            }
         }
-
         if (thumbnailUrl.isNotEmpty()) {
             imageUri = Uri.parse(thumbnailUrl)
         }
@@ -230,7 +235,11 @@ fun Form(
                             .size(150.dp)
                             .clip(RoundedCornerShape(75.dp))
                             .shadow(elevation = 12.dp, shape = RoundedCornerShape(75.dp), true)
-                            .border(width = 2.dp, color = Color.LightGray, shape = RoundedCornerShape(75.dp)),
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                                shape = RoundedCornerShape(75.dp)
+                            ),
                     )
 
                     // Icon to open gallery
@@ -303,7 +312,8 @@ fun Form(
                         "User name is required.",
                         color = Danger,
                     )
-                }else {}
+                } else {
+                }
                 Spacer(modifier = Modifier.height(10.dp))
 
                 //Contact
@@ -372,7 +382,8 @@ fun Form(
                     Text(
                         "Phone number is required.",
                         color = Danger,
-                    )}else {
+                    )
+                } else {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -415,7 +426,8 @@ fun Form(
                     Text(
                         "Address is required.",
                         color = Danger,
-                    )}else {
+                    )
+                } else {
                 }
 
                 Row() {
@@ -450,7 +462,8 @@ fun Form(
                             "City is required.",
                             color = Danger,
                         )
-                    }else {}
+                    } else {
+                    }
 
                     //Province
                     OutlinedTextField(
@@ -484,7 +497,8 @@ fun Form(
                             "Province is required.",
                             color = Danger,
                         )
-                    }else {}
+                    } else {
+                    }
                 }
 
                 //Postal Code
@@ -517,7 +531,8 @@ fun Form(
                     Text(
                         "PostalCode is required.",
                         color = Danger,
-                    )}else {
+                    )
+                } else {
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -563,8 +578,8 @@ fun Form(
                                     )
                                 ) {
                                     // if resource is success
-                                    if(it is Resource.Success){
-                                        navController.navigate(Route.MainScreen.route){
+                                    if (it is Resource.Success) {
+                                        navController.navigate(Route.MainScreen.route) {
                                             popUpTo(Route.MainScreen.route)
                                         }
                                     }
@@ -588,8 +603,8 @@ fun Form(
                                 )
                             ) {
                                 // if resource is success
-                                if(it is Resource.Success){
-                                    navController.navigate(Route.MainScreen.route){
+                                if (it is Resource.Success) {
+                                    navController.navigate(Route.MainScreen.route) {
                                         popUpTo(Route.MainScreen.route)
                                     }
                                 }
