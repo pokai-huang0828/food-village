@@ -2,6 +2,7 @@ package com.example.foodvillage2205.view.screens
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Patterns
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -53,6 +54,7 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.regex.Pattern
 
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
@@ -133,6 +135,11 @@ fun TopBarProfile(
     }
 }
 
+@Composable
+fun ErrorMessage(text:String){
+    Text(text, color = Danger)
+}
+
 @ExperimentalComposeUiApi
 @SuppressLint("ProduceStateDoesNotAssignValue")
 @ExperimentalPermissionsApi
@@ -159,6 +166,23 @@ fun Form(
         focusRequesterProvince,
         focusRequesterPostCode, ) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    //validate
+    val inValidEmail = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val postalCodePattern = Pattern.compile("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]\$")
+    val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
+    val inValidPhone = !phonePattern.matcher(phone).matches()
+    val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
+
+    val isValid by derivedStateOf {
+        !inValidEmail &&
+        !inValidPhone &&
+        !inValidPostalCode &&
+        name.isNotBlank() &&
+        street.isNotBlank() &&
+        province.isNotBlank() &&
+        city.isNotBlank()
+    }
 
     // Set up for picking image from gallery
     val context = LocalContext.current
@@ -204,7 +228,7 @@ fun Form(
     } else {
         Column(
             modifier = Modifier
-                .height(700.dp)
+                .height(750.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(10.dp),
         ) {
@@ -230,7 +254,11 @@ fun Form(
                             .size(150.dp)
                             .clip(RoundedCornerShape(75.dp))
                             .shadow(elevation = 12.dp, shape = RoundedCornerShape(75.dp), true)
-                            .border(width = 2.dp, color = Color.LightGray, shape = RoundedCornerShape(75.dp)),
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                                shape = RoundedCornerShape(75.dp)
+                            ),
                     )
 
                     // Icon to open gallery
@@ -279,17 +307,15 @@ fun Form(
                     onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {
-                        Text(text = "Name")
-                    },
+                    label = {Text(text = "Name")},
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                        focusedLabelColor = SecondaryColor
                     ),
+                    isError = name.isBlank(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
@@ -298,13 +324,8 @@ fun Form(
                         onDone = { keyboardController?.hide() }
                     ),
                 )
-                if (name.isEmpty()) {
-                    Text(
-                        "User name is required.",
-                        color = Danger,
-                    )
-                }else {}
-                Spacer(modifier = Modifier.height(10.dp))
+                if (name.isBlank()) ErrorMessage("user name can't be blank")
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //Contact
                 Text(
@@ -321,17 +342,15 @@ fun Form(
                     onValueChange = { email = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.email))
-                    },
+                    label = {Text(text = stringResource(R.string.email))},
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
                         focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
                     ),
+                    isError = inValidEmail,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -341,6 +360,8 @@ fun Form(
                         onNext = { focusRequesterPhone.requestFocus() }
                     ),
                 )
+                if (inValidEmail) ErrorMessage("invalid email")
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //Phone Number
                 OutlinedTextField(
@@ -349,17 +370,15 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPhone),
-                    label = {
-                        Text(text = stringResource(R.string.phone))
-                    },
+                    label = {Text(text = stringResource(R.string.phone))},
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                        focusedLabelColor = SecondaryColor
                     ),
+                    isError = inValidPhone,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
                         imeAction = ImeAction.Done
@@ -368,13 +387,8 @@ fun Form(
                         onDone = { keyboardController?.hide() }
                     ),
                 )
-                if (phone.isEmpty()) {
-                    Text(
-                        "Phone number is required.",
-                        color = Danger,
-                    )}else {
-                }
-                Spacer(modifier = Modifier.height(10.dp))
+                if (inValidPhone) ErrorMessage("invalid phone number")
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //Pick Up Location
                 Text(
@@ -392,17 +406,15 @@ fun Form(
                     onValueChange = { street = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {
-                        Text(text = stringResource(R.string.Street))
-                    },
+                    label = {Text(text = stringResource(R.string.Street))},
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                        focusedLabelColor = SecondaryColor
                     ),
+                    isError = street.isBlank(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
@@ -411,81 +423,68 @@ fun Form(
                         onNext = { focusRequesterCity.requestFocus() }
                     ),
                 )
-                if (street.isEmpty()) {
-                    Text(
-                        "Address is required.",
-                        color = Danger,
-                    )}else {
-                }
+                if (street.isBlank()) ErrorMessage("street can't be blank")
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row() {
                     //City
-                    OutlinedTextField(
-                        value = city,
-                        onValueChange = { city = it },
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .focusRequester(focusRequesterCity),
-                        label = {
-                            Text(text = stringResource(R.string.City))
-                        },
-                        singleLine = true,
-                        maxLines = 1,
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = WhiteLight,
-                            focusedIndicatorColor = SecondaryColor,
-                            focusedLabelColor = SecondaryColor,
-                            unfocusedIndicatorColor = SecondaryColor
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusRequesterProvince.requestFocus() }
-                        ),
-                    )
-                    if (city.isEmpty()) {
-                        Text(
-                            "City is required.",
-                            color = Danger,
+                    Column{
+                        OutlinedTextField(
+                            value = city,
+                            onValueChange = { city = it },
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .focusRequester(focusRequesterCity),
+                            label = {Text(text = stringResource(R.string.City))},
+                            singleLine = true,
+                            maxLines = 1,
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = WhiteLight,
+                                focusedIndicatorColor = SecondaryColor,
+                                focusedLabelColor = SecondaryColor
+                            ),
+                            isError = city.isBlank(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusRequesterProvince.requestFocus() }
+                            ),
                         )
-                    }else {}
+                        if (city.isBlank()) ErrorMessage("city can't be blank")
+                    }
 
                     //Province
-                    OutlinedTextField(
-                        value = province,
-                        onValueChange = { province = it },
-                        modifier = Modifier
-                            .padding(start = 5.dp)
-                            .fillMaxWidth()
-                            .focusRequester(focusRequesterProvince),
-                        label = {
-                            Text(text = stringResource(R.string.Province))
-                        },
-                        singleLine = true,
-                        maxLines = 1,
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = WhiteLight,
-                            focusedIndicatorColor = SecondaryColor,
-                            focusedLabelColor = SecondaryColor,
-                            unfocusedIndicatorColor = SecondaryColor
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusRequesterPostCode.requestFocus() }
-                        ),
-                    )
-                    if (province.isEmpty()) {
-                        Text(
-                            "Province is required.",
-                            color = Danger,
+                    Column {
+                        OutlinedTextField(
+                            value = province,
+                            onValueChange = { province = it },
+                            modifier = Modifier
+                                .padding(start = 5.dp)
+                                .fillMaxWidth()
+                                .focusRequester(focusRequesterProvince),
+                            label = {Text(text = stringResource(R.string.Province))},
+                            singleLine = true,
+                            maxLines = 1,
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = WhiteLight,
+                                focusedIndicatorColor = SecondaryColor,
+                                focusedLabelColor = SecondaryColor
+                            ),
+                            isError = province.isBlank(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusRequesterPostCode.requestFocus() }
+                            ),
                         )
-                    }else {}
+                        if (province.isBlank()) ErrorMessage("province can't be blank")
+                    }
                 }
+                Spacer(modifier = Modifier.height(8.dp))
 
                 //Postal Code
                 OutlinedTextField(
@@ -494,32 +493,24 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPostCode),
-                    label = {
-                        Text(text = stringResource(R.string.Postal))
-                    },
+                    label = {Text(text = stringResource(R.string.Postal))},
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = WhiteLight,
                         focusedIndicatorColor = SecondaryColor,
-                        focusedLabelColor = SecondaryColor,
-                        unfocusedIndicatorColor = SecondaryColor
+                        focusedLabelColor = SecondaryColor
                     ),
+                    isError = inValidPostalCode,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
+                        keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = { keyboardController?.hide() }
                     ),
                 )
-                if (postalCode.isEmpty()) {
-                    Text(
-                        "PostalCode is required.",
-                        color = Danger,
-                    )}else {
-                }
-
+                if (inValidPostalCode) ErrorMessage("invalid postal code")
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
@@ -601,6 +592,7 @@ fun Form(
                         .padding(top = 1.dp)
                         .width(200.dp)
                         .height(50.dp),
+                    enabled = isValid,
                     shape = Shapes.medium,
                     colors = ButtonDefaults.buttonColors(SecondaryColor),
                     contentPadding = PaddingValues(5.dp)
