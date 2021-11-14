@@ -176,13 +176,14 @@ fun FoodDetailList(
                     navController = navController,
                 )
             } else {
-                var userById: User? = null
-                userVM.getUserById(id = Firebase.auth.currentUser!!.uid) { resPost ->
-                    userById = resPost.data as User
+                val userById = produceState(initialValue = User()) {
+                    userVM.getUserById(id = post.value.appliedUserID) { resPost ->
+                      value = resPost.data as User
+                    }
                 }
-                Text(text = "Applicant name = ${userById?.name}")
-                Text(text = "Applicant name = ${userById?.email}")
-                Text(text = "Applicant name = ${userById?.phone}")
+                Text(text = "Applicant name = ${userById.value.name}")
+                Text(text = "Applicant email = ${userById.value.email}")
+                Text(text = "Applicant phone = ${userById.value.phone}")
             }
         } else {
             if (post.value.appliedUserID == "") {
