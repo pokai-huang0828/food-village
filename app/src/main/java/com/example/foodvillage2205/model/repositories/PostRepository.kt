@@ -46,10 +46,11 @@ class PostRepository {
     }
 
     fun createPost(post: Post, onResponse: (Resource<*>) -> Unit) {
-        _collection.add(post)
+        val newDocRef = _collection.document()
+        newDocRef.set(post.apply { id = newDocRef.id })
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                onResponse(Resource.Success(documentReference.id))
+                Log.d(TAG, "DocumentSnapshot written  $documentReference")
+                onResponse(Resource.Success(documentReference))
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding post", e)

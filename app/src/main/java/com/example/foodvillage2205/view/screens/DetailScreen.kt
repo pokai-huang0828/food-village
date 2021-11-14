@@ -184,12 +184,12 @@ fun FoodDetailList(
                 Text(text = "Applicant name = ${userById.value.name}")
                 Text(text = "Applicant email = ${userById.value.email}")
                 Text(text = "Applicant phone = ${userById.value.phone}")
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Delete),
+                    navController = navController,
+                )
             }
-            DefaultBtn(
-                postVM = postVM,
-                btnText = stringResource(R.string.Delete),
-                navController = navController,
-            )
         } else {
             if (post.value.appliedUserID == "") {
                 DefaultBtn(
