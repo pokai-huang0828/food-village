@@ -39,7 +39,8 @@ fun ApplyHistory(navController: NavController, auth: Auth) {
             TopBar(
                 navController,
                 scope = scope,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                text = "Apply History"
             ) { userSearch ->
                 userRequest = userSearch
             }

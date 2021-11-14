@@ -73,15 +73,19 @@ fun FoodListContent(
             }
             val filtered =
                 foodItems.value.filter { userRequest.lowercase() in (it).title.lowercase() }
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                modifier = Modifier
-                    .padding(bottom = 5.dp)
-                    .background(Gray)
-            ) {
-                items(items = filtered) { post ->
-                    val listItem: Post = post
-                    FoodListItem(listItem = listItem, navController)
+            if (filtered.isEmpty()) {
+                Text(text = "NOTHING TO SHOW YET")
+            } else {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .padding(bottom = 5.dp)
+                        .background(Gray)
+                ) {
+                    items(items = filtered) { post ->
+                        val listItem: Post = post
+                        FoodListItem(listItem = listItem, navController)
+                    }
                 }
             }
         }
@@ -97,15 +101,19 @@ fun FoodListContent(
             }
             val filtered =
                 foodItems.value.filter { userRequest.lowercase() in (it).title.lowercase() }
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                modifier = Modifier
-                    .padding(bottom = 5.dp)
-                    .background(Gray)
-            ) {
-                items(items = filtered) { post ->
-                    val listItem: Post = post
-                    FoodListItem(listItem = listItem, navController)
+            if (filtered.isEmpty()) {
+                Text(text = "NOTHING TO SHOW YET")
+            } else {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .padding(bottom = 5.dp)
+                        .background(Gray)
+                ) {
+                    items(items = filtered) { post ->
+                        val listItem: Post = post
+                        FoodListItem(listItem = listItem, navController)
+                    }
                 }
             }
         }

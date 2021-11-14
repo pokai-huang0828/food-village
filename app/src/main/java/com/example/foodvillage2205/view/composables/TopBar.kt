@@ -34,6 +34,7 @@ fun TopBar(
     navController: NavController,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
+    text: String = "Food Village",
     filterRequest: (String) -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
@@ -61,7 +62,7 @@ fun TopBar(
             }
 
             Text(
-                text = "Food Village",
+                text = text,
                 color = White,
                 fontFamily = RobotoSlab,
                 fontSize = 30.sp,
@@ -98,6 +99,6 @@ fun TopBar(
                 }
             }
         }
-        AnimatedVisibility(visible) { SearchBar() { userSearch -> filterRequest(userSearch) }        }
+        AnimatedVisibility(visible) { SearchBar() { userSearch -> filterRequest(userSearch) } }
     }
 }

@@ -39,6 +39,7 @@ fun DonateHistory(navController: NavController, auth: Auth) {
             TopBar(
                 navController,
                 scope = scope,
+                text = "Donation History",
                 scaffoldState = scaffoldState
             ) { userSearch ->
                 userRequest = userSearch
