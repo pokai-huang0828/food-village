@@ -32,10 +32,13 @@ import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
+import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.DefaultBtn
 import com.example.foodvillage2205.view.composables.Drawer
+import com.example.foodvillage2205.view.composables.MapBox
+import com.example.foodvillage2205.view.composables.OnlyMapBox
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
@@ -168,13 +171,10 @@ fun FoodDetailList(
                 DefaultBtn(
                     btnText = stringResource(R.string.Edit),
                     navController = navController,
+                    enabled = true,
                 )
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
-                DefaultBtn(
-                    postVM = postVM,
-                    btnText = stringResource(R.string.Delete),
-                    navController = navController,
-                )
+
             } else {
                 val userById = produceState(initialValue = User()) {
                     userVM.getUserById(id = post.value.appliedUserID) { resPost ->
@@ -184,24 +184,27 @@ fun FoodDetailList(
                 Text(text = "Applicant name = ${userById.value.name}")
                 Text(text = "Applicant email = ${userById.value.email}")
                 Text(text = "Applicant phone = ${userById.value.phone}")
-                DefaultBtn(
-                    postVM = postVM,
-                    btnText = stringResource(R.string.Delete),
-                    navController = navController,
-                )
             }
+            DefaultBtn(
+                postVM = postVM,
+                btnText = stringResource(R.string.Delete),
+                navController = navController,
+                enabled = true,
+            )
         } else {
             if (post.value.appliedUserID == "") {
                 DefaultBtn(
                     postVM = postVM,
                     btnText = stringResource(R.string.Apply),
                     navController = navController,
+                    enabled = true,
                 )
             } else {
                 DefaultBtn(
                     postVM = postVM,
                     btnText = stringResource(R.string.Undo),
                     navController = navController,
+                    enabled = true,
                 )
             }
         }
@@ -371,8 +374,7 @@ fun FoodDetail(
         // Address
         Text(
             text = if (post.street.isEmpty()) "No Location" else "${post.street}\n" +
-                    "${post.city} ${post.province}\n" +
-                    "${post.postalCode}",
+                    "${post.city} ${post.province}\n" + "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             modifier = Modifier.padding(bottom = 5.dp, start = 15.dp),
@@ -380,17 +382,11 @@ fun FoodDetail(
         )
 
         // Map
-        Image(
-            painter = painterResource(id = R.drawable.map),
-            contentDescription = "header",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-
+        if (post.postalCode.isNotBlank() || post.street.isNotBlank()) {
+            OnlyMapBox(
+                mapSearch = "${post.street} ${post.city}",
+            )
+        }
     }
 }
 

@@ -11,7 +11,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -42,6 +44,7 @@ import com.example.foodvillage2205.model.repositories.FireStorageRepo
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
+import com.example.foodvillage2205.view.composables.MapBox
 import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.composables.gallery.GallerySelect
 import com.example.foodvillage2205.view.navigation.Route
@@ -53,8 +56,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.util.regex.Pattern
+import androidx.compose.material.Text as Text
 
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
@@ -67,13 +70,9 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
     )
 
     Scaffold(
-        topBar = {
-            TopBarProfile(
-                navController,
-                scope = scope,
-                scaffoldState = scaffoldState
-            )
-        },
+        topBar = { TopBarProfile(navController,
+            scope = scope,
+            scaffoldState = scaffoldState) },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -140,7 +139,7 @@ fun TopBarProfile(
 }
 
 @Composable
-fun ErrorMessage(text:String){
+fun ErrorMessage(text: String) {
     Text(text, color = Danger)
 }
 
@@ -179,15 +178,19 @@ fun Form(
     val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
     val inValidPhone = !phonePattern.matcher(phone).matches()
     val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
+    var isValidAddress by remember { mutableStateOf(false) }
+    var isDirty by remember { mutableStateOf(true) }
 
     val isValid by derivedStateOf {
         !inValidEmail &&
-        !inValidPhone &&
-        !inValidPostalCode &&
-        name.isNotBlank() &&
-        street.isNotBlank() &&
-        province.isNotBlank() &&
-        city.isNotBlank()
+                !inValidPhone &&
+                !inValidPostalCode &&
+                name.isNotBlank() &&
+                street.isNotBlank() &&
+                province.isNotBlank() &&
+                city.isNotBlank() &&
+                isValidAddress &&
+                !isDirty
     }
 
     // Set up for picking image from gallery
@@ -215,6 +218,7 @@ fun Form(
                 timestamp = user.timestamp!!
             }
         }
+
         if (thumbnailUrl.isNotEmpty()) {
             imageUri = Uri.parse(thumbnailUrl)
         }
@@ -248,11 +252,7 @@ fun Form(
                 Box(contentAlignment = Alignment.TopEnd) {
                     //profile pic, show default image if user does not has one
                     Image(
-                        painter =
-                        if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI)
-                            painterResource(R.drawable.default_image)
-                        else
-                            rememberImagePainter(imageUri),
+                        painter = if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI) painterResource(R.drawable.default_image) else rememberImagePainter(imageUri),
                         stringResource(R.string.Profile_title),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -307,12 +307,13 @@ fun Form(
                     fontWeight = FontWeight.W900,
                 )
                 Spacer(modifier = Modifier.height(5.dp))
+                // Name
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = "Name")},
+                    label = { Text(text = "Name") },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -347,7 +348,7 @@ fun Form(
                     onValueChange = { email = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = stringResource(R.string.email))},
+                    label = { Text(text = stringResource(R.string.email)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -375,7 +376,7 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPhone),
-                    label = {Text(text = stringResource(R.string.phone))},
+                    label = { Text(text = stringResource(R.string.phone)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -408,10 +409,13 @@ fun Form(
                 //Street
                 OutlinedTextField(
                     value = street,
-                    onValueChange = { street = it },
+                    onValueChange = {
+                        isDirty = true
+                        street = it
+                    },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = stringResource(R.string.Street))},
+                    label = { Text(text = stringResource(R.string.Street)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -431,16 +435,16 @@ fun Form(
                 if (street.isBlank()) ErrorMessage("street can't be blank")
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row() {
+                Row {
                     //City
-                    Column{
+                    Column {
                         OutlinedTextField(
                             value = city,
                             onValueChange = { city = it },
                             modifier = Modifier
                                 .fillMaxWidth(0.5f)
                                 .focusRequester(focusRequesterCity),
-                            label = {Text(text = stringResource(R.string.City))},
+                            label = { Text(text = stringResource(R.string.City)) },
                             singleLine = true,
                             maxLines = 1,
                             colors = TextFieldDefaults.textFieldColors(
@@ -469,7 +473,7 @@ fun Form(
                                 .padding(start = 5.dp)
                                 .fillMaxWidth()
                                 .focusRequester(focusRequesterProvince),
-                            label = {Text(text = stringResource(R.string.Province))},
+                            label = { Text(text = stringResource(R.string.Province)) },
                             singleLine = true,
                             maxLines = 1,
                             colors = TextFieldDefaults.textFieldColors(
@@ -498,7 +502,7 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPostCode),
-                    label = {Text(text = stringResource(R.string.Postal))},
+                    label = { Text(text = stringResource(R.string.Postal)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -517,6 +521,22 @@ fun Form(
                 )
                 if (inValidPostalCode) ErrorMessage("invalid postal code")
                 Spacer(modifier = Modifier.height(10.dp))
+            }
+
+
+            // MapBox
+            if (postalCode.isNotBlank() || street.isNotBlank()) {
+                MapBox(
+                    mapSearch = "$street $city",
+                    onSearchError = {
+                        // do something on Error
+                        isValidAddress = false
+                    }
+                ) {
+                    // do something on Success
+                    isValidAddress = true
+                    isDirty = false
+                }
             }
 
             Column(
@@ -613,6 +633,4 @@ fun Form(
             }
         }
     }
-
-
 }

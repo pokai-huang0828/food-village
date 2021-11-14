@@ -331,7 +331,7 @@ fun UserImage(auth: Auth) {
                 modifier = Modifier
                     .width(150.dp)
                     .height(150.dp)
-                    .shadow(elevation = 12.dp),
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(75.dp), true),
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center
             )

@@ -43,4 +43,7 @@
     <string name="Undo">Undo</string>
     <string name="Edit">Edit</string>
     <string name="AddImage">Add Image</string>
+
+    <!--Mapbox default public token-->
+    <string name="mapbox_access_token">pk.eyJ1IjoiZm9vZHZpbGxhZ2UiLCJhIjoiY2t2eWRoNnN1NmNsNzJ3bnV0b240cnZieSJ9.NPhngsVQhruAllGjD25TPg</string>
 </resources>
