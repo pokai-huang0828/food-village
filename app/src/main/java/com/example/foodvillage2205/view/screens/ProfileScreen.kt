@@ -2,6 +2,7 @@ package com.example.foodvillage2205.view.screens
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -217,10 +218,10 @@ fun Form(
                 thumbnailUrl = user.thumbnailUrl
                 timestamp = user.timestamp!!
             }
-        }
-
-        if (thumbnailUrl.isNotEmpty()) {
-            imageUri = Uri.parse(thumbnailUrl)
+            if (thumbnailUrl.isNotEmpty()) {
+                Log.d("imageDebug", thumbnailUrl)
+                imageUri = Uri.parse(thumbnailUrl)
+            }
         }
     }
 

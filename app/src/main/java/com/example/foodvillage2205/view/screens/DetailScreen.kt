@@ -181,9 +181,57 @@ fun FoodDetailList(
                       value = resPost.data as User
                     }
                 }
-                Text(text = "Applicant name = ${userById.value.name}")
-                Text(text = "Applicant email = ${userById.value.email}")
-                Text(text = "Applicant phone = ${userById.value.phone}")
+                Column {
+                    Text(
+                        text = "Applicant's Name:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+                        color = PrimaryColor,
+                        fontFamily = RobotoSlab,
+                    )
+                    Text(
+                        text = "${userById.value.name}",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 17.sp,
+                        fontFamily = RobotoSlab,
+                        modifier = Modifier.padding(start = 15.dp)
+                    )
+                    Text(
+                        text = "Applicant's Email:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+                        color = PrimaryColor,
+                        fontFamily = RobotoSlab,
+                    )
+                    Text(
+                        text = "${userById.value.email}",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 17.sp,
+                        fontFamily = RobotoSlab,
+                        modifier = Modifier.padding(start = 15.dp)
+                    )
+
+                    Text(
+                        text = "Applicant's Phone Num:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
+                        color = PrimaryColor,
+                        fontFamily = RobotoSlab,
+                    )
+                    Text(
+                        text = "${userById.value.phone}",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 17.sp,
+                        fontFamily = RobotoSlab,
+                        modifier = Modifier.padding(start = 15.dp)
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
+
+
             }
             DefaultBtn(
                 postVM = postVM,
@@ -208,7 +256,7 @@ fun FoodDetailList(
                 )
             }
         }
-        Spacer(modifier = Modifier.padding(bottom = 80.dp))
+        Spacer(modifier = Modifier.padding(bottom = 50.dp))
     }
 }
 
