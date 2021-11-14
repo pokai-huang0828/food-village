@@ -82,8 +82,8 @@ class MainActivity : ComponentActivity() {
 
     private fun createLocationRequest(): LocationRequest {
         val locationRequest = LocationRequest.create().apply {
-            interval = 5000
-            fastestInterval = 1000
+            interval = 10000
+            fastestInterval = 5000
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
         return locationRequest

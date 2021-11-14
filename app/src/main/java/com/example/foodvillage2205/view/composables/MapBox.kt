@@ -1,14 +1,17 @@
 package com.example.foodvillage2205.view.composables
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.responses.Resource
@@ -30,58 +33,60 @@ import kotlinx.coroutines.launch
 
 data class Coordinates(val latitude: Double, val longitude: Double)
 
+@SuppressLint("ProduceStateDoesNotAssignValue")
 @Composable
-fun MapBox(modifier: Modifier) {
+fun MapBox(
+    mapSearch: String = "vancouver community college",
+    onSearchError: () -> Unit,
+    onSearchSuccess: () -> Unit,
+    //    auth: Auth,
+//    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())
+) {
     val coroutineScope = rememberCoroutineScope()
     val mapService = MapService() // to call mapbox Geocoding API
 
     var location by remember { mutableStateOf(Coordinates(0.0, 0.0)) }
-    var address by remember { mutableStateOf("") }
     var mapBox by remember { mutableStateOf<MapboxMap?>(null) }
     var mapView by remember { mutableStateOf<MapView?>(null) }
+//    var street by remember { mutableStateOf(mapSearch) }
     var pointAnnotationManager by remember { mutableStateOf<PointAnnotationManager?>(null) }
 
-    Column {
-        TextField(
-            value = address,
-            onValueChange = { address = it }
+    // initial run
+    LaunchedEffect(key1 = true) {
+        var response = mapService.getLocationResult(
+            searchText = mapSearch
         )
 
-        Button(onClick = {
-            coroutineScope.launch(Dispatchers.Main) {
-                Log.d("result", address)
+        if (response is Resource.Success) {
+            Log.d("result", response.data?.features.toString())
 
-                var response = mapService.getLocationResult(
-                    searchText = address
-                )
-
-                if (response is Resource.Success) {
-                    Log.d("result", response.data?.features.toString())
-
-                    // check if response has coordinates
-                    if(response.data?.features!!.isEmpty())
-                        return@launch;
-
-                    location = Coordinates(
-                        response.data?.features!![0].center[1], //latitude
-                        response.data?.features!![0].center[0] // longitude
-                    )
-
-                    addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
-                    moveToLocation(mapBox, location)
-
-                } else {
-                    Log.d("error", (response as Resource.Error).message.toString())
-
-                    // display error msg
-                }
+            // check if response has coordinates
+            if (response.data?.features!!.isEmpty()) {
+                onSearchError()
+                return@LaunchedEffect;
             }
-        }) {
-            Text("Search")
-        }
 
+            location = Coordinates(
+                response.data?.features!![0].center[1], //latitude
+                response.data?.features!![0].center[0] // longitude
+            )
+
+            addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
+            moveToLocation(mapBox, location)
+            onSearchSuccess()
+
+        } else {
+            Log.d("error", (response as Resource.Error).message.toString())
+
+            // display error msg
+        }
+    }
+
+    Column {
         AndroidView(
-            modifier = modifier,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
             factory = { context ->
                 MapView(context).apply {
                     layoutParams = ViewGroup.LayoutParams(
@@ -100,12 +105,48 @@ fun MapBox(modifier: Modifier) {
             }
         )
 
+        Button(onClick = {
+            coroutineScope.launch(Dispatchers.Main) {
+                Log.d("result", mapSearch)
+
+                var response = mapService.getLocationResult(
+                    searchText = mapSearch
+                )
+
+                if (response is Resource.Success) {
+                    Log.d("result", response.data?.features.toString())
+
+                    // check if response has coordinates
+                    if (response.data?.features!!.isEmpty()) {
+                        onSearchError()
+                        return@launch;
+                    }
+
+                    location = Coordinates(
+                        response.data?.features!![0].center[1], //latitude
+                        response.data?.features!![0].center[0] // longitude
+                    )
+
+                    addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
+                    moveToLocation(mapBox, location)
+                    onSearchSuccess()
+
+                } else {
+                    Log.d("result", (response as Resource.Error).message.toString())
+                    onSearchError()
+
+                    // display error msg
+                }
+            }
+        }) {
+            Text("Find My Address")
+        }
     }
 }
 
 fun moveToLocation(
     mapBox: MapboxMap?,
-    location: Coordinates
+    location: Coordinates,
 ) {
     mapBox?.flyTo(
         CameraOptions.Builder()
@@ -120,7 +161,7 @@ fun addAnnotationToMap(
     mapBox: MapboxMap?,
     location: Coordinates,
     mapView: MapView?,
-    pointAnnotationManager: PointAnnotationManager?
+    pointAnnotationManager: PointAnnotationManager?,
 ) {
     mapBox?.loadStyleUri(
         Style.MAPBOX_STREETS

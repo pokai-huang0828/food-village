@@ -69,9 +69,11 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
     )
 
     Scaffold(
-        topBar = { TopBarProfile(navController,
-            scope = scope,
-            scaffoldState = scaffoldState) },
+        topBar = {
+            TopBarProfile(navController,
+                scope = scope,
+                scaffoldState = scaffoldState)
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -84,7 +86,7 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
 fun TopBarProfile(
     navController: NavController,
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
     Row(
         modifier = Modifier
@@ -138,7 +140,7 @@ fun TopBarProfile(
 }
 
 @Composable
-fun ErrorMessage(text:String){
+fun ErrorMessage(text: String) {
     Text(text, color = Danger)
 }
 
@@ -149,7 +151,7 @@ fun ErrorMessage(text:String){
 fun Form(
     navController: NavController,
     auth: Auth,
-    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
 ) {
     var id by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -162,11 +164,14 @@ fun Form(
     var thumbnailUrl by remember { mutableStateOf("") }
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
 
+
     // Keyboard done button
-    val (focusRequesterPhone,
+    val (
+        focusRequesterPhone,
         focusRequesterCity,
         focusRequesterProvince,
-        focusRequesterPostCode, ) = FocusRequester.createRefs()
+        focusRequesterPostCode,
+    ) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //validate
@@ -175,15 +180,19 @@ fun Form(
     val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
     val inValidPhone = !phonePattern.matcher(phone).matches()
     val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
+    var isValidAddress by remember { mutableStateOf(false) }
+    var isDirty by remember { mutableStateOf(true) }
 
     val isValid by derivedStateOf {
         !inValidEmail &&
-        !inValidPhone &&
-        !inValidPostalCode &&
-        name.isNotBlank() &&
-        street.isNotBlank() &&
-        province.isNotBlank() &&
-        city.isNotBlank()
+                !inValidPhone &&
+//                !inValidPostalCode &&
+                name.isNotBlank() &&
+                street.isNotBlank() &&
+                province.isNotBlank() &&
+                city.isNotBlank() &&
+                isValidAddress &&
+                !isDirty
     }
 
     // Set up for picking image from gallery
@@ -309,7 +318,7 @@ fun Form(
                     onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = "Name")},
+                    label = { Text(text = "Name") },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -344,7 +353,7 @@ fun Form(
                     onValueChange = { email = it },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = stringResource(R.string.email))},
+                    label = { Text(text = stringResource(R.string.email)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -372,7 +381,7 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPhone),
-                    label = {Text(text = stringResource(R.string.phone))},
+                    label = { Text(text = stringResource(R.string.phone)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -405,10 +414,13 @@ fun Form(
                 //Street
                 OutlinedTextField(
                     value = street,
-                    onValueChange = { street = it },
+                    onValueChange = {
+                        isDirty = true
+                        street = it
+                    },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    label = {Text(text = stringResource(R.string.Street))},
+                    label = { Text(text = stringResource(R.string.Street)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -430,14 +442,14 @@ fun Form(
 
                 Row() {
                     //City
-                    Column{
+                    Column {
                         OutlinedTextField(
                             value = city,
                             onValueChange = { city = it },
                             modifier = Modifier
                                 .fillMaxWidth(0.5f)
                                 .focusRequester(focusRequesterCity),
-                            label = {Text(text = stringResource(R.string.City))},
+                            label = { Text(text = stringResource(R.string.City)) },
                             singleLine = true,
                             maxLines = 1,
                             colors = TextFieldDefaults.textFieldColors(
@@ -466,7 +478,7 @@ fun Form(
                                 .padding(start = 5.dp)
                                 .fillMaxWidth()
                                 .focusRequester(focusRequesterProvince),
-                            label = {Text(text = stringResource(R.string.Province))},
+                            label = { Text(text = stringResource(R.string.Province)) },
                             singleLine = true,
                             maxLines = 1,
                             colors = TextFieldDefaults.textFieldColors(
@@ -495,7 +507,7 @@ fun Form(
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPostCode),
-                    label = {Text(text = stringResource(R.string.Postal))},
+                    label = { Text(text = stringResource(R.string.Postal)) },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(
@@ -516,11 +528,21 @@ fun Form(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            MapBox(
-                modifier = Modifier
-                    .height(300.dp)
-                    .width(300.dp)
-            )
+
+            // MapBox
+            if (postalCode.isNotBlank() || street.isNotBlank()) {
+                MapBox(
+                    mapSearch = "$street $city $province $postalCode",
+                    onSearchError = {
+                        // do something on Error
+                        isValidAddress = false
+                    }
+                ) {
+                    // do something on Success
+                    isValidAddress = true
+                    isDirty = false
+                }
+            }
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -562,8 +584,8 @@ fun Form(
                                     )
                                 ) {
                                     // if resource is success
-                                    if(it is Resource.Success){
-                                        navController.navigate(Route.MainScreen.route){
+                                    if (it is Resource.Success) {
+                                        navController.navigate(Route.MainScreen.route) {
                                             popUpTo(Route.MainScreen.route)
                                         }
                                     }
@@ -587,8 +609,8 @@ fun Form(
                                 )
                             ) {
                                 // if resource is success
-                                if(it is Resource.Success){
-                                    navController.navigate(Route.MainScreen.route){
+                                if (it is Resource.Success) {
+                                    navController.navigate(Route.MainScreen.route) {
                                         popUpTo(Route.MainScreen.route)
                                     }
                                 }
