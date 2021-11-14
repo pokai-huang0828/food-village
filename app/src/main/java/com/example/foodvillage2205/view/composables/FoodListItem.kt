@@ -20,6 +20,7 @@ import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.screens.RobotoSlab
+import com.example.foodvillage2205.view.theme.FourthColor
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.White
 
@@ -34,7 +35,7 @@ fun FoodListItem(listItem: Post, navController: NavController, applicant: String
                 navController.navigate(Route.DetailScreen.route + "/${listItem.id}")
             },
         elevation = 9.dp,
-        backgroundColor = if (applicant == "") White else Color.Green,
+        backgroundColor = if (applicant == "") White else FourthColor,
         shape = RoundedCornerShape(corner = CornerSize(15.dp))
     ) {
         val painter = rememberImagePainter(listItem.imageUrl)

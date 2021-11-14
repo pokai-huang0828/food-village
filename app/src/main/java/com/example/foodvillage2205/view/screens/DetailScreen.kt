@@ -174,12 +174,7 @@ fun FoodDetailList(
                     enabled = true,
                 )
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
-                DefaultBtn(
-                    postVM = postVM,
-                    btnText = stringResource(R.string.Delete),
-                    navController = navController,
-                    enabled = true,
-                )
+
             } else {
                 val userById = produceState(initialValue = User()) {
                     userVM.getUserById(id = post.value.appliedUserID) { resPost ->
@@ -390,8 +385,6 @@ fun FoodDetail(
         if (post.postalCode.isNotBlank() || post.street.isNotBlank()) {
             OnlyMapBox(
                 mapSearch = "${post.street} ${post.city}",
-                onSearchError = {},
-                onSearchSuccess = {}
             )
         }
     }

@@ -42,16 +42,13 @@ data class CoordinatesOMB(val latitude: Double, val longitude: Double)
 @Composable
 fun OnlyMapBox(
     mapSearch: String = "vancouver community college",
-    onSearchError: () -> Unit,
-    onSearchSuccess: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val mapService = MapService() // to call mapbox Geocoding API
 
     var location by remember { mutableStateOf(CoordinatesOMB(0.0, 0.0)) }
     var mapBox by remember { mutableStateOf<MapboxMap?>(null) }
     var mapView by remember { mutableStateOf<MapView?>(null) }
-//    var street by remember { mutableStateOf(mapSearch) }
+
     var pointAnnotationManager by remember { mutableStateOf<PointAnnotationManager?>(null) }
 
     // initial run
@@ -65,7 +62,7 @@ fun OnlyMapBox(
 
             // check if response has coordinates
             if (response.data?.features!!.isEmpty()) {
-                onSearchError()
+
                 return@LaunchedEffect;
             }
 
@@ -76,7 +73,7 @@ fun OnlyMapBox(
 
             addAnnotationToMapOMB(mapBox, location, mapView, pointAnnotationManager)
             moveToLocationOMB(mapBox, location)
-            onSearchSuccess()
+
 
         } else {
             Log.d("error", (response as Resource.Error).message.toString())
