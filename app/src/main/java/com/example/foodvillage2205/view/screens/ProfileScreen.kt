@@ -57,6 +57,7 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
+import androidx.compose.material.Text as Text
 
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
@@ -186,7 +187,7 @@ fun Form(
     val isValid by derivedStateOf {
         !inValidEmail &&
                 !inValidPhone &&
-//                !inValidPostalCode &&
+                !inValidPostalCode &&
                 name.isNotBlank() &&
                 street.isNotBlank() &&
                 province.isNotBlank() &&
@@ -313,6 +314,7 @@ fun Form(
                     fontWeight = FontWeight.W900,
                 )
                 Spacer(modifier = Modifier.height(5.dp))
+                // Name
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -440,7 +442,7 @@ fun Form(
                 if (street.isBlank()) ErrorMessage("street can't be blank")
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row() {
+                Row {
                     //City
                     Column {
                         OutlinedTextField(
@@ -532,7 +534,7 @@ fun Form(
             // MapBox
             if (postalCode.isNotBlank() || street.isNotBlank()) {
                 MapBox(
-                    mapSearch = "$street $city $province $postalCode",
+                    mapSearch = "$street $city",
                     onSearchError = {
                         // do something on Error
                         isValidAddress = false

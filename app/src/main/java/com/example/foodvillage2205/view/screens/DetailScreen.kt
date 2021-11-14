@@ -170,17 +170,20 @@ fun FoodDetailList(
             DefaultBtn(
                 btnText = stringResource(R.string.Edit),
                 navController = navController,
+                enabled = true,
             )
             Spacer(modifier = Modifier.padding(bottom = 10.dp))
             DefaultBtn(
                 postVM = postVM,
                 btnText = stringResource(R.string.Delete),
                 navController = navController,
+                enabled = true,
             )
         } else {
             DefaultBtn(
                 btnText = stringResource(R.string.Apply),
                 navController = navController,
+                enabled = true,
             )
         }
         Spacer(modifier = Modifier.padding(bottom = 80.dp))

@@ -4,18 +4,23 @@ import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.map.MapService
+import com.example.foodvillage2205.view.screens.RobotoSlab
+import com.example.foodvillage2205.view.theme.*
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -82,7 +87,7 @@ fun MapBox(
         }
     }
 
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally){
         AndroidView(
             modifier = Modifier
                 .fillMaxWidth()
@@ -105,41 +110,57 @@ fun MapBox(
             }
         )
 
-        Button(onClick = {
-            coroutineScope.launch(Dispatchers.Main) {
-                Log.d("result", mapSearch)
+        Button(
+            onClick = {
+                coroutineScope.launch(Dispatchers.Main) {
+                    Log.d("result", mapSearch)
 
-                var response = mapService.getLocationResult(
-                    searchText = mapSearch
-                )
-
-                if (response is Resource.Success) {
-                    Log.d("result", response.data?.features.toString())
-
-                    // check if response has coordinates
-                    if (response.data?.features!!.isEmpty()) {
-                        onSearchError()
-                        return@launch;
-                    }
-
-                    location = Coordinates(
-                        response.data?.features!![0].center[1], //latitude
-                        response.data?.features!![0].center[0] // longitude
+                    var response = mapService.getLocationResult(
+                        searchText = mapSearch
                     )
 
-                    addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
-                    moveToLocation(mapBox, location)
-                    onSearchSuccess()
+                    if (response is Resource.Success) {
+                        Log.d("result", response.data?.features.toString())
 
-                } else {
-                    Log.d("result", (response as Resource.Error).message.toString())
-                    onSearchError()
+                        // check if response has coordinates
+                        if (response.data?.features!!.isEmpty()) {
+                            onSearchError()
+                            return@launch;
+                        }
 
-                    // display error msg
+                        location = Coordinates(
+                            response.data?.features!![0].center[1], //latitude
+                            response.data?.features!![0].center[0] // longitude
+                        )
+
+                        addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
+                        moveToLocation(mapBox, location)
+                        onSearchSuccess()
+
+                    } else {
+                        Log.d("result", (response as Resource.Error).message.toString())
+                        onSearchError()
+
+
+                        // display error msg
+                    }
                 }
-            }
-        }) {
-            Text("Find My Address")
+            },
+            modifier = Modifier
+                .padding(top = 10.dp)
+                .width(200.dp)
+                .height(50.dp),
+            shape = Shapes.medium,
+            colors = ButtonDefaults.buttonColors(PrimaryColor),
+            contentPadding = PaddingValues(5.dp)
+        ) {
+            Text(
+                text = "Validate Address",
+                fontFamily = RobotoSlab,
+                color = White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W900
+            )
         }
     }
 }

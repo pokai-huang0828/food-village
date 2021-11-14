@@ -47,6 +47,7 @@ fun DefaultBtn(
     postVM: PostsViewModel? = null,
     navController: NavController? = null,
     btnText: String = "",
+    enabled: Boolean,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -177,7 +178,8 @@ fun DefaultBtn(
                 .height(50.dp),
             shape = Shapes.medium,
             colors = ButtonDefaults.buttonColors(SecondaryColor),
-            contentPadding = PaddingValues(5.dp)
+            contentPadding = PaddingValues(5.dp),
+            enabled = enabled,
         ) {
             Text(
                 text = btnText,
