@@ -37,6 +37,8 @@ import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.DefaultBtn
 import com.example.foodvillage2205.view.composables.Drawer
+import com.example.foodvillage2205.view.composables.MapBox
+import com.example.foodvillage2205.view.composables.OnlyMapBox
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
@@ -385,17 +387,13 @@ fun FoodDetail(
         )
 
         // Map
-        Image(
-            painter = painterResource(id = R.drawable.map),
-            contentDescription = "header",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-
+        if (post.postalCode.isNotBlank() || post.street.isNotBlank()) {
+            OnlyMapBox(
+                mapSearch = "${post.street} ${post.city}",
+                onSearchError = {},
+                onSearchSuccess = {}
+            )
+        }
     }
 }
 
