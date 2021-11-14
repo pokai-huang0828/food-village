@@ -25,10 +25,14 @@ import com.example.foodvillage2205.view.theme.Shapes
 import com.example.foodvillage2205.view.theme.White
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 
+@ExperimentalCoroutinesApi
 @Composable
 fun DefaultBtn(
     imageUrl: Uri? = null,
@@ -147,7 +151,6 @@ fun DefaultBtn(
                             // upload post to firestore
                             if (fireStorageException === null) {
                                 postVM?.createPost(post) { resource ->
-                                    // if resource is success, return to Main Screen
                                     if (resource is Resource.Success) {
                                         navController?.navigate(Route.MainScreen.route)
                                     }
@@ -161,14 +164,28 @@ fun DefaultBtn(
                     }
                     "Delete" -> {
                         postVM?.deletePost(SessionPost.getSessionPost()) { resource ->
-                            // if resource is success, return to Main Screen
                             if (resource is Resource.Success) {
                                 navController?.navigate(Route.MainScreen.route)
                             }
                         }
                     }
                     "Apply" -> {
-                        navController?.navigate(Route.ApplyHistory.route)
+                        postVM?.updatePost(
+                            SessionPost.getSessionPost()
+                                .apply { appliedUserID = Firebase.auth.currentUser!!.uid }) { res ->
+                            if (res is Resource.Success) {
+                                navController?.navigate(Route.ApplyHistory.route)
+                            }
+                        }
+                    }
+                    "Undo" -> {
+                        postVM?.updatePost(
+                            SessionPost.getSessionPost()
+                                .apply { appliedUserID = "" }) { res ->
+                            if (res is Resource.Success) {
+                                navController?.navigate(Route.ApplyHistory.route)
+                            }
+                        }
                     }
                 }
             },

@@ -69,9 +69,11 @@ import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
+@ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
 @Composable
@@ -127,7 +129,7 @@ fun TopBarDonateScreen(
         }
 
         Text(
-            text = "New Post",
+            text = if (SessionPost.enabled) "Edit Mode" else "New Post",
             color = White,
             fontFamily = RobotoSlab,
             fontSize = 30.sp,
@@ -153,6 +155,7 @@ fun TopBarDonateScreen(
     }
 }
 
+@ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
 @SuppressLint("ProduceStateDoesNotAssignValue")
 @ExperimentalPermissionsApi
@@ -222,20 +225,18 @@ fun FormDonateScreen(
 
     // Get User Info from firebase to populate input fields
     produceState(initialValue = false) {
-        val resource = userVM.getUserById((auth.currentUser as FirebaseUser).uid)
-
-        if (resource is Resource.Success<*>) {
-            val user = resource.data as User
-            email = user.email
-            phone = user.phone
-            postalCode = user.postalCode
-            province = user.province
-            street = user.street
-            city = user.city
+        userVM.getUserById((auth.currentUser as FirebaseUser).uid) { resource ->
+            if (resource is Resource.Success<*>) {
+                val user = resource.data as User
+                email = user.email
+                phone = user.phone
+                postalCode = user.postalCode
+                province = user.province
+                street = user.street
+                city = user.city
+            }
         }
     }
-
-
     var showCameraScreen by remember { mutableStateOf(false) }
 
     if (showCameraScreen) {
@@ -246,12 +247,10 @@ fun FormDonateScreen(
         ) {
             // call return the Uri of the photo taken
             imageUrl = it
-
             // close the camera screen
             showCameraScreen = !showCameraScreen
         }
     } else {
-
         Column(
             modifier = Modifier
                 .height(700.dp)
@@ -375,11 +374,8 @@ fun FormDonateScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(text = "Title")
-                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Title") },
                     singleLine = true,
                     maxLines = 1,
                     colors = TextFieldDefaults.textFieldColors(

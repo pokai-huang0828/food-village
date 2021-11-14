@@ -83,17 +83,17 @@ class Auth(var context: Activity, default_web_client_id: String) {
 
                     // Try to get user from firestore
                     CoroutineScope(IO).launch {
-                        val response = userRepo.getUserById(_auth.currentUser?.uid!!)
-
-                        // if no user, create one
-                        if (response is Resource.Error) {
-                            userRepo.createUser(
-                                User(
-                                    email = _auth.currentUser?.email!!,
-                                    id = _auth.currentUser?.uid!!
-                                )
-                            ) {
-                                // check response type here
+                        userRepo.getUserById(_auth.currentUser?.uid!!) { response ->
+                            // if no user, create one
+                            if (response is Resource.Error) {
+                                userRepo.createUser(
+                                    User(
+                                        email = _auth.currentUser?.email!!,
+                                        id = _auth.currentUser?.uid!!
+                                    )
+                                ) {
+                                    // check response type here
+                                }
                             }
                         }
                     }

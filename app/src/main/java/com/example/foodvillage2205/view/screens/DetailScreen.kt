@@ -47,8 +47,10 @@ import com.example.foodvillage2205.viewmodels.UserViewModelFactory
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @Composable
 fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
 
@@ -69,7 +71,9 @@ fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
         drawerContent = {
             Drawer(navController = navController, auth = auth)
         },
-        content = { FoodDetailList(postId = postId, navController = navController) }
+        content = {
+            FoodDetailList(postId = postId, navController = navController)
+        }
     )
 }
 
@@ -132,28 +136,22 @@ fun TopBarDetail(
 }
 
 
+@ExperimentalCoroutinesApi
 @Composable
 fun FoodDetailList(
-    postId: String?,
     postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository())),
     userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
+    postId: String?,
     navController: NavController,
 ) {
     var user by remember { mutableStateOf(User()) }
     val post = produceState(initialValue = Post()) {
-        postId?.let {
-            val resource = postVM.getPostById(postId)
-
-            resource.let {
-                if (resource is Resource.Success) {
-                    value = resource.data as Post
-                    SessionPost.setSessionPost(value.apply { id = postId })
-
-                    // Get Post owner info
-                    val resource = userVM.getUserById(value.userId)
-                    if (resource is Resource.Success) {
-                        user = resource.data as User
-                    }
+        if (postId != null) {
+            postVM.getPostById(postId) { resPost ->
+                value = resPost.data as Post
+                SessionPost.setSessionPost(value.apply { id = postId })
+                userVM.getUserById(value.userId) { resUser ->
+                    user = resUser.data as User
                 }
             }
         }
@@ -167,12 +165,29 @@ fun FoodDetailList(
         FoodDetail(post.value)
         Spacer(modifier = Modifier.padding(bottom = 10.dp))
         if (post.value.userId == Firebase.auth.currentUser?.uid) {
-            DefaultBtn(
-                btnText = stringResource(R.string.Edit),
-                navController = navController,
-                enabled = true,
-            )
-            Spacer(modifier = Modifier.padding(bottom = 10.dp))
+            if (post.value.appliedUserID == "") {
+                DefaultBtn(
+                    btnText = stringResource(R.string.Edit),
+                    navController = navController,
+                    enabled = true,
+                )
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Delete),
+                    navController = navController,
+                    enabled = true,
+                )
+            } else {
+                val userById = produceState(initialValue = User()) {
+                    userVM.getUserById(id = post.value.appliedUserID) { resPost ->
+                      value = resPost.data as User
+                    }
+                }
+                Text(text = "Applicant name = ${userById.value.name}")
+                Text(text = "Applicant email = ${userById.value.email}")
+                Text(text = "Applicant phone = ${userById.value.phone}")
+            }
             DefaultBtn(
                 postVM = postVM,
                 btnText = stringResource(R.string.Delete),
@@ -180,11 +195,21 @@ fun FoodDetailList(
                 enabled = true,
             )
         } else {
-            DefaultBtn(
-                btnText = stringResource(R.string.Apply),
-                navController = navController,
-                enabled = true,
-            )
+            if (post.value.appliedUserID == "") {
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Apply),
+                    navController = navController,
+                    enabled = true,
+                )
+            } else {
+                DefaultBtn(
+                    postVM = postVM,
+                    btnText = stringResource(R.string.Undo),
+                    navController = navController,
+                    enabled = true,
+                )
+            }
         }
         Spacer(modifier = Modifier.padding(bottom = 80.dp))
     }
@@ -352,8 +377,7 @@ fun FoodDetail(
         // Address
         Text(
             text = if (post.street.isEmpty()) "No Location" else "${post.street}\n" +
-                    "${post.city} ${post.province}\n" +
-                    "${post.postalCode}",
+                    "${post.city} ${post.province}\n" + "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             modifier = Modifier.padding(bottom = 5.dp, start = 15.dp),

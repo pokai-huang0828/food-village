@@ -15,3 +15,8 @@
 local.properties
 *.idea
 .idea/codeStyles/Project.xml
+.project
+.settings/
+app/.classpath
+app/.project
+app/.settings/

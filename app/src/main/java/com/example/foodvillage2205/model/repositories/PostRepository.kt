@@ -3,14 +3,12 @@ package com.example.foodvillage2205.model.repositories
 import android.util.Log
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.responses.Resource
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
 
 class PostRepository {
     private val _collection = FirebaseFirestore.getInstance().collection("posts")
@@ -36,15 +34,15 @@ class PostRepository {
         awaitClose { snapshotListener.remove() }
     }
 
-    suspend fun getPostById(id: String): Resource<Any?> {
-        val response = _collection
-            .document(id)
+    fun getPostById(postId: String, onResponse: (Resource<*>) -> Unit) {
+        _collection.document(postId)
             .get()
-            .await()
-
-        if (response.exists())
-            return Resource.Success(response.toObject<Post>())
-        return Resource.Error("Could not find the post with the given Id.")
+            .addOnSuccessListener { post ->
+                onResponse(Resource.Success(post.toObject<Post>()))
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 
     fun createPost(post: Post, onResponse: (Resource<*>) -> Unit) {
@@ -60,7 +58,6 @@ class PostRepository {
     }
 
     fun updatePost(post: Post, onResponse: (Resource<*>) -> Unit) {
-//        FirebaseFirestore.getInstance().collection("app").document("posts").collection(post.id).set(post)
         _collection.document(post.id)
             .set(post)
             .addOnSuccessListener {
@@ -83,6 +80,22 @@ class PostRepository {
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error deleting document", e)
                 onResponse(Resource.Error("Error deleting post", e))
+            }
+    }
+
+    fun getPostByUser(field: String, id: String, onResponse: (Resource<*>) -> Unit) {
+        _collection
+            .whereEqualTo(field, id)
+            .get()
+            .addOnSuccessListener { documents ->
+                val listOfResults = mutableListOf<Post>()
+                for (document in documents) {
+                    listOfResults.add(document.toObject<Post>())
+                }
+                onResponse(Resource.Success(listOfResults))
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
             }
     }
 }

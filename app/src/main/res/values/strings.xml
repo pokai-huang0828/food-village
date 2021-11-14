@@ -40,6 +40,7 @@
     <string name="Submit">Submit</string>
     <string name="Delete">Delete</string>
     <string name="Apply">Apply</string>
+    <string name="Undo">Undo</string>
     <string name="Edit">Edit</string>
     <string name="AddImage">Add Image</string>
 

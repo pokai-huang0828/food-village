@@ -70,11 +70,9 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
     )
 
     Scaffold(
-        topBar = {
-            TopBarProfile(navController,
-                scope = scope,
-                scaffoldState = scaffoldState)
-        },
+        topBar = { TopBarProfile(navController,
+            scope = scope,
+            scaffoldState = scaffoldState) },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -87,7 +85,7 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
 fun TopBarProfile(
     navController: NavController,
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
+    scaffoldState: ScaffoldState
 ) {
     Row(
         modifier = Modifier
@@ -152,7 +150,7 @@ fun ErrorMessage(text: String) {
 fun Form(
     navController: NavController,
     auth: Auth,
-    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())),
+    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository()))
 ) {
     var id by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -164,7 +162,6 @@ fun Form(
     var city by remember { mutableStateOf("") }
     var thumbnailUrl by remember { mutableStateOf("") }
     var timestamp by remember { mutableStateOf(Timestamp.now()) }
-
 
     // Keyboard done button
     val (
@@ -206,20 +203,20 @@ fun Form(
 
     // Get User Info from firebase
     produceState(initialValue = false) {
-        val resource = userVM.getUserById((auth.currentUser as FirebaseUser).uid)
-
-        if (resource is Resource.Success<*>) {
-            val user = resource.data as User
-            id = user.id
-            name = user.name
-            email = user.email
-            phone = user.phone
-            postalCode = user.postalCode
-            province = user.province
-            street = user.street
-            city = user.city
-            thumbnailUrl = user.thumbnailUrl
-            timestamp = user.timestamp!!
+        userVM.getUserById((auth.currentUser as FirebaseUser).uid) { resource ->
+            if (resource is Resource.Success<*>) {
+                val user = resource.data as User
+                id = user.id
+                name = user.name
+                email = user.email
+                phone = user.phone
+                postalCode = user.postalCode
+                province = user.province
+                street = user.street
+                city = user.city
+                thumbnailUrl = user.thumbnailUrl
+                timestamp = user.timestamp!!
+            }
         }
 
         if (thumbnailUrl.isNotEmpty()) {
@@ -255,11 +252,7 @@ fun Form(
                 Box(contentAlignment = Alignment.TopEnd) {
                     //profile pic, show default image if user does not has one
                     Image(
-                        painter =
-                        if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI)
-                            painterResource(R.drawable.default_image)
-                        else
-                            rememberImagePainter(imageUri),
+                        painter = if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI) painterResource(R.drawable.default_image) else rememberImagePainter(imageUri),
                         stringResource(R.string.Profile_title),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
