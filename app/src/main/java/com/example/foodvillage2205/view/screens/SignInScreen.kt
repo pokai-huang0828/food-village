@@ -1,6 +1,7 @@
 package com.example.foodvillage2205.view.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,9 +41,12 @@ import com.example.foodvillage2205.MainActivity
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 val RobotoSlab = FontFamily(Font(R.font.robotoslab_semibold))
 
+@ExperimentalFoundationApi
+@ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable

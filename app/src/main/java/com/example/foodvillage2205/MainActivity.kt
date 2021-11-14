@@ -1,34 +1,120 @@
 package com.example.foodvillage2205
 
+import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import com.example.foodvillage2205.util.Permission
+import com.example.foodvillage2205.util.PermissionForLocation
 import com.example.foodvillage2205.view.navigation.Navigation
 import com.example.foodvillage2205.view.screens.TestScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.gms.location.*
 
+@ExperimentalComposeUiApi
+@ExperimentalPermissionsApi
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     private lateinit var auth: Auth
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var  locationCallback: LocationCallback
+    private var requestingLocationUpdates = true
 
-    @ExperimentalComposeUiApi
-    @ExperimentalPermissionsApi
-    @ExperimentalFoundationApi
-    @ExperimentalAnimationApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         auth = Auth(this, getString(R.string.default_web_client_id))
 
-        setContent {
-            Navigation(auth)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationCallback = object: LocationCallback(){
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
 
+                for (location in locationResult.locations){
+                    Log.d(TAG, location.toString())
+                }
+            }
+        }
+
+        setContent {
+            PermissionForLocation(){
+                Navigation(auth)
+            }
         // Just for testing
 //            TestScreen()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (requestingLocationUpdates){
+            startLocationUpdates()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        stopLocationUpdates()
+    }
+
+    private fun createLocationRequest(): LocationRequest {
+        val locationRequest = LocationRequest.create().apply {
+            interval = 5000
+            fastestInterval = 1000
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+        return locationRequest
+    }
+
+    private fun startLocationUpdates() {
+        val locationRequest = createLocationRequest()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Consider calling
+            // ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     @ExperimentalAnimationApi
@@ -42,6 +128,7 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val GOOGLE_AUTH = 9001
+        val TAG = "Location"
     }
 }
 
