@@ -1,18 +1,13 @@
 package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
-import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.responses.Resource
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     private val _collection = FirebaseFirestore.getInstance().collection("users")

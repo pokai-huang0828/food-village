@@ -9,6 +9,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,7 +24,7 @@ import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.White
 
 @Composable
-fun FoodListItem(listItem: Post, navController: NavController) {
+fun FoodListItem(listItem: Post, navController: NavController, applicant: String = "") {
     Card(
         modifier = Modifier
             .padding(horizontal = 4.dp, vertical = 4.dp)
@@ -33,7 +34,7 @@ fun FoodListItem(listItem: Post, navController: NavController) {
                 navController.navigate(Route.DetailScreen.route + "/${listItem.id}")
             },
         elevation = 9.dp,
-        backgroundColor = White,
+        backgroundColor = if (applicant == "") White else Color.Green,
         shape = RoundedCornerShape(corner = CornerSize(15.dp))
     ) {
         val painter = rememberImagePainter(listItem.imageUrl)

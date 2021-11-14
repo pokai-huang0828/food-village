@@ -112,7 +112,7 @@ fun FoodListContent(
                 ) {
                     items(items = filtered) { post ->
                         val listItem: Post = post
-                        FoodListItem(listItem = listItem, navController)
+                        FoodListItem(listItem = listItem, navController,applicant = listItem.appliedUserID)
                     }
                 }
             }
