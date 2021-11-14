@@ -1,20 +1,28 @@
 package com.example.foodvillage2205.view.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.responses.Resource
@@ -74,7 +82,33 @@ fun FoodListContent(
             val filtered =
                 foodItems.value.filter { userRequest.lowercase() in (it).title.lowercase() }
             if (filtered.isEmpty()) {
-                Text(text = "NOTHING TO SHOW YET")
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.food_village_logo_2),
+                        contentDescription = "Post Image",
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(300.dp),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
+                        alpha = 0.2f,
+                    )
+                    Text(
+                        text = "Your list is empty.",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier
+                            .padding(top = 10.dp, bottom = 5.dp)
+                            .alpha(0.4f),
+                        color = PrimaryColor,
+                        fontFamily = RobotoSlab,
+                    )
+                }
+
             } else {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
@@ -102,7 +136,32 @@ fun FoodListContent(
             val filtered =
                 foodItems.value.filter { userRequest.lowercase() in (it).title.lowercase() }
             if (filtered.isEmpty()) {
-                Text(text = "NOTHING TO SHOW YET")
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.food_village_logo_2),
+                        contentDescription = "Post Image",
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(300.dp),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
+                        alpha = 0.2f,
+                    )
+                    Text(
+                        text = "Your list is empty.",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        modifier = Modifier
+                            .padding(top = 10.dp, bottom = 5.dp)
+                            .alpha(0.4f),
+                        color = PrimaryColor,
+                        fontFamily = RobotoSlab,
+                    )
+                }
             } else {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
