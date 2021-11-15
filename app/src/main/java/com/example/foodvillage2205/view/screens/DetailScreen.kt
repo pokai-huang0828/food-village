@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: This file represents a clicked Food Item from the Home Screen
+ */
+
 package com.example.foodvillage2205.view.screens
 
 import androidx.compose.foundation.*
@@ -26,18 +32,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
-import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.DefaultBtn
 import com.example.foodvillage2205.view.composables.Drawer
-import com.example.foodvillage2205.view.composables.MapBox
 import com.example.foodvillage2205.view.composables.OnlyMapBox
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
@@ -146,6 +150,7 @@ fun FoodDetailList(
     postId: String?,
     navController: NavController,
 ) {
+    /** Getting Post for this screen and Its User */
     var user by remember { mutableStateOf(User()) }
     val post = produceState(initialValue = Post()) {
         if (postId != null) {
@@ -166,7 +171,10 @@ fun FoodDetailList(
         IconTest(user)
         FoodDetail(post.value)
         Spacer(modifier = Modifier.padding(bottom = 10.dp))
+        /** If the User and the Owner of this Post
+         * he/she allowed to Edit it */
         if (post.value.userId == Firebase.auth.currentUser?.uid) {
+            /** Post does not has an applicant */
             if (post.value.appliedUserID == "") {
                 DefaultBtn(
                     btnText = stringResource(R.string.Edit),
@@ -176,6 +184,7 @@ fun FoodDetailList(
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
 
             } else {
+                /** Post has an applicant */
                 val userById = produceState(initialValue = User()) {
                     userVM.getUserById(id = post.value.appliedUserID) { resPost ->
                       value = resPost.data as User
@@ -191,7 +200,7 @@ fun FoodDetailList(
                         fontFamily = RobotoSlab,
                     )
                     Text(
-                        text = "${userById.value.name}",
+                        text = userById.value.name,
                         fontWeight = FontWeight.Normal,
                         fontSize = 17.sp,
                         fontFamily = RobotoSlab,
@@ -206,7 +215,7 @@ fun FoodDetailList(
                         fontFamily = RobotoSlab,
                     )
                     Text(
-                        text = "${userById.value.email}",
+                        text = userById.value.email,
                         fontWeight = FontWeight.Normal,
                         fontSize = 17.sp,
                         fontFamily = RobotoSlab,

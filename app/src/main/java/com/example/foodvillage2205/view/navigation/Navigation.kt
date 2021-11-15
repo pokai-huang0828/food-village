@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: This file contains the Navigation of the Application
+ */
+
 package com.example.foodvillage2205.view.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -9,10 +15,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.view.screens.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
 @ExperimentalFoundationApi

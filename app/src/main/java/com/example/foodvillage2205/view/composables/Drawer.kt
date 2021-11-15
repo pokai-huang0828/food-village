@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: TODO
+ */
+
 package com.example.foodvillage2205.view.composables
 
 import androidx.compose.foundation.Image
@@ -21,25 +27,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.R
-import com.example.foodvillage2205.model.entities.User
-import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.navigation.Route
-import com.example.foodvillage2205.view.navigation.RouteArgs.Companion.postId
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
-import com.example.foodvillage2205.view.theme.Shapes
 import com.example.foodvillage2205.view.theme.White
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun Drawer(

@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: This Screen was created for testing purposes
+ */
+
 package com.example.foodvillage2205.view.screens
 
 import android.util.Log

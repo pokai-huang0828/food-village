@@ -1,3 +1,10 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: This file holds User's profile UI components
+ * @ and represents Profile Screen
+ */
+
 package com.example.foodvillage2205.view.screens
 
 import android.annotation.SuppressLint
@@ -38,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.FireStorageRepo

@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-14 02:22:48
+ * @ Description: TODO
+ */
+
 package com.example.foodvillage2205.view.composables
 
 import androidx.compose.foundation.layout.Row

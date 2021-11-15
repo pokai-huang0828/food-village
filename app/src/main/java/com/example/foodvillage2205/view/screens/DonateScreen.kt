@@ -1,3 +1,10 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: This file represents a Screen where a User
+ * @ may donate food or edit the existing Food Item
+ */
+
 package com.example.foodvillage2205.view.screens
 
 import android.annotation.SuppressLint
@@ -47,7 +54,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.entities.User
 import com.example.foodvillage2205.model.repositories.FireStorageRepo
@@ -78,7 +85,6 @@ import java.util.regex.Pattern
 @ExperimentalPermissionsApi
 @Composable
 fun DonateScreen(navController: NavController, auth: Auth) {
-
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -127,7 +133,7 @@ fun TopBarDonateScreen(
                 tint = Color.White
             )
         }
-
+        /** Depending whether a User clicked on Existing Item or It is a New one */
         Text(
             text = if (SessionPost.enabled) "Edit Mode" else "New Post",
             color = White,
@@ -272,7 +278,8 @@ fun FormDonateScreen(
                         Image(
                             painter = rememberImagePainter(
                                 data = if (SessionPost.enabled) SessionPost.getSessionPost().imageUrl
-                                else R.drawable.defaultimagepreview),
+                                else R.drawable.defaultimagepreview
+                            ),
                             contentDescription = "",
                             contentScale = ContentScale.Crop,
                             alignment = Alignment.Center,
@@ -645,7 +652,7 @@ fun FormDonateScreen(
             }
 
             Spacer(modifier = Modifier.height(5.dp))
-
+            /** Depending whether a User clicked on an existing Item or it is a new one */
             DefaultBtn(
                 imageUrl,
                 coroutineScope,

@@ -1,32 +1,25 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: TODO
+ */
 package com.example.foodvillage2205
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import com.example.foodvillage2205.util.Permission
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.util.PermissionForLocation
 import com.example.foodvillage2205.view.navigation.Navigation
-import com.example.foodvillage2205.view.screens.TestScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.*
 
@@ -61,7 +54,7 @@ class MainActivity : ComponentActivity() {
             PermissionForLocation(){
                 Navigation(auth)
             }
-        // Just for testing
+            // Just for testing
 //            TestScreen()
         }
     }

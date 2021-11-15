@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: TODO
+ */
+
 package com.example.foodvillage2205.view.screens
 
 import androidx.compose.foundation.*
@@ -14,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.view.composables.*
 import com.example.foodvillage2205.view.navigation.Route

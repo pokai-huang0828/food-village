@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: Contains FireStorageRepo class for storing User's images in FireStore
+ */
+
 package com.example.foodvillage2205.model.repositories
 
 import android.content.Context
@@ -15,7 +21,9 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Class that take care of storing User's images in FireStore
+ */
 class FireStorageRepo() {
     private val imageRef = Firebase.storage.reference
     private val TAG = "Debug"

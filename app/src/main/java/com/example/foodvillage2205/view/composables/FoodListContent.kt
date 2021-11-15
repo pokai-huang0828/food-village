@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-14 02:22:48
+ * @ Description: This file contains a list of Food Items
+ */
+
 package com.example.foodvillage2205.view.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -7,17 +13,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,7 +50,7 @@ fun FoodListContent(
     screen: String
 ) {
     when (screen) {
-        // Exact real time posts from firestore
+        /** This List of Food Items renders for Main/Home Screen */
         "Home" -> {
             when (val postsListResponse =
                 postsViewModel.postsStateFlow.asStateFlow().collectAsState().value) {
@@ -69,6 +72,7 @@ fun FoodListContent(
                 }
             }
         }
+        /** This List of Food Items renders for ApplyHistory Screen */
         "ApplyHistory" -> {
             val postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
             val foodItems = produceState(initialValue = mutableListOf<Post>()) {
@@ -123,6 +127,7 @@ fun FoodListContent(
                 }
             }
         }
+        /** This List of Food Items renders for DonateHistory Screen */
         "DonateHistory" -> {
             val postVM: PostsViewModel = viewModel(factory = PostViewModelFactory(PostRepository()))
             val foodItems = produceState(initialValue = mutableListOf<Post>()) {

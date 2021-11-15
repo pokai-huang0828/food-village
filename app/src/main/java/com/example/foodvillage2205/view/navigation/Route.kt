@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: TODO
+ */
+
 package com.example.foodvillage2205.view.navigation
 
 import androidx.annotation.StringRes

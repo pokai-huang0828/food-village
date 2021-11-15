@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: his file contains UserRepository class that makes requests to FirebaseFirestore
+ */
+
 package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
@@ -9,10 +15,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
+/**
+ * Represents the API class of [User] entity. It allows to make requests to [FirebaseFirestore]
+ */
 class UserRepository {
     private val _collection = FirebaseFirestore.getInstance().collection("users")
     private val TAG = "Debug"
 
+    /**  Receiving a list of Users that FirebaseFirestore has */
     @ExperimentalCoroutinesApi
     fun getUsers() = callbackFlow {
         val snapshotListener = _collection.addSnapshotListener { snapshot, error ->
@@ -32,6 +42,7 @@ class UserRepository {
         awaitClose { snapshotListener.remove() }
     }
 
+    /** Getting a User by ID */
     fun getUserById(userId: String, onResponse: (Resource<*>) -> Unit) {
         _collection.document(userId)
             .get()
@@ -43,6 +54,7 @@ class UserRepository {
             }
     }
 
+    /** Creating a new User */
     fun createUser(user: User, onResponse: (Resource<*>) -> Unit) {
         _collection.document(user.id).set(user)
             .addOnSuccessListener {
@@ -55,6 +67,7 @@ class UserRepository {
             }
     }
 
+    /** Updating a User */
     fun updateUser(user: User, onResponse: (Resource<*>) -> Unit) {
         _collection.document(user.id).set(user)
             .addOnSuccessListener {
@@ -67,6 +80,7 @@ class UserRepository {
             }
     }
 
+    /** Deleting a User */
     fun deleteUser(user: User, onResponse: (Resource<*>) -> Unit) {
         _collection.document(user.id).delete()
             .addOnSuccessListener {

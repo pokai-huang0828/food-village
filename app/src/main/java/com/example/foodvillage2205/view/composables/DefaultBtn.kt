@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-14 02:22:48
+ * @ Description: This file contains the Button with default style
+ */
+
 package com.example.foodvillage2205.view.composables
 
 import android.content.Context
@@ -13,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.foodvillage2205.Auth
+import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.model.entities.Post
 import com.example.foodvillage2205.model.repositories.FireStorageRepo
 import com.example.foodvillage2205.model.responses.Resource
@@ -57,14 +63,14 @@ fun DefaultBtn(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        //Submit Button
         Button(
             onClick = {
-                // Check if imageUrl has been set
                 when (btnText) {
+                    /** imageUrl !== null means that a User
+                     * updated an Image and we need to Upload it
+                     * and keep Its url in a database */
                     "Update" -> if (imageUrl !== null) {
-                        // upload image to firestorage
+                        // upload image to fireStorage
                         var imageDownloadUrl: String? = null
 
                         coroutineScope?.launch {
@@ -101,6 +107,8 @@ fun DefaultBtn(
                             }
                         }
                     } else {
+                        /** imageUrl is null and no need to upload the Image
+                         * one more time - just updating the Post in database */
                         val post = Post(
                             id = SessionPost.getSessionPost().id,
                             title = name,
@@ -122,6 +130,7 @@ fun DefaultBtn(
                         }
                         SessionPost.enabled = false
                     }
+                    /** Creating a new Post */
                     "Submit" -> if (imageUrl !== null) {
                         // upload image to firestorage
                         var imageDownloadUrl: String? = null
@@ -169,6 +178,7 @@ fun DefaultBtn(
                             }
                         }
                     }
+                    /** A User pressed on Apply for food Button */
                     "Apply" -> {
                         postVM?.updatePost(
                             SessionPost.getSessionPost()
@@ -178,6 +188,8 @@ fun DefaultBtn(
                             }
                         }
                     }
+                    /** A User decided not to take food and
+                     * he/she is removing food from the List */
                     "Undo" -> {
                         postVM?.updatePost(
                             SessionPost.getSessionPost()

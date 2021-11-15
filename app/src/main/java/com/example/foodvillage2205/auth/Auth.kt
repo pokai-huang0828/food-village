@@ -1,4 +1,10 @@
-package com.example.foodvillage2205
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 11:37:52
+ * @ Description: This file contains FireBase Authentication class
+ */
+
+package com.example.foodvillage2205.auth
 
 import android.app.Activity
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -6,9 +12,6 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
-import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.core.app.ActivityCompat.recreate
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
 import com.example.foodvillage2205.model.entities.User
@@ -18,7 +21,6 @@ import com.example.foodvillage2205.view.navigation.Route
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Response
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -26,6 +28,9 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
+/**
+ * Represents authentication with [Firebase] via Google and Login + Password
+ */
 class Auth(var context: Activity, default_web_client_id: String) {
 
     private var googleSignInClient: GoogleSignInClient
@@ -164,12 +169,6 @@ class Auth(var context: Activity, default_web_client_id: String) {
                     } else {
                         // If sign in fails, display a message to the user.
                         onError()
-
-//                        Toast.makeText(
-//                            context,
-//                            "Login failed, please check your information and try again.",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
                     }
                 }
         }

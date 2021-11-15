@@ -1,3 +1,9 @@
+/**
+ * @ Author: 2205 Team (Food Village)
+ * @ Create Time: 2021-11-11 20:41:02
+ * @ Description: This file contains PostRepository class that makes requests to FirebaseFirestore
+ */
+
 package com.example.foodvillage2205.model.repositories
 
 import android.util.Log
@@ -10,10 +16,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
+/**
+ * Represents the API class of [Post] entity. It allows to make requests to [FirebaseFirestore]
+ */
 class PostRepository {
     private val _collection = FirebaseFirestore.getInstance().collection("posts")
     private val TAG = "Debug"
 
+    /**  Receiving a list of Posts that FirebaseFirestore has */
     @ExperimentalCoroutinesApi
     fun getPosts() = callbackFlow {
         val snapshotListener = _collection
@@ -34,6 +44,7 @@ class PostRepository {
         awaitClose { snapshotListener.remove() }
     }
 
+    /** Getting a Post by ID */
     fun getPostById(postId: String, onResponse: (Resource<*>) -> Unit) {
         _collection.document(postId)
             .get()
@@ -45,6 +56,7 @@ class PostRepository {
             }
     }
 
+    /** Creating a new Post */
     fun createPost(post: Post, onResponse: (Resource<*>) -> Unit) {
         val newDocRef = _collection.document()
         newDocRef.set(post.apply { id = newDocRef.id })
@@ -58,6 +70,7 @@ class PostRepository {
             }
     }
 
+    /** Updating a Post */
     fun updatePost(post: Post, onResponse: (Resource<*>) -> Unit) {
         _collection.document(post.id)
             .set(post)
@@ -71,6 +84,7 @@ class PostRepository {
             }
     }
 
+    /** Deleting a Post */
     fun deletePost(post: Post, onResponse: (Resource<*>) -> Unit) {
         _collection.document(post.id)
             .delete()
@@ -84,6 +98,7 @@ class PostRepository {
             }
     }
 
+    /** Getting a Post by User ID or technically by any field in Post Collection */
     fun getPostByUser(field: String, id: String, onResponse: (Resource<*>) -> Unit) {
         _collection
             .whereEqualTo(field, id)
