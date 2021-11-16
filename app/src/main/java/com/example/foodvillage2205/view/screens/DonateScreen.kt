@@ -643,6 +643,7 @@ fun FormDonateScreen(
                     onSearchError = {
                         // do something on Error
                         isValidAddress = false
+
                     }
                 ) {
                     // do something on Success

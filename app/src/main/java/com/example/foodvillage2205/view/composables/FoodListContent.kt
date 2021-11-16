@@ -91,6 +91,7 @@ fun FoodListContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
+                    /** This shows if list is empty */
                     Image(
                         painter = painterResource(id = R.drawable.food_village_logo_2),
                         contentDescription = "Post Image",
@@ -146,6 +147,7 @@ fun FoodListContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
+                    /** This shows if list is empty */
                     Image(
                         painter = painterResource(id = R.drawable.food_village_logo_2),
                         contentDescription = "Post Image",

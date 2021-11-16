@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 
+/** This is for CAMERA permission */
 @ExperimentalPermissionsApi
 @Composable
 fun Permission(
@@ -56,6 +57,7 @@ fun Permission(
     )
 }
 
+/** This is for location permission  */
 @ExperimentalPermissionsApi
 @Composable
 fun PermissionForLocation(

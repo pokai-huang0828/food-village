@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.map.MapService
+import com.example.foodvillage2205.view.screens.ErrorMessage
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.*
 import com.mapbox.geojson.Point
@@ -50,8 +51,6 @@ fun MapBox(
     mapSearch: String = "vancouver community college",
     onSearchError: () -> Unit,
     onSearchSuccess: () -> Unit,
-    //    auth: Auth,
-//    userVM: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository())
 ) {
     val coroutineScope = rememberCoroutineScope()
     val mapService = MapService() // to call mapbox Geocoding API
@@ -59,7 +58,6 @@ fun MapBox(
     var location by remember { mutableStateOf(Coordinates(0.0, 0.0)) }
     var mapBox by remember { mutableStateOf<MapboxMap?>(null) }
     var mapView by remember { mutableStateOf<MapView?>(null) }
-//    var street by remember { mutableStateOf(mapSearch) }
     var pointAnnotationManager by remember { mutableStateOf<PointAnnotationManager?>(null) }
 
     // initial run
@@ -88,7 +86,7 @@ fun MapBox(
 
         } else {
             Log.d("error", (response as Resource.Error).message.toString())
-
+            onSearchError()
             // display error msg
         }
     }
@@ -146,8 +144,6 @@ fun MapBox(
                     } else {
                         Log.d("result", (response as Resource.Error).message.toString())
                         onSearchError()
-
-
                         // display error msg
                     }
                 }
