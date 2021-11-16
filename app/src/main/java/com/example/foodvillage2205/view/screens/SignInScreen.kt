@@ -1,7 +1,8 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 11:37:52
- * @ Description: TODO
+ * @ Description: This is signin screen for user to sign in with email and password or google account,
+ * if user don't have an account, they can click get an account to go to sign up page.
  */
 
 package com.example.foodvillage2205.view.screens

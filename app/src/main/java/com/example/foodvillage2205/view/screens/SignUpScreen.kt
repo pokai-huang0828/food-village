@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 11:37:52
- * @ Description: TODO
+ * @ Description: This is sign up screen for user to sign up with email and password.
  */
 
 package com.example.foodvillage2205.view.screens

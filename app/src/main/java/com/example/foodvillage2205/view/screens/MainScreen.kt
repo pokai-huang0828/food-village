@@ -1,7 +1,8 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 11:37:52
- * @ Description: TODO
+ * @ Description: This is the main page for user to check all kinds of food list to apply
+ * or quick donate by clicking right down flow button.
  */
 
 package com.example.foodvillage2205.view.screens

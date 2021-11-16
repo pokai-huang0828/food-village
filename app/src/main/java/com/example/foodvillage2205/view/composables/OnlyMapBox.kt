@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-14 15:19:42
- * @ Description: TODO
+ * @ Description: This is a only map box for detail screen.
  */
 
 package com.example.foodvillage2205.view.composables

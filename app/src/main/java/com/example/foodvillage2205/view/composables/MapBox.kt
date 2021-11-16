@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-14 15:19:42
- * @ Description: TODO
+ * @ Description: This is a mapbox with Validate Address button to let user check if their location is correct.
  */
 
 package com.example.foodvillage2205.view.composables

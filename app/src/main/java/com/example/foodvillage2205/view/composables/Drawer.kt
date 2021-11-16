@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 20:41:02
- * @ Description: TODO
+ * @ Description: This file is the drawer in each pages topbar.
  */
 
 package com.example.foodvillage2205.view.composables
@@ -76,9 +76,7 @@ fun Drawer(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(10.dp),
-
-            ) {
-
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -217,7 +215,7 @@ fun Drawer(
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Post History",
+                    text = "My Post",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = RobotoSlab,
@@ -254,7 +252,7 @@ fun Drawer(
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Apply History",
+                    text = "Wanted Items",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = RobotoSlab,
@@ -280,7 +278,7 @@ fun Drawer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                )
+            )
             {
                 Divider(color = Color.LightGray, thickness = 1.dp)
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -315,7 +313,6 @@ fun Drawer(
 
 @Composable
 fun UserImage(auth: Auth) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -355,7 +352,7 @@ fun UserImage(auth: Auth) {
                 Spacer(modifier = Modifier.size(5.dp))
 
                 Text(
-                    text = "Welcome! \n"+ auth.currentUser?.displayName?: "",
+                    text = "Welcome! \n" + auth.currentUser?.displayName ?: "",
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
                     fontStyle = FontStyle.Italic,
