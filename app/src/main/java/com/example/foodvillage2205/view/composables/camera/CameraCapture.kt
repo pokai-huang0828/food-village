@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 20:41:02
- * @ Description: TODO
+ * @ Description: Contains that composable for displaying camera screen
  */
 
 package com.example.foodvillage2205.view.composables
@@ -30,6 +30,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 import java.io.File
 
+/**
+ * A composable for displaying camera screen
+ * @param [modifier] [allow screen customization]
+ * @param [cameraSelector] [camera setting]
+ * @param [onImageFile] [callback when an image has been taken. Returns a file object containing
+ * the image]
+ */
 @ExperimentalPermissionsApi
 @Composable
 fun CameraCapture(
@@ -39,6 +46,7 @@ fun CameraCapture(
 ) {
     val context = LocalContext.current
 
+    // Wrapper for asking the user for camera permission
     Permission(
         permission = Manifest.permission.CAMERA,
         rationale = "You said you wanted a picture, so I'm going to have to ask for permission.",
@@ -56,7 +64,7 @@ fun CameraCapture(
             }
         }
     ) {
-        // If permission is granted, show content
+        // If permission is granted, show the camera screen
         Box(modifier = modifier) {
             val lifecycleOwner = LocalLifecycleOwner.current
             val coroutineScope = rememberCoroutineScope()
@@ -96,6 +104,7 @@ fun CameraCapture(
 
             LaunchedEffect(previewUseCase) {
                 val cameraProvider = context.getCameraProvider()
+
                 try {
                     // Must unbind the use-cases before rebinding them.
                     cameraProvider.unbindAll()

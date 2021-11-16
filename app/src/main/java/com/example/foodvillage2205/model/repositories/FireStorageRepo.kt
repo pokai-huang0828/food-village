@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 20:41:02
- * @ Description: Contains FireStorageRepo class for storing User's images in FireStore
+ * @ Description: Contains FireStorageRepo class for storing User's and Posts' images in FireStorage
  */
 
 package com.example.foodvillage2205.model.repositories
@@ -22,12 +22,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Class that take care of storing User's images in FireStore
+ * Class that take care of storing User's and Posts' images in FireStorage
  */
 class FireStorageRepo() {
     private val imageRef = Firebase.storage.reference
     private val TAG = "Debug"
 
+    /**
+     * Upload Image to Firestorage
+     * @param [context] [application context]
+     * @param [curFile] [the uri of the image]
+     * @param [filename] [file name of the image]
+     * @param [onImageUploaded] [callback when the image has been successfully uploaded to
+     * firestorage]
+     */
     fun uploadImageToStorage(
         context: Context,
         curFile: Uri,
@@ -66,6 +74,40 @@ class FireStorageRepo() {
             }
         }
 
+    /**
+     * Get an image from firestorage
+     * @param [filename] [file name of the image]
+     * firestorage]
+     */
+    fun getImage(filename: String) : Task<Uri> {
+        return imageRef.child("images/$filename").downloadUrl
+    }
+
+    /**
+     * Delete an image from firestorage
+     * @param [context] [application context]
+     * @param [filename] [file name of the image]
+     * firestorage]
+     */
+    fun deleteImage(context: Context, filename: String) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            imageRef.child("images/$filename").delete().await()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    context, "Successfully deleted image.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    /**
+     * Lists all the objects in firestorage
+     */
     suspend fun listFiles(): MutableList<ImageItem> {
         var result = mutableListOf<ImageItem>()
 
@@ -90,26 +132,6 @@ class FireStorageRepo() {
         }
 
         return result
-    }
-
-    fun getImage(filename: String) : Task<Uri> {
-        return imageRef.child("images/$filename").downloadUrl
-    }
-
-    fun deleteImage(context: Context, filename: String) = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            imageRef.child("images/$filename").delete().await()
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    context, "Successfully deleted image.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
     }
 }
 

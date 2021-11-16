@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 11:37:52
- * @ Description: This file contains FireBase Authentication class
+ * @ Description: This file contains the App Authentication class that uses the FirebaseAuth
  */
 
 package com.example.foodvillage2205.auth
@@ -51,11 +51,20 @@ class Auth(var context: Activity, default_web_client_id: String) {
         googleSignInClient = GoogleSignIn.getClient(context, gso)
     }
 
+    /**
+     * Sign in with Google
+     * @param [requestCode] [Request Code for startActivityForResult]
+     */
     fun signInWithGoogle(requestCode: Int) {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(context, signInIntent, requestCode, null)
     }
 
+    /**
+     * Test if Google sign in has been successful. If Google sign in was successful,
+     * it will call firebaseAuthWithGoogle, else it will display a Toast Error Message.
+     * @param [data] [Data from signInWithGoogle Request]
+     */
     @ExperimentalAnimationApi
     fun onGoogleSignInResult(data: Intent?) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -76,6 +85,11 @@ class Auth(var context: Activity, default_web_client_id: String) {
         }
     }
 
+    /**
+     * This private function is called when Google Sign In was successful.
+     * Id Token will be used to authenticate user to the app.
+     * @param [idToken] [Token returned from Google Sign In]
+     */
     @ExperimentalAnimationApi
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -113,6 +127,12 @@ class Auth(var context: Activity, default_web_client_id: String) {
             }
     }
 
+    /**
+     * Sign up new user with email and password
+     * @param [navController] [used to navigate user to another screen]
+     * @param [email] [user email]
+     * @param [password] [user password]
+     */
     @ExperimentalAnimationApi
     fun signUpWithEmailAndPassword(
         navController: NavController,
@@ -140,7 +160,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
                         }
 
                     } else {
-                        // If sign in fails, display a message to the user.
+                        // If sign up fails, display a message to the user.
                         Toast.makeText(
                             context,
                             "Authentication failed.",
@@ -151,6 +171,13 @@ class Auth(var context: Activity, default_web_client_id: String) {
         }
     }
 
+    /**
+     * Sign in with email and password
+     * @param [navController] [used to navigate user to another screen]
+     * @param [email] [user email]
+     * @param [password] [user password]
+     * @param [onError] [callabck called when sign-in fails]
+     */
     @ExperimentalAnimationApi
     fun signInWithEmailAndPassword(
         navController: NavController,
@@ -174,6 +201,10 @@ class Auth(var context: Activity, default_web_client_id: String) {
         }
     }
 
+    /**
+     * Sign out from the app
+     * @param [navController] [used to navigate user to another screen]
+     */
     fun signOut(navController: NavController) {
         _auth.signOut()
         currentUser = null

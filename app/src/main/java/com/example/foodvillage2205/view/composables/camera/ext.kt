@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 20:41:02
- * @ Description: TODO
+ * @ Description: Contains helper functions required for camera features
  */
 
 package com.example.foodvillage2205.view.composables.camera
@@ -20,6 +20,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+/**
+ * Return Camera Provider
+ */
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { future ->
         future.addListener({
@@ -28,9 +31,15 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
     }
 }
 
+/**
+ * Return an Executor Object from taking an camera image
+ */
 val Context.executor: Executor
     get() = ContextCompat.getMainExecutor(this)
 
+/**
+ * Return an File object after taking an image
+ */
 suspend fun ImageCapture.takePicture(executor: Executor): File {
     val photoFile = withContext(Dispatchers.IO) {
         kotlin.runCatching {

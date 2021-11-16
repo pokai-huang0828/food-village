@@ -1,8 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-11 20:41:02
- * @ Description: This file contains Permission functions which are
- * @ getting permissions from a User
+ * @ Description: This file contains functions for obtain permissions from app users
  */
 
 package com.example.foodvillage2205.util
@@ -33,6 +32,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 
+/**
+ * A generic function for obtaining permissions from users.
+ * @param [permission] [permission type]
+ * @param [rationale] [reason for asking the permission]
+ * @param [permissionNotAvailableContent] [composable to display when permission is not obtained]
+ * @param [content] [composable to display when permission is obtained]
+ */
 @ExperimentalPermissionsApi
 @Composable
 fun Permission(
@@ -56,6 +62,12 @@ fun Permission(
     )
 }
 
+/**
+ * Obtaining fine location permission from users.
+ * @param [permission] [permission type]
+ * @param [rationale] [reason for asking the permission]
+ * @param [content] [composable to display when permission is obtained]
+ */
 @ExperimentalPermissionsApi
 @Composable
 fun PermissionForLocation(
@@ -91,6 +103,11 @@ fun PermissionForLocation(
     )
 }
 
+/**
+ * A Alert Dialog to display when asking for permissions.
+ * @param [text] [text message]
+ * @param [onRequestPermission] [callback when requests have been granted]
+ */
 @Composable
 private fun Rationale(
     text: String,
