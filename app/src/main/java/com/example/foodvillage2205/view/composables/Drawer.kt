@@ -44,7 +44,7 @@ fun Drawer(
     navController: NavController,
     auth: Auth,
 ) {
-
+    /** This is top box to show [UserImage] */
     Column(
         modifier = Modifier
             .background(White)
@@ -71,12 +71,14 @@ fun Drawer(
 
         Divider(color = Color.LightGray, thickness = 1.dp)
 
+        /** This Column shows all pages list to navigate */
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(10.dp),
         ) {
+            /** This will go to [com.example.foodvillage2205.view.screens.MainScreen] */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,6 +116,7 @@ fun Drawer(
                 }
             }
 
+            /** This will go to [com.example.foodvillage2205.view.screens.DonateScreen] */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,6 +156,8 @@ fun Drawer(
 
             Divider(color = Color.LightGray, thickness = 1.dp)
             Spacer(modifier = Modifier.padding(5.dp))
+
+            /** This will go to [com.example.foodvillage2205.view.screens.ProfileSreen] */
             Text(
                 text = "User",
                 fontSize = 20.sp,
@@ -199,6 +204,7 @@ fun Drawer(
                 }
             }
 
+            /** This will go to [com.example.foodvillage2205.view.screens.DonateHistory] */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -236,6 +242,7 @@ fun Drawer(
                 }
             }
 
+            /** This will go to [com.example.foodvillage2205.view.screens.ApplyHistory] */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -273,6 +280,8 @@ fun Drawer(
                 }
             }
 
+
+            /** This will let user to logout to login page */
             Column(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
@@ -310,7 +319,8 @@ fun Drawer(
         }
     }
 }
-
+/** This is show if user login with email account, it will show logo.
+ * But if user sign in with google account, it will show user image & welcome user name. */
 @Composable
 fun UserImage(auth: Auth) {
     Row(

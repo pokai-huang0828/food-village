@@ -13,6 +13,9 @@ import com.example.foodvillage2205.util.map.responses.LocationResult
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/** This is MapService to setup getLocationResult
+ * Used by [com.example.foodvillage2205.view.composables.MapBox],
+ * [com.example.foodvillage2205.view.composables.OnlyMapBox]*/
 class MapService {
     private val api: MapApi
 

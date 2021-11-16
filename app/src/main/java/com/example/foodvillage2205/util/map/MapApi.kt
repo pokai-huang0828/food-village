@@ -1,7 +1,7 @@
 /**
  * @ Author: 2205 Team (Food Village)
  * @ Create Time: 2021-11-14 15:19:42
- * @ Description: This is Map Api file.
+ * @ Description: This is Map Api file called from MapService.
  */
 
 package com.example.foodvillage2205.util.map
@@ -10,7 +10,7 @@ import com.example.foodvillage2205.util.map.responses.LocationResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
+/** This is calle form [com.example.foodvillage2205.util.map.MapService] */
 interface MapApi {
 
     @GET("geocoding/v5/mapbox.places/{search_text}.json?")
