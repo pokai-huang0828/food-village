@@ -200,7 +200,7 @@ fun FoodDetailList(
                         fontFamily = RobotoSlab,
                     )
                     Text(
-                        text = userById.value.name,
+                        text = if(userById.value.name == "") "No Name provided" else userById.value.name,
                         fontWeight = FontWeight.Normal,
                         fontSize = 17.sp,
                         fontFamily = RobotoSlab,
@@ -231,7 +231,7 @@ fun FoodDetailList(
                         fontFamily = RobotoSlab,
                     )
                     Text(
-                        text = "${userById.value.phone}",
+                        text = if(userById.value.phone == "") "No Phone number provided" else userById.value.phone,
                         fontWeight = FontWeight.Normal,
                         fontSize = 17.sp,
                         fontFamily = RobotoSlab,
