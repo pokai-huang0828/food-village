@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.FoodVillage" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Foodvillage3" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/SecondaryColor</item>
-        <item name="colorPrimaryVariant">@color/PrimaryColor</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -14,17 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.FoodVillage.NoActionBar">
+    <style name="Theme.Foodvillage3.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/PrimaryColor</item>
-        <item name="colorPrimaryVariant">@color/SecondaryColor</item>
-        <item name="colorOnPrimary">@color/white</item>
     </style>
 
-    <style name="Theme.FoodVillage.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Foodvillage3.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.FoodVillage.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Foodvillage3.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -19,5 +19,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "foodvillage2205"
+rootProject.name = "foodvillage3"
 include ':app'
