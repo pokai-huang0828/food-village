@@ -47,10 +47,15 @@ class UserRepository {
         _collection.document(userId)
             .get()
             .addOnSuccessListener { user ->
-                onResponse(Resource.Success(user.toObject<User>()))
+                if (user.toObject<User>() == null) {
+                    onResponse(Resource.Error("User doesn't exit", "no user"))
+                } else {
+                    onResponse(Resource.Success(user.toObject<User>()))
+                }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
+                onResponse(Resource.Error("User doesn't exit", exception))
             }
     }
 
