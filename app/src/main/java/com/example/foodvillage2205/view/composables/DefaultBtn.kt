@@ -168,6 +168,7 @@ fun DefaultBtn(
                         }
                     }
                     "Edit" -> {
+                        /** A User pressed edit Btn and now he/she is in Edit mode, thus [enabled] bool should be true, if a User wanted to create a new Post bool shoudl be false */
                         SessionPost.enabled = true
                         navController?.navigate(Route.DonateScreen.route)
                     }

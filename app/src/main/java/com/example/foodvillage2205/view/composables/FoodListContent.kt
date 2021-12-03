@@ -40,6 +40,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asStateFlow
 
 
+/** There is no need to create a new [FoodlistContent] for each case. We just reusing it depending on the Screen */
 @ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @Composable

@@ -40,9 +40,7 @@ import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
-import com.example.foodvillage2205.view.composables.DefaultBtn
-import com.example.foodvillage2205.view.composables.Drawer
-import com.example.foodvillage2205.view.composables.OnlyMapBox
+import com.example.foodvillage2205.view.composables.*
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
@@ -64,7 +62,7 @@ fun DetailScreen(navController: NavController, postId: String?, auth: Auth) {
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
     )
-
+    /** The content consists only of [TopBarDetail] [Drawer] and [FoodDetailList] where we may see the details for the exact food item */
     Scaffold(
         topBar = {
             TopBarDetail(
