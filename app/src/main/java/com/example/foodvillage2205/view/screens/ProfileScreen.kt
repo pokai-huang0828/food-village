@@ -54,6 +54,7 @@ import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
 import com.example.foodvillage2205.view.composables.ErrorMessage
 import com.example.foodvillage2205.view.composables.MapBox
+import com.example.foodvillage2205.view.composables.TopBar
 import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.composables.gallery.GallerySelect
 import com.example.foodvillage2205.view.navigation.Route
@@ -76,6 +77,7 @@ fun ProfileScreen(navController: NavController, auth: Auth) {
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
     )
+    /** The content consists only of [TopBar] [Drawer] and [Form] where a User may update his/she info */
 
     Scaffold(
         topBar = {

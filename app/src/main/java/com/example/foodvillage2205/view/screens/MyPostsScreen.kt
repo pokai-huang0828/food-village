@@ -29,6 +29,7 @@ fun MyPostsScreen(navController: NavController, auth: Auth) {
         rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     var userRequest by remember { mutableStateOf("") }
 
+    /** The content consists only of [TopBar] [Drawer] and [FoodListContent] in which we are displaying the food images */
     Scaffold(
         modifier = Modifier.background(White),
         topBar = {

@@ -29,6 +29,8 @@ import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.FourthColor
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.White
+
+
 /** This is foodlist card style,
  * used by [com.example.foodvillage2205.view.composables.FoodListContent]*/
 @Composable

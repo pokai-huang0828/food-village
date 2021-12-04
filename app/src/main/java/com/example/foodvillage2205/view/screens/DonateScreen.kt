@@ -86,6 +86,7 @@ fun DonateScreen(navController: NavController, auth: Auth) {
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
     )
+    /** The content consists only of [TopBar] [Drawer] and [FormDonateScreen] for posting new food items */
 
     Scaffold(
         topBar = {
