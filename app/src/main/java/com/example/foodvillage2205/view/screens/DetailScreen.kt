@@ -41,6 +41,7 @@ import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.util.SessionPost
 import com.example.foodvillage2205.util.TimestampToFormatedString
 import com.example.foodvillage2205.view.composables.*
+import com.example.foodvillage2205.view.theme.Dm
 import com.example.foodvillage2205.view.theme.PrimaryColor
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
@@ -313,7 +314,8 @@ fun FoodDetail(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = Dm.marginSmall),
     ) {
         Image(
             painter =
@@ -348,7 +350,7 @@ fun FoodDetail(
             fontWeight = FontWeight.Normal,
             fontFamily = RobotoSlab,
             fontSize = 17.sp,
-            modifier = Modifier.padding(start = 15.dp)
+//            modifier = Modifier.padding(start = 15.dp)
         )
 
         Text(
@@ -363,7 +365,7 @@ fun FoodDetail(
         // Telephone
         Row(
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(start = 15.dp)
+//            modifier = Modifier.padding(start = 15.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.PhoneAndroid,
@@ -382,7 +384,7 @@ fun FoodDetail(
 
         Row(
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(start = 15.dp)
+//            modifier = Modifier.padding(start = 15.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.Email,
@@ -413,7 +415,7 @@ fun FoodDetail(
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             fontFamily = RobotoSlab,
-            modifier = Modifier.padding(start = 15.dp)
+//            modifier = Modifier.padding(start = 15.dp)
         )
 
 
@@ -432,7 +434,7 @@ fun FoodDetail(
                     "${post.city} ${post.province}\n" + "${post.postalCode}",
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
-            modifier = Modifier.padding(bottom = 5.dp, start = 15.dp),
+            modifier = Modifier.padding(bottom = Dm.marginMedium),
             fontFamily = RobotoSlab,
         )
 

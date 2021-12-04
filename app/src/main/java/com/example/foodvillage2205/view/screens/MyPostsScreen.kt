@@ -11,6 +11,7 @@ import androidx.compose.foundation.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.view.composables.Drawer
@@ -31,7 +32,7 @@ fun MyPostsScreen(navController: NavController, auth: Auth) {
 
     /** The content consists only of [TopBar] [Drawer] and [FoodListContent] in which we are displaying the food images */
     Scaffold(
-        modifier = Modifier.background(White),
+        modifier = Modifier.background(Color.White),
         topBar = {
             TopBar(
                 navController,

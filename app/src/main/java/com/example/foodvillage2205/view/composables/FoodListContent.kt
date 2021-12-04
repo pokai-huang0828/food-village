@@ -122,7 +122,7 @@ fun FoodListContent(
                     cells = GridCells.Fixed(2),
                     modifier = Modifier
                         .padding(bottom = 5.dp)
-                        .background(White)
+                        .background(Color.White)
                 ) {
                     items(items = filtered) { post ->
                         val listItem: Post = post
@@ -177,7 +177,7 @@ fun FoodListContent(
                     cells = GridCells.Fixed(2),
                     modifier = Modifier
                         .padding(bottom = 5.dp)
-                        .background(White)
+                        .background(Color.White)
                 ) {
                     items(items = filtered) { post ->
                         val listItem: Post = post
