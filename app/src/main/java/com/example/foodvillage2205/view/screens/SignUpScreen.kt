@@ -6,12 +6,10 @@
 
 package com.example.foodvillage2205.view.screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -20,13 +18,10 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -67,9 +62,6 @@ fun SignUpScreen(
 
     val (focusRequester1, focusRequester2) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
-
-//    val openDialog = remember { mutableStateOf(false) }
-//    var visible by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -265,63 +257,6 @@ fun SignUpScreen(
                 },
                 modifier = Modifier.clickable { navController.navigate(Route.SignInScreen.route) }
             )
-
-//            AnimatedVisibility(visible) {
-//                Dialog()
-//            }
         }
     }
 }
-
-
-//@Composable
-//fun Dialog() {
-//    val openDialog = remember { mutableStateOf(true) }
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        if (openDialog.value) {
-//            AlertDialog(
-//                onDismissRequest = {
-//                    openDialog.value = false
-//                },
-//                title = {
-//                    Text(
-//                        fontFamily = RobotoSlab,
-//                        text = "Warning ⚠️",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp
-//                    )
-//                },
-//                text = {
-//                    Text(
-//                        "Your password are not match, please try again.",
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.W500,
-//                    )
-//                },
-//                confirmButton = {
-//                    TextButton(
-//                        modifier = Modifier
-//                            .clip(RoundedCornerShape(5.dp))
-//                            .fillMaxWidth(0.3f)
-//                            .background(White),
-//                        onClick = {
-//                            openDialog.value = false
-//                        }) {
-//                        Text(
-//                            "OK",
-//                            fontSize = 18.sp,
-//                            color = PrimaryColor,
-//                        )
-//                    }
-//                },
-//                backgroundColor = SecondaryColor,
-//                contentColor = Color.White
-//            )
-//        }
-//    }
-//}
-

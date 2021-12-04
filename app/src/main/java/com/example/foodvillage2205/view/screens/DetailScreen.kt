@@ -350,7 +350,6 @@ fun FoodDetail(
             fontWeight = FontWeight.Normal,
             fontFamily = RobotoSlab,
             fontSize = 17.sp,
-//            modifier = Modifier.padding(start = 15.dp)
         )
 
         Text(
@@ -365,7 +364,6 @@ fun FoodDetail(
         // Telephone
         Row(
             horizontalArrangement = Arrangement.Center,
-//            modifier = Modifier.padding(start = 15.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.PhoneAndroid,
@@ -384,7 +382,6 @@ fun FoodDetail(
 
         Row(
             horizontalArrangement = Arrangement.Center,
-//            modifier = Modifier.padding(start = 15.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.Email,
@@ -415,7 +412,6 @@ fun FoodDetail(
             fontWeight = FontWeight.Normal,
             fontSize = 17.sp,
             fontFamily = RobotoSlab,
-//            modifier = Modifier.padding(start = 15.dp)
         )
 
 
