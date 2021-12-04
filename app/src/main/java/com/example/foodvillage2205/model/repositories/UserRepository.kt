@@ -48,14 +48,14 @@ class UserRepository {
             .get()
             .addOnSuccessListener { user ->
                 if (user.toObject<User>() == null) {
-                    onResponse(Resource.Error("User doesn't exit", "no user"))
+                    onResponse(Resource.Error("User doesn't exist", "no user"))
                 } else {
                     onResponse(Resource.Success(user.toObject<User>()))
                 }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
-                onResponse(Resource.Error("User doesn't exit", exception))
+                onResponse(Resource.Error("User doesn't exist", exception))
             }
     }
 
@@ -68,7 +68,7 @@ class UserRepository {
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding user", e)
-                onResponse(Resource.Error("Error adding user", e))
+                onResponse(Resource.Error(e.message!!, e))
             }
     }
 

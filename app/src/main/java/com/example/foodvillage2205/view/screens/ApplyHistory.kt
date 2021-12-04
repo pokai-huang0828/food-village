@@ -30,7 +30,7 @@ fun ApplyHistory(navController: NavController, auth: Auth) {
     var userRequest by remember { mutableStateOf("") }
 
     Scaffold(
-        modifier = Modifier.background(Gray),
+        modifier = Modifier.background(White),
         topBar = {
             TopBar(
                 navController,

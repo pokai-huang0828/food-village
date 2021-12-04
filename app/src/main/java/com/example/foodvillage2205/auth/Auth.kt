@@ -135,9 +135,10 @@ class Auth(var context: Activity, default_web_client_id: String) {
      */
     @ExperimentalAnimationApi
     fun signUpWithEmailAndPassword(
-        navController: NavController,
         email: String,
         password: String,
+        onError: (errorMessage: String) -> Unit,
+        onSuccess: () -> Unit,
     ) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             _auth.createUserWithEmailAndPassword(email, password)
@@ -147,26 +148,24 @@ class Auth(var context: Activity, default_web_client_id: String) {
 
                         // Save new user to firestore
                         val userRepo = UserRepository()
+
                         userRepo.createUser(
                             User(
                                 email = _auth.currentUser?.email!!,
                                 id = _auth.currentUser?.uid!!
                             )
                         ) {
-                            if (it is Resource.Success) {
+                            if (it is Resource.Success<*>) {
                                 // Sign up and Save user successfully, update UI
-                                navController.navigate(Route.MainScreen.route)
+                                onSuccess()
+                            } else {
+                                onError(it.message ?: "Please try again.")
                             }
                         }
-
-                    } else {
-                        // If sign up fails, display a message to the user.
-                        Toast.makeText(
-                            context,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
+                }
+                .addOnFailureListener {
+                    onError(it.message ?: "Please try again.")
                 }
         }
     }
@@ -183,7 +182,7 @@ class Auth(var context: Activity, default_web_client_id: String) {
         navController: NavController,
         email: String,
         password: String,
-        onError: () -> Unit,
+        onError: (errorMessage: String) -> Unit,
     ) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
             _auth.signInWithEmailAndPassword(email, password)
@@ -193,10 +192,10 @@ class Auth(var context: Activity, default_web_client_id: String) {
                         currentUser = _auth.currentUser
 
                         navController.navigate(Route.MainScreen.route)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        onError()
                     }
+                }.addOnFailureListener {
+                    // If sign in fails, display a message to the user.
+                    onError(it?.message ?: "Please try again.")
                 }
         }
     }

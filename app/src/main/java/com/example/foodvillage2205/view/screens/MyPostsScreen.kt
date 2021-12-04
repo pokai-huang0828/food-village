@@ -22,7 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @Composable
-fun DonateHistory(navController: NavController, auth: Auth) {
+fun MyPostsScreen(navController: NavController, auth: Auth) {
 
     val scope = rememberCoroutineScope()
     val scaffoldState =
@@ -30,12 +30,12 @@ fun DonateHistory(navController: NavController, auth: Auth) {
     var userRequest by remember { mutableStateOf("") }
 
     Scaffold(
-        modifier = Modifier.background(Gray),
+        modifier = Modifier.background(White),
         topBar = {
             TopBar(
                 navController,
                 scope = scope,
-                text = "Donation History",
+                text = "My Posts",
                 scaffoldState = scaffoldState
             ) { userSearch ->
                 userRequest = userSearch

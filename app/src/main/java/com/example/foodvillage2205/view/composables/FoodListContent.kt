@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.Gray
 import com.example.foodvillage2205.view.theme.PrimaryColor
+import com.example.foodvillage2205.view.theme.White
 import com.example.foodvillage2205.viewmodels.PostViewModelFactory
 import com.example.foodvillage2205.viewmodels.PostsViewModel
 import com.google.firebase.auth.ktx.auth
@@ -62,7 +64,7 @@ fun FoodListContent(
                         cells = GridCells.Fixed(2),
                         modifier = Modifier
                             .padding(bottom = 5.dp)
-                            .background(Gray)
+                            .background(Color.White)
                     ) {
                         items(items = filtered) { post ->
                             val listItem: Post = post as Post
@@ -119,7 +121,7 @@ fun FoodListContent(
                     cells = GridCells.Fixed(2),
                     modifier = Modifier
                         .padding(bottom = 5.dp)
-                        .background(Gray)
+                        .background(White)
                 ) {
                     items(items = filtered) { post ->
                         val listItem: Post = post
@@ -174,7 +176,7 @@ fun FoodListContent(
                     cells = GridCells.Fixed(2),
                     modifier = Modifier
                         .padding(bottom = 5.dp)
-                        .background(Gray)
+                        .background(White)
                 ) {
                     items(items = filtered) { post ->
                         val listItem: Post = post

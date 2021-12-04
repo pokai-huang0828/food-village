@@ -17,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +24,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.foodvillage2205.R
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.map.MapService
-import com.example.foodvillage2205.view.screens.ErrorMessage
 import com.example.foodvillage2205.view.screens.RobotoSlab
 import com.example.foodvillage2205.view.theme.*
 import com.mapbox.geojson.Point
@@ -66,7 +64,7 @@ fun MapBox(
             searchText = mapSearch
         )
 
-        if (response is Resource.Success) {
+        if (response is Resource.Success<*>) {
             Log.d("result", response.data?.features.toString())
 
             // check if response has coordinates
@@ -82,12 +80,8 @@ fun MapBox(
 
             addAnnotationToMap(mapBox, location, mapView, pointAnnotationManager)
             moveToLocation(mapBox, location)
-            onSearchSuccess()
-
         } else {
             Log.d("error", (response as Resource.Error).message.toString())
-            onSearchError()
-            // display error msg
         }
     }
 
@@ -113,6 +107,8 @@ fun MapBox(
                 }
             }
         )
+
+
 
         Button(
             onClick = {

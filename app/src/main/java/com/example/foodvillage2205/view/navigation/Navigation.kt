@@ -59,7 +59,7 @@ fun Navigation(auth: Auth) {
         }
 
         composable(route = Route.DonateHistory.route) {
-            DonateHistory(navController = navController, auth = auth)
+            MyPostsScreen(navController = navController, auth = auth)
         }
 
         composable(

@@ -204,7 +204,7 @@ fun Drawer(
                 }
             }
 
-            /** This will go to [com.example.foodvillage2205.view.screens.DonateHistory] */
+            /** This will go to [com.example.foodvillage2205.view.screens.MyPostsScreen] */
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -221,7 +221,7 @@ fun Drawer(
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "My Post",
+                    text = "My Posts",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = RobotoSlab,

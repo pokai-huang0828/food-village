@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import com.example.foodvillage2205.auth.Auth
 import com.example.foodvillage2205.MainActivity
 import com.example.foodvillage2205.R
+import com.example.foodvillage2205.view.composables.ErrorMessage
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -64,6 +65,7 @@ fun SignInScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     var displayErroMsg by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     val (focusRequester) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -170,12 +172,13 @@ fun SignInScreen(
                     color = Danger,
                 )
 
+            ErrorMessage(errorMessage, modifier = Modifier.fillMaxWidth(0.7f))
+
             Button(
                 onClick = {
                     auth.signInWithEmailAndPassword(navController, email, password) {
                         // error msg
-                        displayErroMsg = true
-
+                        errorMessage = it
                     }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),

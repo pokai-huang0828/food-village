@@ -52,6 +52,7 @@ import com.example.foodvillage2205.model.repositories.FireStorageRepo
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.view.composables.Drawer
+import com.example.foodvillage2205.view.composables.ErrorMessage
 import com.example.foodvillage2205.view.composables.MapBox
 import com.example.foodvillage2205.view.composables.gallery.EMPTY_IMAGE_URI
 import com.example.foodvillage2205.view.composables.gallery.GallerySelect
@@ -71,16 +72,19 @@ import androidx.compose.material.Text as Text
 @ExperimentalPermissionsApi
 @Composable
 fun ProfileScreen(navController: NavController, auth: Auth) {
-
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(
         rememberDrawerState(initialValue = DrawerValue.Closed)
     )
 
     Scaffold(
-        topBar = { TopBarProfile(navController,
-            scope = scope,
-            scaffoldState = scaffoldState) },
+        topBar = {
+            TopBarProfile(
+                navController,
+                scope = scope,
+                scaffoldState = scaffoldState
+            )
+        },
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawer(navController = navController, auth = auth)
@@ -104,6 +108,7 @@ fun TopBarProfile(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Topbar: Menu Icon
         IconButton(
             onClick = {
                 scope.launch {
@@ -117,7 +122,7 @@ fun TopBarProfile(
             )
         }
 
-        //title
+        // Topbar Title: Profile
         Text(
             text = stringResource(R.string.Profile_title),
             color = White,
@@ -128,7 +133,7 @@ fun TopBarProfile(
             modifier = Modifier.padding(end = 10.dp)
         )
 
-        // Back button
+        // Topbar Back button
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
@@ -144,11 +149,6 @@ fun TopBarProfile(
             )
         }
     }
-}
-
-@Composable
-fun ErrorMessage(text: String) {
-    Text(text, color = Danger)
 }
 
 @ExperimentalComposeUiApi
@@ -176,7 +176,7 @@ fun Form(
         focusRequesterPhone,
         focusRequesterCity,
         focusRequesterProvince,
-        focusRequesterPostCode,
+        focusRequesterPostCode
     ) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -186,8 +186,12 @@ fun Form(
     val phonePattern = Pattern.compile("^[+]?[0-9]{10,13}\$")
     val inValidPhone = !phonePattern.matcher(phone).matches()
     val inValidPostalCode = !postalCodePattern.matcher(postalCode).matches()
+
+    // set to false if the user altered the original address
+    var isNotDirty by remember { mutableStateOf(true) }
+
     var isValidAddress by remember { mutableStateOf(false) }
-    var isDirty by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf("") }
 
     val isValid by derivedStateOf {
         !inValidEmail &&
@@ -198,7 +202,7 @@ fun Form(
                 province.isNotBlank() &&
                 city.isNotBlank() &&
                 isValidAddress &&
-                !isDirty
+                !isNotDirty
     }
 
     // Set up for picking image from gallery
@@ -260,7 +264,9 @@ fun Form(
                 Box(contentAlignment = Alignment.TopEnd) {
                     //profile pic, show default image if user does not has one
                     Image(
-                        painter = if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI) painterResource(R.drawable.default_image) else rememberImagePainter(imageUri),
+                        painter = if (thumbnailUrl.isEmpty() && imageUri === EMPTY_IMAGE_URI) painterResource(
+                            R.drawable.default_image
+                        ) else rememberImagePainter(imageUri),
                         stringResource(R.string.Profile_title),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -418,7 +424,7 @@ fun Form(
                 OutlinedTextField(
                     value = street,
                     onValueChange = {
-                        isDirty = true
+                        isNotDirty = true
                         street = it
                     },
                     modifier = Modifier
@@ -531,6 +537,15 @@ fun Form(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
+            // show error message: invalid address
+            if (!isValidAddress) {
+                ErrorMessage(
+                    errorMessage = errorMessage,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
 
             // MapBox
             if (postalCode.isNotBlank() || street.isNotBlank()) {
@@ -539,11 +554,18 @@ fun Form(
                     onSearchError = {
                         // do something on Error
                         isValidAddress = false
-                    }
-                ) {
-                    // do something on Success
-                    isValidAddress = true
-                    isDirty = false
+                    },
+                    onSearchSuccess = {
+                        // do something on Success
+                        isValidAddress = true
+                        isNotDirty = false
+                    })
+
+                if (!isValidAddress) {
+                    ErrorMessage(
+                        errorMessage = "Please enter a valid address and press validate.",
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
 
@@ -551,12 +573,13 @@ fun Form(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Spacer(modifier = Modifier.height(5.dp))
 
                 // update button:
                 Button(
                     onClick = {
+
+
                         // upload image to fire storage if user has provided one
                         if (imageChanged) {
 

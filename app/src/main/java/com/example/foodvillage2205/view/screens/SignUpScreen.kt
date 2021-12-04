@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodvillage2205.auth.Auth
+import com.example.foodvillage2205.view.composables.ErrorMessage
 import com.example.foodvillage2205.view.navigation.Route
 import com.example.foodvillage2205.view.theme.*
 
@@ -59,6 +60,7 @@ fun SignUpScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var confirmPasswordVisibility by remember { mutableStateOf(false) }
@@ -66,8 +68,8 @@ fun SignUpScreen(
     val (focusRequester1, focusRequester2) = FocusRequester.createRefs()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val openDialog = remember { mutableStateOf(false) }
-    var visible by remember { mutableStateOf(false) }
+//    val openDialog = remember { mutableStateOf(false) }
+//    var visible by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -136,6 +138,7 @@ fun SignUpScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusRequester2.requestFocus() }
                 ),
+
                 label = {
                     Text("Password")
                 },
@@ -205,13 +208,27 @@ fun SignUpScreen(
                 ),
             )
 
+            ErrorMessage(errorMessage, modifier = Modifier
+                .fillMaxWidth(0.7f))
+
             Button(
                 onClick = {
-                    if( password != confirmPassword ) {
-                        openDialog.value = true
-                        visible = !visible
-                    } else
-                    auth.signUpWithEmailAndPassword(navController, email, password) },
+                    if(!password.contentEquals(confirmPassword)){
+                        errorMessage = "Passwords do not match"
+                        return@Button
+                    }
+
+                    auth.signUpWithEmailAndPassword(
+                        email,
+                        password,
+                        onError = {
+                            errorMessage = it
+                        },
+                        onSuccess = {
+                            navController.navigate(Route.MainScreen.route)
+                        }
+                    )
+                },
                 colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColor),
                 modifier = Modifier
                     .padding(ButtonPadding_16dp)
@@ -249,59 +266,62 @@ fun SignUpScreen(
                 modifier = Modifier.clickable { navController.navigate(Route.SignInScreen.route) }
             )
 
-            AnimatedVisibility(visible) {
-                Dialog()
-            }
+//            AnimatedVisibility(visible) {
+//                Dialog()
+//            }
         }
     }
 }
 
 
-@Composable
-fun Dialog() {
-    val openDialog = remember { mutableStateOf(true) }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (openDialog.value) {
-            AlertDialog(
-                onDismissRequest = {
-                    openDialog.value = false
-                },
-                title = {
-                    Text(
-                        fontFamily = RobotoSlab,
-                        text = "Warning ⚠️",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp)
-                },
-                text = {
-                    Text("Your password are not match, please try again.",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W500,
-                    )
-                },
-                confirmButton = {
-                    TextButton(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(5.dp))
-                            .fillMaxWidth(0.3f)
-                            .background(White),
-                        onClick = {
-                            openDialog.value = false
-                        }) {
-                        Text("OK",
-                            fontSize = 18.sp,
-                            color = PrimaryColor,
-                        )
-                    }
-                },
-                backgroundColor = SecondaryColor,
-                contentColor = Color.White
-            )
-        }
-    }
-}
+//@Composable
+//fun Dialog() {
+//    val openDialog = remember { mutableStateOf(true) }
+//    Column(
+//        modifier = Modifier.fillMaxSize(),
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        if (openDialog.value) {
+//            AlertDialog(
+//                onDismissRequest = {
+//                    openDialog.value = false
+//                },
+//                title = {
+//                    Text(
+//                        fontFamily = RobotoSlab,
+//                        text = "Warning ⚠️",
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 20.sp
+//                    )
+//                },
+//                text = {
+//                    Text(
+//                        "Your password are not match, please try again.",
+//                        fontSize = 16.sp,
+//                        fontWeight = FontWeight.W500,
+//                    )
+//                },
+//                confirmButton = {
+//                    TextButton(
+//                        modifier = Modifier
+//                            .clip(RoundedCornerShape(5.dp))
+//                            .fillMaxWidth(0.3f)
+//                            .background(White),
+//                        onClick = {
+//                            openDialog.value = false
+//                        }) {
+//                        Text(
+//                            "OK",
+//                            fontSize = 18.sp,
+//                            color = PrimaryColor,
+//                        )
+//                    }
+//                },
+//                backgroundColor = SecondaryColor,
+//                contentColor = Color.White
+//            )
+//        }
+//    }
+//}
 

@@ -62,10 +62,7 @@ import com.example.foodvillage2205.model.repositories.PostRepository
 import com.example.foodvillage2205.model.repositories.UserRepository
 import com.example.foodvillage2205.model.responses.Resource
 import com.example.foodvillage2205.util.SessionPost
-import com.example.foodvillage2205.view.composables.CameraCapture
-import com.example.foodvillage2205.view.composables.DefaultBtn
-import com.example.foodvillage2205.view.composables.Drawer
-import com.example.foodvillage2205.view.composables.MapBox
+import com.example.foodvillage2205.view.composables.*
 import com.example.foodvillage2205.view.theme.SecondaryColor
 import com.example.foodvillage2205.view.theme.White
 import com.example.foodvillage2205.view.theme.WhiteLight
@@ -358,7 +355,7 @@ fun FormDonateScreen(
                     imageUpdated = true
                 } else {
                     imageUpdated = false
-                    ErrorMessage(text = "Picture is required")
+                    ErrorMessage(errorMessage = "Picture is required")
                 }
 
             }

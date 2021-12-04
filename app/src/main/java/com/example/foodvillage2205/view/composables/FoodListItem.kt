@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -63,7 +64,8 @@ fun FoodListItem(listItem: Post, navController: NavController, applicant: String
                 fontSize = 18.sp,
                 modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp),
                 color = PrimaryColor,
-                maxLines = 2,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Text(
